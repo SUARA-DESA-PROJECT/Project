@@ -40,7 +40,7 @@
   <header id="header" class="header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="{{ route('landingpage') }}" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1 class="sitename">Suara<span class="text-success"> Desa</span></h1>
@@ -51,9 +51,6 @@
           <li><a href="#hero">Beranda</a></li>
           <li><a href="#akses">Akses</a></li>
           <li><a href="#features">Fitur</a></li>
-          <li class="ms-3">
-            <button type="button" class="btn btn-outline-success">Masuk</button>
-          </li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -72,7 +69,7 @@
             <h2>Suara<span class="text-success"> Desa</span></h2>
             <p>Portal informasi terbuka untuk masyarakat desa dan pengelola desa. Temukan informasi terkini dan up-to-date di <span class="fw-bold">Suara Desa</span></p>
             <div class="d-flex">
-              <a href="#" class="btn-get-started">Dashboard Desa</a>
+              <a href="{{ route('loginmasyarakat') }}" class="btn-get-started">Dashboard Desa</a>
               <a href="#" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-login"></i><span>Daftarkan Diri</span></a>
             </div>
           </div>
@@ -89,32 +86,25 @@
             </div><!-- End Section Title -->
           <div class="row">
 
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
               <div class="icon-box">
                 <div class="icon"><i class="bi bi-person-vcard"></i></div>
-                <h4 class="title"><a href="" class="stretched-link">Masyarakat</a></h4>
+                <h4 class="title"><a href="{{ route('loginmasyarakat') }}" class="stretched-link">Masyarakat</a></h4>
               </div>
             </div><!--End Icon Box -->
 
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
               <div class="icon-box">
                 <div class="icon"><i class="bi bi-person-rolodex"></i></div>
-                <h4 class="title"><a href="" class="stretched-link">Kepala Desa</a></h4>
+                <h4 class="title"><a href="{{ route('loginpengurus') }}" class="stretched-link">Kepala Desa</a></h4>
               </div>
             </div><!--End Icon Box -->
             
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-4 col-md-6">
                 <div class="icon-box">
                   <div class="icon"><i class="bi bi-person-gear"></i></div>
                   <h4 class="title"><a href="" class="stretched-link">Admin</a></h4>
                 </div>
-            </div><!--End Icon Box -->
-
-            <div class="col-xl-3 col-md-6">
-              <div class="icon-box">
-                <div class="icon"><i class="bi bi-command"></i></div>
-                <h4 class="title"><a href="" class="stretched-link">Nemo Enim</a></h4>
-              </div>
             </div><!--End Icon Box -->
 
           </div>
