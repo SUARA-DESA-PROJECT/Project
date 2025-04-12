@@ -69,7 +69,7 @@
             <h2>Suara<span class="text-success"> Desa</span></h2>
             <p>Portal informasi terbuka untuk masyarakat desa dan pengelola desa. Temukan informasi terkini dan up-to-date di <span class="fw-bold">Suara Desa</span></p>
             <div class="d-flex">
-              <a href="{{ route('loginmasyarakat') }}" class="btn-get-started">Dashboard Desa</a>
+              <a href="{{ route('login-masyarakat') }}" class="btn-get-started">Dashboard Desa</a>
               <a href="#" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-login"></i><span>Daftarkan Diri</span></a>
             </div>
           </div>
@@ -89,14 +89,14 @@
             <div class="col-xl-4 col-md-6">
               <div class="icon-box">
                 <div class="icon"><i class="bi bi-person-vcard"></i></div>
-                <h4 class="title"><a href="{{ route('loginmasyarakat') }}" class="stretched-link">Masyarakat</a></h4>
+                <h4 class="title"><a href="{{ route('login-masyarakat') }}" class="stretched-link">Masyarakat</a></h4>
               </div>
             </div><!--End Icon Box -->
 
             <div class="col-xl-4 col-md-6">
               <div class="icon-box">
                 <div class="icon"><i class="bi bi-person-rolodex"></i></div>
-                <h4 class="title"><a href="{{ route('loginpengurus') }}" class="stretched-link">Kepala Desa</a></h4>
+                <h4 class="title"><a href="{{ route('login-kepaladesa') }}" class="stretched-link">Kepala Desa</a></h4>
               </div>
             </div><!--End Icon Box -->
             
