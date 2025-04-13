@@ -1,0 +1,131 @@
+/* Style untuk reveal effect */
+.reveal-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+}
+
+.reveal-section.active {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Style untuk welcome banner */
+.welcome-banner {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    padding: 25px;
+    margin-bottom: 30px;
+    border-left: 5px solid #468B94;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.welcome-banner .decoration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background-color: rgba(70, 139, 148, 0.1);
+    border-radius: 0 0 0 150px;
+}
+
+.welcome-banner h2 {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.welcome-banner p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Style untuk info box */
+.info-box {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    padding: 20px;
+    height: 100%;
+    border-top: 4px solid #468B94;
+}
+
+.info-box-icon {
+    font-size: 40px;
+    color: #468B94;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.info-box-content h4 {
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+.info-box-content .number {
+    font-size: 30px;
+    text-align: center;
+    color: #468B94;
+    font-weight: bold;
+}
+
+.info-box-content p {
+    text-align: center;
+    margin-top: 10px;
+    color: #666;
+}
+
+/* Style untuk box title */
+.box-title {
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.box-title i {
+    color: #468B94;
+    margin-right: 10px;
+}
+
+/* Style untuk notifikasi */
+.notification-list {
+    padding-left: 0;
+    list-style: none;
+}
+
+.notification-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item i {
+    color: #468B94;
+    margin-right: 10px;
+}
+
+.notification-time {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Style untuk chart container */
+.chart-container {
+    min-height: 250px;
+} 
