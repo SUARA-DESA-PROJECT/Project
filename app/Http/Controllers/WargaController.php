@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
-=======
 use App\Models\Warga;
->>>>>>> fbdb894 (SDP-1 fitur registrasi)
 use Illuminate\Http\Request;
 
 class WargaController extends Controller
@@ -36,17 +33,6 @@ class WargaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-<<<<<<< HEAD
-            'username' => 'required',
-            'password' => 'required',
-            'nama' => 'required',
-            'email' => 'required',
-            'no_hp' => 'required'
-        ]);
-
-        Warga::create($validatedData);
-        return redirect()->route('warga.index')->with('success', 'Warga berhasil ditambahkan');
-=======
             'username' => 'required|unique:warga,username',
             'password' => 'required|min:6',
             'nama_lengkap' => 'required',
@@ -62,7 +48,6 @@ class WargaController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
         }
->>>>>>> fbdb894 (SDP-1 fitur registrasi)
     }
 
     /**
