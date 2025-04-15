@@ -9,7 +9,7 @@
         <h1><a href="#" class="logo" style="color: #333; font-weight: bold;">Suara Desa</a></h1>
         <ul class="list-unstyled components mb-5">
             <li class="mb-2">
-                <a href="#" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <a href="{{ route('homepage') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
                     <span class="fa fa-home mr-3"></span>Beranda
                 </a>
             </li>
