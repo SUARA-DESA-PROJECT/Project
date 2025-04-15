@@ -1,11 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\KategoriController;
 
 Route::get('/homepage', function () {
     return view('homepage/homepage');
-});
+})->name('homepage');
+
+// route to registrasi
+Route::get('/registrasi-masyarakat', function () {
+    return view('registrasi/index');
+})->name('registrasi-masyarakat');
+
+Route::post('/registrasi', [WargaController::class, 'store'])->name('registrasi.store');
 
 Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');

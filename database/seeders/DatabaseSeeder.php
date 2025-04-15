@@ -60,35 +60,40 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password123'),
                 'nama_lengkap' => 'Joko Widodo',
                 'nomor_telepon' => '081345678901',
-                'alamat' => 'Jl. Kenanga No. 1, RT 01/RW 02'
+                'alamat' => 'Jl. Kenanga No. 1, RT 01/RW 02',
+                'email' => 'joko.widodo@example.com'
             ],
             [
                 'username' => 'warga2',
                 'password' => bcrypt('password123'),
                 'nama_lengkap' => 'Sri Wahyuni',
                 'nomor_telepon' => '081345678902',
-                'alamat' => 'Jl. Dahlia No. 2, RT 02/RW 02'
+                'alamat' => 'Jl. Dahlia No. 2, RT 02/RW 02',
+                'email' => 'sri.wahyuni@example.com'
             ],
             [
                 'username' => 'warga3',
                 'password' => bcrypt('password123'),
                 'nama_lengkap' => 'Rudi Hermawan',
                 'nomor_telepon' => '081345678903',
-                'alamat' => 'Jl. Tulip No. 3, RT 03/RW 02'
+                'alamat' => 'Jl. Tulip No. 3, RT 03/RW 02',
+                'email' => 'rudi.hermawan@example.com'
             ],
             [
                 'username' => 'warga4',
                 'password' => bcrypt('password123'),
                 'nama_lengkap' => 'Nina Septiani',
                 'nomor_telepon' => '081345678904',
-                'alamat' => 'Jl. Bougenville No. 4, RT 04/RW 02'
+                'alamat' => 'Jl. Bougenville No. 4, RT 04/RW 02',
+                'email' => 'nina.septiani@example.com'
             ],
             [
                 'username' => 'warga5',
                 'password' => bcrypt('password123'),
                 'nama_lengkap' => 'Agus Setiawan',
                 'nomor_telepon' => '081345678905',
-                'alamat' => 'Jl. Kamboja No. 5, RT 05/RW 02'
+                'alamat' => 'Jl. Kamboja No. 5, RT 05/RW 02',
+                'email' => 'agus.setiawan@example.com'
             ]
         ];
 
