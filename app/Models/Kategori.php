@@ -16,8 +16,7 @@ class Kategori extends Model
 
     protected $fillable = [
         'nama_kategori',
-        'deskripsi_kategori',
-        'jenis_kategori'
+        'jenis_laporan'
     ];
 
     // One Kategori has many Laporan

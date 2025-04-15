@@ -3,32 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Laporan;
+use Illuminate\Support\Facades\Route;
+use App\Models\Kategori;
 
 class LaporanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        // Bind route model untuk Laporan
+        $this->middleware(function ($request, $next) {
+            Route::bind('laporan', function ($value) {
+                return Laporan::where('id_laporan', $value)->firstOrFail();
+            });
+            return $next($request);
+        });
+    }
+
     public function index()
     {
         $laporans = Laporan::all();
         $nav = 'Laporan';
 
-        return view('laporan.index', compact('laporans', 'nav'));
+        return view('inputlaporan.index', compact('laporans', 'nav'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
+        $kategoris = Kategori::orderBy('nama_kategori')->get();
         $nav = 'Tambah Laporan';
-        return view('laporan.create', compact('nav'));
+        return view('inputlaporan.create', compact('kategoris', 'nav'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -46,30 +52,21 @@ class LaporanController extends Controller
         ]);
 
         Laporan::create($validatedData);
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil ditambahkan');
+        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Laporan $laporan)
     {
         $nav = 'Detail Laporan - ' . $laporan->judul_laporan;
-        return view('laporan.show', compact('laporan', 'nav'));
+        return view('inputlaporan.show', compact('laporan', 'nav'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Laporan $laporan)
     {
         $nav = 'Edit Laporan - ' . $laporan->judul_laporan;
-        return view('laporan.edit', compact('laporan', 'nav'));
+        return view('inputlaporan.edit', compact('laporan', 'nav'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Laporan $laporan)
     {
         $validatedData = $request->validate([
@@ -87,15 +84,12 @@ class LaporanController extends Controller
         ]);
 
         $laporan->update($validatedData);
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil diubah');
+        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil diubah');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Laporan $laporan)
     {
         $laporan->delete();
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dihapus');
+        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil dihapus');
     }
 }
