@@ -35,6 +35,7 @@ class WargaController extends Controller
         $validatedData = $request->validate([
             'username' => 'required|unique:warga,username',
             'password' => 'required|min:6',
+            'email' =>'required|email|unique:warga,email',
             'nama_lengkap' => 'required',
             'nomor_telepon' => 'required|numeric',
             'alamat' => 'required'
@@ -44,7 +45,7 @@ class WargaController extends Controller
 
         try {
             Warga::create($validatedData);
-            return redirect('/')->with('success', 'Registrasi berhasil! Silakan login.');
+            return redirect()->back()->with('success', 'Registrasi berhasil!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
         }

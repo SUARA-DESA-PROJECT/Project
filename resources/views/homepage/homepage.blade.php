@@ -29,7 +29,7 @@
                 </div>
                 <div class="info-box-content">
                     <h4>Total Laporan</h4>
-                    <div class="number">24</div>
+                    <div class="number">{{ $totalReports }}</div>
                     <p>Jumlah laporan yang masuk</p>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="info-box-content">
                     <h4>Laporan Terverifikasi</h4>
-                    <div class="number">18</div>
+                    <div class="number">{{ $verifiedReports }}</div>
                     <p>Laporan yang sudah diverifikasi</p>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                 </div>
                 <div class="info-box-content">
                     <h4>Pengguna</h4>
-                    <div class="number">42</div>
+                    <div class="number">{{ $totalUsers }}</div>
                     <p>Jumlah pengguna terdaftar</p>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                 <h4 class="box-title">
                     <i class="fa fa-line-chart"></i> Statistik Laporan
                 </h4>
-                <div class="chart-container">
+                <div class="chart-container" style="position: relative; height:300px; width:100%">
                     <canvas id="reportStatChart"></canvas>
                 </div>
             </div>
@@ -80,21 +80,13 @@
                     <i class="fa fa-bell"></i> Notifikasi Terbaru
                 </h4>
                 <ul class="notification-list">
-                    <li class="notification-item">
-                        <i class="fa fa-file-text"></i>
-                        <span>Laporan baru diterima</span>
-                        <div class="notification-time">2 jam yang lalu</div>
-                    </li>
-                    <li class="notification-item">
-                        <i class="fa fa-check"></i>
-                        <span>Laporan terverifikasi</span>
-                        <div class="notification-time">5 jam yang lalu</div>
-                    </li>
-                    <li class="notification-item">
-                        <i class="fa fa-user-plus"></i>
-                        <span>Pengguna baru mendaftar</span>
-                        <div class="notification-time">1 hari yang lalu</div>
-                    </li>
+                    @foreach($recentReports as $report)
+                        <li class="notification-item">
+                            <i class="fa {{ $report->status_verifikasi == 'Terverifikasi' ? 'fa-check' : 'fa-file-text' }}"></i>
+                            <span>Laporan "{{ $report->judul_laporan }}" {{ $report->status_verifikasi == 'Terverifikasi' ? 'telah diverifikasi' : 'baru diterima' }}</span>
+                            <div class="notification-time">{{ \Carbon\Carbon::parse($report->created_at)->locale('id')->diffForHumans() }}</div>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
         </div>
@@ -104,5 +96,68 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ asset('js/homepage/script.js') }}"></script>
-<script src="{{ asset('js/homepage/chart.js') }}"></script>
+<script>
+    const ctx = document.getElementById('reportStatChart').getContext('2d');
+    let myChart;
+
+    fetch('{{ route("report.statistics") }}')
+        .then(response => response.json())
+        .then(data => {
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Laporan Masuk',
+                        data: data.totalReports,
+                        backgroundColor: '#75B7B6',
+                        borderColor: '#75B7B6',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Laporan Terverifikasi',
+                        data: data.verifiedReports,
+                        backgroundColor: '#92DEB7',
+                        borderColor: '#92DEB7',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Statistik Laporan 6 Bulan Terakhir',
+                            padding: 20
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            right: 10
+                        }
+                    }
+                }
+            });
+        });
+</script>
 @endsection
