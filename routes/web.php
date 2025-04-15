@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PengurusLingkunganController;
 use App\Http\Controllers\WargaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
@@ -29,6 +30,17 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 Route::get('/homepage', function () {
     return view('homepage/homepage');
 })->name('homepage');
+
+// route to pengurus
+Route::get('/pengurus', [PengurusLingkunganController::class, 'index'])->name('pengurus');
+Route::put('/pengurus/{username}', [PengurusLingkunganController::class, 'update'])->name('pengurus.update');
+Route::delete('/pengurus/{pengurus}', [PengurusLingkunganController::class, 'destroy'])->name('pengurus.destroy');
+Route::post('/pengurus', [PengurusLingkunganController::class, 'store'])->name('pengurus.store');
+
+// route to pengurus input form
+Route::get('/pengurus/form', function () {
+    return view('pengurus.form');
+})->name('pengurus.form');
 
 // route to registrasi
 Route::get('/registrasi-masyarakat', function () {

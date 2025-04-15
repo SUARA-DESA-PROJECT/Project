@@ -46,6 +46,41 @@ class DatabaseSeeder extends Seeder
                 'nama_lengkap' => 'Budi Santoso',
                 'nomor_telepon' => '081234567892',
                 'alamat' => 'Jl. Anggrek No. 3, RT 03/RW 01'
+            ],
+            [
+                'username' => 'pengurus4',
+                'password' => bcrypt('password123'),
+                'nama_lengkap' => 'Dewi Kartika',
+                'nomor_telepon' => '081234567893',
+                'alamat' => 'Jl. Flamboyan No. 4, RT 04/RW 01'
+            ],
+            [
+                'username' => 'pengurus5',
+                'password' => bcrypt('password123'),
+                'nama_lengkap' => 'Hendra Wijaya',
+                'nomor_telepon' => '081234567894',
+                'alamat' => 'Jl. Cempaka No. 5, RT 05/RW 01'
+            ],
+            [
+                'username' => 'pengurus6',
+                'password' => bcrypt('password123'),
+                'nama_lengkap' => 'Maya Sari',
+                'nomor_telepon' => '081234567895',
+                'alamat' => 'Jl. Teratai No. 6, RT 06/RW 01'
+            ],
+            [
+                'username' => 'pengurus7',
+                'password' => bcrypt('password123'),
+                'nama_lengkap' => 'Rudi Hartono',
+                'nomor_telepon' => '081234567896',
+                'alamat' => 'Jl. Lotus No. 7, RT 07/RW 01'
+            ],
+            [
+                'username' => 'pengurus8',
+                'password' => bcrypt('password123'),
+                'nama_lengkap' => 'Rina Susanti',
+                'nomor_telepon' => '081234567897',
+                'alamat' => 'Jl. Sakura No. 8, RT 08/RW 01'
             ]
         ];
 
@@ -94,7 +129,7 @@ class DatabaseSeeder extends Seeder
                 'nomor_telepon' => '081345678905',
                 'alamat' => 'Jl. Kamboja No. 5, RT 05/RW 02',
                 'email' => 'agus.setiawan@example.com'
-            ]
+            ],
         ];
 
         foreach ($wargaData as $warga) {
