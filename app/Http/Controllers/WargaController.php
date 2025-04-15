@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Warga;
 use Illuminate\Http\Request;
 
 class WargaController extends Controller
@@ -32,15 +33,21 @@ class WargaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-            'nama' => 'required',
-            'email' => 'required',
-            'no_hp' => 'required'
+            'username' => 'required|unique:warga,username',
+            'password' => 'required|min:6',
+            'nama_lengkap' => 'required',
+            'nomor_telepon' => 'required|numeric',
+            'alamat' => 'required'
         ]);
 
-        Warga::create($validatedData);
-        return redirect()->route('warga.index')->with('success', 'Warga berhasil ditambahkan');
+        $validatedData['password'] = bcrypt($validatedData['password']);
+
+        try {
+            Warga::create($validatedData);
+            return redirect('/')->with('success', 'Registrasi berhasil! Silakan login.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
+        }
     }
 
     /**
