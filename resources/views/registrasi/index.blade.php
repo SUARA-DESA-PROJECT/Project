@@ -292,7 +292,7 @@
                 </div>
                 
                 <div class="login-link">
-                    <p>Sudah punya akun? <a href="#">Login di sini</a></p>
+                    <p>Sudah punya akun? <a href="{{ route('login-masyarakat') }}">Login di sini</a></p>
                 </div>
             </form>
         </div>

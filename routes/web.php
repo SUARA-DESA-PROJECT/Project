@@ -8,13 +8,10 @@ Route::get('/', function () {
     return view('LandingPage.landingpage');
 })->name('/');
 
-
 // route to landing page
 Route::get('/landingpage', function () {
     return view('LandingPage.landingpage');
 }) -> name('landingpage');
-
-
 
 // route to login masyarakat
 Route::get('/login-masyarakat', [AuthController::class, 'showLoginFormMasyarakat'])->name('login-masyarakat');
@@ -26,16 +23,14 @@ Route::get('/login-kepaladesa', [AuthController::class, 'showLoginFormKepdes'])-
 Route::post('/login-kepaladesa', [AuthController::class, 'loginPengurus'])->name('login.pengurus');
 Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name('logout.pengurus');
 
-
-
 // route to homepage
 Route::get('/homepage', function () {
     return view('homepage/homepage');
 })->name('homepage');
 
-Route::get('/', function () {
+// route to registrasi
+Route::get('/registrasi-masyarakat', function () {
     return view('registrasi/index');
-});
+})->name('registrasi-masyarakat');
 
-// Registration route
 Route::post('/registrasi', [WargaController::class, 'store'])->name('registrasi.store');

@@ -124,7 +124,7 @@
                         <label class="form-check-label" for="remember">Ingat saya</label>
                     </div>
                     <button type="submit" class="btn btn-login btn-success">Masuk</button>
-                    <p class="form-text">Belum punya akun? <a href="#">Daftar disini</a></p>
+                    <p class="form-text">Belum punya akun? <a href="{{ route('registrasi-masyarakat') }}">Daftar disini</a></p>
                 </form>
             </div>
         </div>
