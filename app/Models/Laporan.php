@@ -16,18 +16,17 @@ class Laporan extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id_laporan',
         'judul_laporan',
         'deskripsi_laporan',
         'tanggal_pelaporan',
         'tempat_kejadian',
-        'status_verifikasi',
         'status_penanganan',
         'deskripsi_penanganan',
+        'kategori_laporan',
+        'status_verifikasi',
         'tipe_pelapor',
         'pengurus_lingkungan_username',
-        'warga_username',
-        'kategori_laporan'
+        'warga_username'
     ];
 
     protected $casts = [
