@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
 
 class KategoriController extends Controller
 {
@@ -34,7 +35,7 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nama_kategori' => 'required|unique:kategoris,nama_kategori',
+            'nama_kategori' => 'required|unique:kategori,nama_kategori',
             'deskripsi_kategori' => 'required',
             'jenis_kategori' => 'required|in:Positif,Negatif'
         ]);
@@ -55,8 +56,9 @@ class KategoriController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Kategori $kategori)
+    public function edit($nama_kategori)
     {
+        $kategori = Kategori::where('nama_kategori', $nama_kategori)->firstOrFail();
         $nav = 'Edit Kategori - ' . $kategori->nama_kategori;
         return view('kategori.edit', compact('kategori', 'nav'));
     }
@@ -64,10 +66,12 @@ class KategoriController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Kategori $kategori)
+    public function update(Request $request, $nama_kategori)
     {
+        $kategori = Kategori::where('nama_kategori', $nama_kategori)->firstOrFail();
+        
         $validatedData = $request->validate([
-            'nama_kategori' => 'required|unique:kategori,nama_kategori,' . $kategori->nama_kategori . ',nama_kategori',
+            'nama_kategori' => 'required|unique:kategori,nama_kategori,' . $nama_kategori . ',nama_kategori',
             'deskripsi_kategori' => 'required',
             'jenis_kategori' => 'required|in:Positif,Negatif'
         ]);
