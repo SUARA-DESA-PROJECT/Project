@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WargaController;
 
 Route::get('/', function () {
     return view('LandingPage.landingpage');
@@ -26,7 +27,15 @@ Route::post('/login-kepaladesa', [AuthController::class, 'loginPengurus'])->name
 Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name('logout.pengurus');
 
 
+
 // route to homepage
 Route::get('/homepage', function () {
     return view('homepage/homepage');
 })->name('homepage');
+
+Route::get('/', function () {
+    return view('registrasi/index');
+});
+
+// Registration route
+Route::post('/registrasi', [WargaController::class, 'store'])->name('registrasi.store');
