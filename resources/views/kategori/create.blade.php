@@ -30,20 +30,24 @@
                         <div class="mb-3">
                             <label for="nama_kategori" class="form-label">Nama Kategori</label>
                             <input type="text" class="form-control" id="nama_kategori" name="nama_kategori" 
-                                   value="{{ old('nama_kategori') }}" required>
+                                   value="{{ old('nama_kategori') }}" required
+                                   style="border: 1px solid #ced4da; border-radius: 5px;">
                         </div>
                         
                         <div class="mb-3">
                             <label for="deskripsi_kategori" class="form-label">Deskripsi</label>
-                            <textarea class="form-control" id="deskripsi_kategori" name="deskripsi_kategori" rows="3">{{ old('deskripsi_kategori') }}</textarea>
+                            <textarea class="form-control" id="deskripsi_kategori" name="deskripsi_kategori" 
+                                      rows="3" required
+                                      style="border: 1px solid #ced4da; border-radius: 5px;">{{ old('deskripsi_kategori') }}</textarea>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="jenis_kategori" class="form-label">Status</label>
-                            <select class="form-select" id="jenis_kategori" name="jenis_kategori" required>
+                            <label for="jenis_kategori" class="form-label">Jenis Kategori</label>
+                            <select class="form-select" id="jenis_kategori" name="jenis_kategori" required
+                                    style="border: 1px solid #ced4da; border-radius: 5px;">
                                 <option value="">Pilih Status</option>
-                                <option value="Positif" {{ old('j') == 'Positif' ? 'selected' : '' }}>Positif</option>
-                                <option value="Negatif" {{ old('j') == 'Negatif' ? 'selected' : '' }}>Negatif</option>
+                                <option value="Positif" {{ old('jenis_kategori') == 'Positif' ? 'selected' : '' }}>Positif</option>
+                                <option value="Negatif" {{ old('jenis_kategori') == 'Negatif' ? 'selected' : '' }}>Negatif</option>
                             </select>
                         </div>
                         
