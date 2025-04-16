@@ -26,7 +26,7 @@
                             <th>No</th>
                             <th>Nama Kategori</th>
                             <th>Deskripsi</th>
-                            <th>Status</th>
+                            <th>Jenis Kategori</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -37,7 +37,7 @@
                                 <td>{{ $item->nama_kategori }}</td>
                                 <td>{{ $item->deskripsi_kategori ?? '-' }}</td>
                                 <td>
-                                    <span class="badge {{ $item->jenis_kategori == 'Positif' ? 'bg-success' : 'bg-secondary' }}">
+                                    <span class="badge {{ $item->jenis_kategori == 'Positif' ? 'bg-success' : 'bg-danger' }} text-white">
                                         {{ ucfirst($item->jenis_kategori) }}
                                     </span>
                                 </td>
