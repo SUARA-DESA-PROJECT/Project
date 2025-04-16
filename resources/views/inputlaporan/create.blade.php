@@ -150,7 +150,7 @@
         <div class="mb-3">
             <label for="status_verifikasi" class="form-label">Status Verifikasi</label>
             <select name="status_verifikasi" id="status_verifikasi" class="form-control @error('status_verifikasi') is-invalid @enderror">
-                <option value="Belum Diverifikasi" {{ old('status_verifikasi') == 'Belum Diverifikasi' ? 'selected' : '' }}>Belum Diverifikasi</option>
+                <option value="Belum Diverifikasi"  {{ old('status_verifikasi') == 'Belum Diverifikasi' ? 'selected' : '' }}>Belum Diverifikasi</option>
                 <option value="Diverifikasi" {{ old('status_verifikasi') == 'Diverifikasi' ? 'selected' : '' }}>Diverifikasi</option>
             </select>
             @error('status_verifikasi')
@@ -158,7 +158,7 @@
             @enderror
         </div>
 
-        <a href="{{ url('/') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ url('/homepage') }}" class="btn btn-secondary">Kembali</a>
         <button type="submit" class="btn btn-primary float-end">Simpan Laporan</button>
     </form>
 </div>
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tambahkan event listener untuk form submit
     document.getElementById('formLaporan').addEventListener('submit', function(e) {
         e.preventDefault(); // Mencegah form submit langsung
-        
+
         Swal.fire({
             title: "Konfirmasi Simpan",
             text: "Apakah Anda yakin ingin menyimpan laporan ini?",
@@ -237,7 +237,40 @@ document.addEventListener('DOMContentLoaded', function() {
             cancelButtonText: "Batal"
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika user mengkonfirmasi, submit form
+                // Cek semua field yang wajib diisi
+                const requiredFields = [
+                    'judul_laporan',
+                    'deskripsi_laporan',
+                    'tanggal_pelaporan',
+                    'time_laporan',
+                    'tempat_kejadian',
+                    'status_penanganan',
+                    'deskripsi_penanganan',
+                    'kategori_laporan',
+                    'tipe_pelapor',
+                    'warga_username',
+                    'pengurus_lingkungan_username',
+                    'status_verifikasi'
+                ];
+                let isValid = true;
+                for (let field of requiredFields) {
+                    const el = document.getElementsByName(field)[0];
+                    if (el && !el.value.trim()) {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Silahkan isi semua formulir!",
+                    });
+                    return;
+                }
+
+                // Jika semua field terisi, submit form
                 Swal.fire({
                     title: "Berhasil!",
                     text: "Laporan Anda telah berhasil disimpan.",
@@ -279,9 +312,9 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 /* Styling untuk form */
 .container {
-    max-width: 1200px;
+    max-width: 98vw;      /* Ubah dari 1200px ke 98vw agar hampir penuh layar */
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px 12px;   /* Ubah padding agar kiri-kanan lebih kecil */
 }
 
 h2 {
