@@ -11,7 +11,6 @@ class LaporanController extends Controller
 {
     public function __construct()
     {
-        // Bind route model untuk Laporan
         $this->middleware(function ($request, $next) {
             Route::bind('laporan', function ($value) {
                 return Laporan::where('id_laporan', $value)->firstOrFail();

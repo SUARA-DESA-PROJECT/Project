@@ -167,8 +167,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const kategoriSelect = document.getElementById('judul_laporan');
     const jenisLaporanInput = document.getElementById('kategori_laporan');
-    
-    // Update jenis laporan saat kategori berubah
+
     kategoriSelect.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         if (selectedOption.value === "") {
@@ -180,36 +179,27 @@ document.addEventListener('DOMContentLoaded', function() {
         jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
     });
 
-    // Set nilai awal jika ada
     if (kategoriSelect.value) {
         const selectedOption = kategoriSelect.options[kategoriSelect.selectedIndex];
         const jenisKategori = selectedOption.getAttribute('data-jenis');
         jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
     }
 
-    // Auto-expand textarea penanganan dengan batas maksimal
     function autoExpandPenanganan(textarea) {
-        // Reset height untuk mendapatkan tinggi yang benar
         textarea.style.height = 'auto';
         
-        // Hitung tinggi konten
         const newHeight = Math.min(textarea.scrollHeight, 500);
         
-        // Set tinggi baru
         textarea.style.height = newHeight + 'px';
         
-        // Scrollbar akan selalu muncul
         textarea.style.overflowY = 'scroll';
     }
 
-    // Set tinggi awal
     autoExpandPenanganan(document.getElementById('deskripsi_penanganan'));
 
-    // Auto-expand saat mengetik
     document.getElementById('deskripsi_penanganan').addEventListener('input', function() {
         autoExpandPenanganan(this);
         
-        // Penghitung karakter
         const maxLength = 10000;
         const currentLength = this.value.length;
         const remaining = maxLength - currentLength;
@@ -222,9 +212,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Tambahkan event listener untuk form submit
     document.getElementById('formLaporan').addEventListener('submit', function(e) {
-        e.preventDefault(); // Mencegah form submit langsung
+        e.preventDefault(); 
 
         Swal.fire({
             title: "Konfirmasi Simpan",
@@ -270,14 +259,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                // Jika semua field terisi, submit form
                 Swal.fire({
                     title: "Berhasil!",
                     text: "Laporan Anda telah berhasil disimpan.",
                     icon: "success",
                     confirmButtonColor: "#4a90e2"
                 }).then(() => {
-                    this.submit(); // Submit form setelah alert ditutup
+                    this.submit(); 
                 });
             }
         });
@@ -286,7 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Styling untuk scrollbar */
 textarea::-webkit-scrollbar {
     width: 8px;
 }
@@ -310,11 +297,10 @@ textarea::-webkit-scrollbar-thumb:hover {
     transition: height 0.1s ease-out;
 }
 
-/* Styling untuk form */
 .container {
-    max-width: 98vw;      /* Ubah dari 1200px ke 98vw agar hampir penuh layar */
+    max-width: 98vw;      
     margin: 0 auto;
-    padding: 10px 12px;   /* Ubah padding agar kiri-kanan lebih kecil */
+    padding: 10px 12px;   
 }
 
 h2 {
@@ -476,7 +462,6 @@ select.form-control {
     color: #155724;
 }
 
-/* Form section header */
 .form-section-header {
     border-bottom: 2px solid #eee;
     margin-bottom: 20px;
