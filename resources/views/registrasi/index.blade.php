@@ -265,6 +265,18 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
+                            name="email" value="{{ old('email') }}" required>
+                        @error('email')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                        <span class="invalid-feedback" id="email-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="nomor_telepon">Nomor Telepon</label>
                         <input id="nomor_telepon" type="text" class="form-control @error('nomor_telepon') is-invalid @enderror" 
                             name="nomor_telepon" value="{{ old('nomor_telepon') }}" required>
@@ -273,16 +285,16 @@
                         @enderror
                         <span class="invalid-feedback" id="nomor-telepon-error"></span>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="alamat">Alamat</label>
-                    <textarea id="alamat" class="form-control @error('alamat') is-invalid @enderror" 
-                        name="alamat" required>{{ old('alamat') }}</textarea>
-                    @error('alamat')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                    <span class="invalid-feedback" id="alamat-error"></span>
+                    <div class="form-group">
+                        <label for="alamat">Alamat</label>
+                        <textarea id="alamat" class="form-control @error('alamat') is-invalid @enderror" 
+                            name="alamat" required>{{ old('alamat') }}</textarea>
+                        @error('alamat')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                        <span class="invalid-feedback" id="alamat-error"></span>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -394,7 +406,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: 'Registrasi Berhasil!',
-                    text: 'Anda akan diarahkan ke halaman login...',
+                    text: 'Anda akan diarahkan ke halaman utama...',
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false,
@@ -403,7 +415,7 @@
                         Swal.showLoading()
                     }
                 }).then((result) => {
-                    window.location.href = '{{ route('homepage') }}';
+                    window.location.href = '{{ route('/') }}';
                 });
             @endif
         });

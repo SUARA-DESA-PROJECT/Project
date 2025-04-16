@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Laporan;
 use Illuminate\Support\Facades\Route;
 use App\Models\Kategori;
@@ -91,5 +92,46 @@ class LaporanController extends Controller
     {
         $laporan->delete();
         return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil dihapus');
+    }
+
+    public function getReportStatistics()
+    {
+        $sixMonthsAgo = now()->subMonths(5)->startOfMonth();
+        
+        $reports = DB::table('laporan')
+            ->select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as total_reports'),
+                DB::raw('SUM(CASE WHEN status_verifikasi = "Terverifikasi" THEN 1 ELSE 0 END) as verified_reports')
+            )
+            ->where('created_at', '>=', $sixMonthsAgo)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('month')
+            ->get();
+
+        // Initialize arrays with zeros for all months
+        $months = [];
+        $totalReports = array_fill(0, 6, 0);
+        $verifiedReports = array_fill(0, 6, 0);
+
+        // Get last 6 months
+        for ($i = 5; $i >= 0; $i--) {
+            $months[] = now()->subMonths($i)->format('M');
+        }
+
+        // Fill in actual data
+        foreach ($reports as $report) {
+            $monthIndex = array_search(date('M', mktime(0, 0, 0, $report->month, 1)), $months);
+            if ($monthIndex !== false) {
+                $totalReports[$monthIndex] = $report->total_reports;
+                $verifiedReports[$monthIndex] = $report->verified_reports;
+            }
+        }
+
+        return response()->json([
+            'labels' => $months,
+            'totalReports' => $totalReports,
+            'verifiedReports' => $verifiedReports
+        ]);
     }
 }
