@@ -19,19 +19,16 @@ class Kategori extends Model
         'jenis_laporan'
     ];
 
-    // One Kategori has many Laporan
     public function laporans()
     {
         return $this->hasMany(Laporan::class, 'kategori_laporan', 'nama_kategori');
     }
 
-    // Scope untuk filter kategori positif
     public function scopePositif($query)
     {
         return $query->where('jenis_kategori', 'Positif');
     }
 
-    // Scope untuk filter kategori negatif
     public function scopeNegatif($query)
     {
         return $query->where('jenis_kategori', 'Negatif');

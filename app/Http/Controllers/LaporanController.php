@@ -12,7 +12,6 @@ class LaporanController extends Controller
 {
     public function __construct()
     {
-        // Bind route model untuk Laporan
         $this->middleware(function ($request, $next) {
             Route::bind('laporan', function ($value) {
                 return Laporan::where('id_laporan', $value)->firstOrFail();
@@ -49,11 +48,12 @@ class LaporanController extends Controller
             'tipe_pelapor' => 'required',
             'pengurus_lingkungan_username' => 'required',
             'warga_username' => 'required',
-            'kategori_laporan' => 'required'
+            'kategori_laporan' => 'required',
+            'time_laporan' => 'required',
         ]);
 
         Laporan::create($validatedData);
-        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil ditambahkan');
+        return redirect()->route('laporan.create')->with('success', 'Laporan berhasil ditambahkan');
     }
 
     public function show(Laporan $laporan)

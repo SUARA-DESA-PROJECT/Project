@@ -1,6 +1,7 @@
 <nav id="sidebar" class="active" style="background-color: #C4D6C4;">
     <div class="custom-menu" style="text-align: right; padding-right: 15px;">
-        <button type="button" id="sidebarCollapse" class="btn" style="position: relative; right: -15px; background-color: #468B94; color: white; border: none;">
+        <button type="button" id="sidebarCollapse" class="btn" style="position: relative; right: -15px; background-color: #468B94; color: white; border: none; 
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0;">
             <i class="fa fa-bars"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
@@ -64,4 +65,4 @@
         transition: all 0.3s ease;
         box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-</style> 
+</style>

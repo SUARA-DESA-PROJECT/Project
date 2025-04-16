@@ -2,6 +2,8 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="container mt-4">
     <h2>Input Laporan</h2>
     <p>Silahkan mengisi seluruh formulir berikut ini untuk memberikan informasi laporan :</p>
@@ -12,11 +14,11 @@
         </div>
     @endif
 
-    <form action="{{ route('laporan.store') }}" method="POST">
+    <form action="{{ route('laporan.store') }}" method="POST" id="formLaporan">
         @csrf
         <div class="mb-3">
             <label for="judul" class="form-label">Judul Laporan</label>
-            <input type="text" name="judul" id="judul" class="form-control @error('judul') is-invalid @enderror" 
+            <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul') is-invalid @enderror" 
                 value="{{ old('judul') }}" placeholder="Masukkan judul laporan">
             @error('judul')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -46,8 +48,8 @@
                 </div>
                 <div class="col-md-6">
                     <label for="time" class="form-label">Jam</label>    
-                    <input type="time" name="waktu_kejadian" id="waktu_kejadian" class="form-control @error('waktu_kejadian') is-invalid @enderror" value="{{ old('waktu_kejadian') }}" placeholder="Pilih Jam">
-                    @error('waktu_kejadian')
+                    <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" value="{{ old('time_laporan') }}" placeholder="Pilih Jam">
+                    @error('time_laporan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -56,7 +58,7 @@
 
         <div class="mb-3">
             <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
-            <select name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror">
+            <select name="tempat_kejadian" id="desa" class="form-control @error('desa') is-invalid @enderror">
                 <option value="">Pilih Desa/Kelurahan</option>
                 <option value="Bojongsari" {{ old('desa') == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
                 <option value="Bojongsoang" {{ old('desa') == 'Bojongsoang' ? 'selected' : '' }}>Bojongsoang</option>
@@ -95,10 +97,10 @@
 
         <div class="mb-3">
             <label for="judul_laporan" class="form-label">Kategori Laporan</label>
-            <select name="judul_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
+            <select name="kategori_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
                 <option value="">Pilih Kategori Laporan</option>
                 @foreach($kategoris as $kategori)
-                    <option value="{{ $kategori->id }}" {{ old('judul_laporan') == $kategori->id ? 'selected' : '' }}
+                    <option value="{{ $kategori->nama_kategori }}" {{ old('kategori_laporan') == $kategori->nama_kategori ? 'selected' : '' }}
                         data-jenis="{{ $kategori->jenis_kategori }}">
                         {{ $kategori->nama_kategori }}
                     </option>
@@ -111,7 +113,7 @@
 
         <div class="mb-3">
             <label for="kategori_laporan" class="form-label">Jenis Laporan</label>
-            <input type="text" name="kategori_laporan" id="kategori_laporan" class="form-control" readonly 
+            <input type="text" name="jenis_laporan" id="kategori_laporan" class="form-control" readonly 
                 value="{{ old('kategori_laporan') }}" placeholder="Jenis laporan akan muncul otomatis">
             @error('kategori_laporan')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -148,7 +150,7 @@
         <div class="mb-3">
             <label for="status_verifikasi" class="form-label">Status Verifikasi</label>
             <select name="status_verifikasi" id="status_verifikasi" class="form-control @error('status_verifikasi') is-invalid @enderror">
-                <option value="Belum Diverifikasi" {{ old('status_verifikasi') == 'Belum Diverifikasi' ? 'selected' : '' }}>Belum Diverifikasi</option>
+                <option value="Belum Diverifikasi"  {{ old('status_verifikasi') == 'Belum Diverifikasi' ? 'selected' : '' }}>Belum Diverifikasi</option>
                 <option value="Diverifikasi" {{ old('status_verifikasi') == 'Diverifikasi' ? 'selected' : '' }}>Diverifikasi</option>
             </select>
             @error('status_verifikasi')
@@ -156,7 +158,7 @@
             @enderror
         </div>
 
-        <a href="{{ url('/') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ url('/homepage') }}" class="btn btn-secondary">Kembali</a>
         <button type="submit" class="btn btn-primary float-end">Simpan Laporan</button>
     </form>
 </div>
@@ -165,8 +167,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const kategoriSelect = document.getElementById('judul_laporan');
     const jenisLaporanInput = document.getElementById('kategori_laporan');
-    
-    // Update jenis laporan saat kategori berubah
+
     kategoriSelect.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         if (selectedOption.value === "") {
@@ -178,36 +179,27 @@ document.addEventListener('DOMContentLoaded', function() {
         jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
     });
 
-    // Set nilai awal jika ada
     if (kategoriSelect.value) {
         const selectedOption = kategoriSelect.options[kategoriSelect.selectedIndex];
         const jenisKategori = selectedOption.getAttribute('data-jenis');
         jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
     }
 
-    // Auto-expand textarea penanganan dengan batas maksimal
     function autoExpandPenanganan(textarea) {
-        // Reset height untuk mendapatkan tinggi yang benar
         textarea.style.height = 'auto';
         
-        // Hitung tinggi konten
         const newHeight = Math.min(textarea.scrollHeight, 500);
         
-        // Set tinggi baru
         textarea.style.height = newHeight + 'px';
         
-        // Scrollbar akan selalu muncul
         textarea.style.overflowY = 'scroll';
     }
 
-    // Set tinggi awal
     autoExpandPenanganan(document.getElementById('deskripsi_penanganan'));
 
-    // Auto-expand saat mengetik
     document.getElementById('deskripsi_penanganan').addEventListener('input', function() {
         autoExpandPenanganan(this);
         
-        // Penghitung karakter
         const maxLength = 10000;
         const currentLength = this.value.length;
         const remaining = maxLength - currentLength;
@@ -219,11 +211,69 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('charCountPenanganan').style.color = '';
         }
     });
+
+    document.getElementById('formLaporan').addEventListener('submit', function(e) {
+        e.preventDefault(); 
+
+        Swal.fire({
+            title: "Konfirmasi Simpan",
+            text: "Apakah Anda yakin ingin menyimpan laporan ini?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#4a90e2",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Simpan!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Cek semua field yang wajib diisi
+                const requiredFields = [
+                    'judul_laporan',
+                    'deskripsi_laporan',
+                    'tanggal_pelaporan',
+                    'time_laporan',
+                    'tempat_kejadian',
+                    'status_penanganan',
+                    'deskripsi_penanganan',
+                    'kategori_laporan',
+                    'tipe_pelapor',
+                    'warga_username',
+                    'pengurus_lingkungan_username',
+                    'status_verifikasi'
+                ];
+                let isValid = true;
+                for (let field of requiredFields) {
+                    const el = document.getElementsByName(field)[0];
+                    if (el && !el.value.trim()) {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Silahkan isi semua formulir!",
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Berhasil!",
+                    text: "Laporan Anda telah berhasil disimpan.",
+                    icon: "success",
+                    confirmButtonColor: "#4a90e2"
+                }).then(() => {
+                    this.submit(); 
+                });
+            }
+        });
+    });
 });
 </script>
 
 <style>
-/* Styling untuk scrollbar */
 textarea::-webkit-scrollbar {
     width: 8px;
 }
@@ -247,11 +297,10 @@ textarea::-webkit-scrollbar-thumb:hover {
     transition: height 0.1s ease-out;
 }
 
-/* Styling untuk form */
 .container {
-    max-width: 1200px;
+    max-width: 98vw;      
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px 12px;   
 }
 
 h2 {
@@ -413,7 +462,6 @@ select.form-control {
     color: #155724;
 }
 
-/* Form section header */
 .form-section-header {
     border-bottom: 2px solid #eee;
     margin-bottom: 20px;

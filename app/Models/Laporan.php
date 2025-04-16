@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Laporan extends Model
-{
-    //
-    use HasFactory;
+{    use HasFactory;
 
     protected $table = 'laporan';
     protected $primaryKey = 'id_laporan';
@@ -20,34 +18,33 @@ class Laporan extends Model
         'deskripsi_laporan',
         'tanggal_pelaporan',
         'tempat_kejadian',
+        'status_verifikasi',
         'status_penanganan',
         'deskripsi_penanganan',
-        'kategori_laporan',
-        'status_verifikasi',
         'tipe_pelapor',
         'pengurus_lingkungan_username',
-        'warga_username'
+        'warga_username',
+        'kategori_laporan',
+        'time_laporan' 
     ];
 
     protected $casts = [
         'tanggal_pelaporan' => 'date',
         'status_verifikasi' => 'string',
-        'status_penanganan' => 'string'
+        'status_penanganan' => 'string',
+        'time_laporan' => 'string' 
     ];
 
-    // Laporan belongs to one Warga
     public function warga()
     {
         return $this->belongsTo(Warga::class, 'warga_username', 'username');
     }
 
-    // Laporan belongs to one Pengurus Lingkungan
     public function pengurusLingkungan()
     {
         return $this->belongsTo(PengurusLingkungan::class, 'pengurus_lingkungan_username', 'username');
     }
 
-    // Laporan belongs to one Kategori
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_laporan', 'nama_kategori');

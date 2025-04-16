@@ -28,6 +28,10 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 // Homepage Route
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
 
+// route to Input Laporan
+Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
+Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
+
 // Laporan Routes
 Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
 Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
