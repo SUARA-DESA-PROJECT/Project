@@ -20,19 +20,21 @@ class Laporan extends Model
         'deskripsi_laporan',
         'tanggal_pelaporan',
         'tempat_kejadian',
+        'status_verifikasi',
         'status_penanganan',
         'deskripsi_penanganan',
-        'kategori_laporan',
-        'status_verifikasi',
         'tipe_pelapor',
         'pengurus_lingkungan_username',
-        'warga_username'
+        'warga_username',
+        'kategori_laporan',
+        'time_laporan' 
     ];
 
     protected $casts = [
         'tanggal_pelaporan' => 'date',
         'status_verifikasi' => 'string',
-        'status_penanganan' => 'string'
+        'status_penanganan' => 'string',
+        'time_laporan' => 'string' // Atau 'time' jika ingin di-cast sebagai waktu
     ];
 
     // Laporan belongs to one Warga

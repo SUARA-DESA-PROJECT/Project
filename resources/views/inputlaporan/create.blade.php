@@ -2,6 +2,8 @@
 @extends('layouts.app')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="container mt-4">
     <h2>Input Laporan</h2>
     <p>Silahkan mengisi seluruh formulir berikut ini untuk memberikan informasi laporan :</p>
@@ -12,11 +14,11 @@
         </div>
     @endif
 
-    <form action="{{ route('laporan.store') }}" method="POST">
+    <form action="{{ route('laporan.store') }}" method="POST" id="formLaporan">
         @csrf
         <div class="mb-3">
             <label for="judul" class="form-label">Judul Laporan</label>
-            <input type="text" name="judul" id="judul" class="form-control @error('judul') is-invalid @enderror" 
+            <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul') is-invalid @enderror" 
                 value="{{ old('judul') }}" placeholder="Masukkan judul laporan">
             @error('judul')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -46,8 +48,8 @@
                 </div>
                 <div class="col-md-6">
                     <label for="time" class="form-label">Jam</label>    
-                    <input type="time" name="waktu_kejadian" id="waktu_kejadian" class="form-control @error('waktu_kejadian') is-invalid @enderror" value="{{ old('waktu_kejadian') }}" placeholder="Pilih Jam">
-                    @error('waktu_kejadian')
+                    <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" value="{{ old('time_laporan') }}" placeholder="Pilih Jam">
+                    @error('time_laporan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -56,7 +58,7 @@
 
         <div class="mb-3">
             <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
-            <select name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror">
+            <select name="tempat_kejadian" id="desa" class="form-control @error('desa') is-invalid @enderror">
                 <option value="">Pilih Desa/Kelurahan</option>
                 <option value="Bojongsari" {{ old('desa') == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
                 <option value="Bojongsoang" {{ old('desa') == 'Bojongsoang' ? 'selected' : '' }}>Bojongsoang</option>
@@ -95,10 +97,10 @@
 
         <div class="mb-3">
             <label for="judul_laporan" class="form-label">Kategori Laporan</label>
-            <select name="judul_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
+            <select name="kategori_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
                 <option value="">Pilih Kategori Laporan</option>
                 @foreach($kategoris as $kategori)
-                    <option value="{{ $kategori->id }}" {{ old('judul_laporan') == $kategori->id ? 'selected' : '' }}
+                    <option value="{{ $kategori->nama_kategori }}" {{ old('kategori_laporan') == $kategori->nama_kategori ? 'selected' : '' }}
                         data-jenis="{{ $kategori->jenis_kategori }}">
                         {{ $kategori->nama_kategori }}
                     </option>
@@ -111,7 +113,7 @@
 
         <div class="mb-3">
             <label for="kategori_laporan" class="form-label">Jenis Laporan</label>
-            <input type="text" name="kategori_laporan" id="kategori_laporan" class="form-control" readonly 
+            <input type="text" name="jenis_laporan" id="kategori_laporan" class="form-control" readonly 
                 value="{{ old('kategori_laporan') }}" placeholder="Jenis laporan akan muncul otomatis">
             @error('kategori_laporan')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -218,6 +220,34 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             document.getElementById('charCountPenanganan').style.color = '';
         }
+    });
+
+    // Tambahkan event listener untuk form submit
+    document.getElementById('formLaporan').addEventListener('submit', function(e) {
+        e.preventDefault(); // Mencegah form submit langsung
+        
+        Swal.fire({
+            title: "Konfirmasi Simpan",
+            text: "Apakah Anda yakin ingin menyimpan laporan ini?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#4a90e2",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Simpan!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika user mengkonfirmasi, submit form
+                Swal.fire({
+                    title: "Berhasil!",
+                    text: "Laporan Anda telah berhasil disimpan.",
+                    icon: "success",
+                    confirmButtonColor: "#4a90e2"
+                }).then(() => {
+                    this.submit(); // Submit form setelah alert ditutup
+                });
+            }
+        });
     });
 });
 </script>

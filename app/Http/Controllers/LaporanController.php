@@ -48,7 +48,8 @@ class LaporanController extends Controller
             'tipe_pelapor' => 'required',
             'pengurus_lingkungan_username' => 'required',
             'warga_username' => 'required',
-            'kategori_laporan' => 'required'
+            'kategori_laporan' => 'required',
+            'time_laporan' => 'required',
         ]);
 
         Laporan::create($validatedData);
