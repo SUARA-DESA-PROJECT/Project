@@ -20,12 +20,8 @@ class Warga extends Model
         'password',
         'nama_lengkap',
         'nomor_telepon',
-<<<<<<< HEAD
-        'alamat'
-=======
         'alamat',
         'email'
->>>>>>> main
     ];
 
     // One Warga has many Laporan
