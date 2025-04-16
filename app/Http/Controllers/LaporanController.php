@@ -53,7 +53,7 @@ class LaporanController extends Controller
         ]);
 
         Laporan::create($validatedData);
-        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil ditambahkan');
+        return redirect()->route('laporan.create')->with('success', 'Laporan berhasil ditambahkan');
     }
 
     public function show(Laporan $laporan)
