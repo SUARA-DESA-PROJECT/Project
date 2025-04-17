@@ -100,7 +100,7 @@
                 <form action="{{ route('login.pengurus') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
+                        <label for="username" class="form-label">Email</label>
                         <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" placeholder="Masukkan username Anda" value="{{ old('username') }}">
                         @error('username')
                             <div class="invalid-feedback">

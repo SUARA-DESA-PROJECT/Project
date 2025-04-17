@@ -8342,3 +8342,88 @@ a[data-toggle="collapse"] {
 
 .subscribe-form .form-control {
   background: #5356b1; }
+
+  .suara-desa-sidebar {
+    background-color: var(--light-bg);
+    min-height: 100vh;
+  }
+  
+  .suara-desa-sidebar .nav-link {
+    color: var(--text-dark);
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    transition: all 0.3s;
+  }
+  
+  .suara-desa-sidebar .nav-link:hover,
+  .suara-desa-sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .suara-desa-sidebar .nav-link i {
+    margin-right: 8px;
+  }
+  
+  .card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+    border: none;
+    margin-bottom: 20px;
+  }
+  
+  .card-header {
+    background-color: white;
+    border-bottom: 1px solid #eaeaea;
+    padding: 15px 20px;
+  }
+  
+  .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .btn-primary:hover {
+    background-color: #3a8a88;
+    border-color: #3a8a88;
+  }
+  
+  .table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+  }
+  
+  .badge.bg-success {
+    background-color: #4caf50 !important;
+  }
+  
+  .badge.bg-secondary {
+    background-color: #757575 !important;
+  }
+  
+  /* Stats cards like in your screenshot */
+  .stats-card {
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    height: 100%;
+  }
+  
+  .stats-card .stats-icon {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+  }
+  
+  .stats-card .stats-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+  
+  .stats-card .stats-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }

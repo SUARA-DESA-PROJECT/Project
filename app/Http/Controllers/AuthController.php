@@ -65,7 +65,7 @@ class AuthController extends Controller
             // Store warga data in session
             session(['pengurusLingkungan' => $pengurusLingkungan]);
             
-            return redirect()->route('homepage')->with('success', 'Login berhasil!');
+            return redirect()->route('pengurus')->with('success', 'Login berhasil!');
         }
 
         return back()->withErrors([

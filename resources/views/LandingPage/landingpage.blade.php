@@ -70,7 +70,7 @@
             <p>Portal informasi terbuka untuk masyarakat desa dan pengelola desa. Temukan informasi terkini dan up-to-date di <span class="fw-bold">Suara Desa</span></p>
             <div class="d-flex gap-3">
               <a href="{{ route('login-masyarakat') }}" class="btn-get-started">Dashboard Desa</a>
-              <a href="{{ route('registrasi-masyarakat') }}" class="btn-get-started">Daftar Akun</a>
+              <a href="{{ route('registrasi-masyarakat') }}" class="btn-get-started">Daftarkan Diri</a>
             </div>
           </div>
           <div class="col-lg-6 order-1 order-lg-2">

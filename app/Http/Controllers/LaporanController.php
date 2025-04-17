@@ -3,32 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Laporan;
+use Illuminate\Support\Facades\Route;
+use App\Models\Kategori;
 
 class LaporanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            Route::bind('laporan', function ($value) {
+                return Laporan::where('id_laporan', $value)->firstOrFail();
+            });
+            return $next($request);
+        });
+    }
+
     public function index()
     {
         $laporans = Laporan::all();
         $nav = 'Laporan';
 
-        return view('laporan.index', compact('laporans', 'nav'));
+        return view('inputlaporan.index', compact('laporans', 'nav'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
+        $kategoris = Kategori::orderBy('nama_kategori')->get();
         $nav = 'Tambah Laporan';
-        return view('laporan.create', compact('nav'));
+        return view('inputlaporan.create', compact('kategoris', 'nav'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -42,34 +48,26 @@ class LaporanController extends Controller
             'tipe_pelapor' => 'required',
             'pengurus_lingkungan_username' => 'required',
             'warga_username' => 'required',
-            'kategori_laporan' => 'required'
+            'kategori_laporan' => 'required',
+            'time_laporan' => 'required',
         ]);
 
         Laporan::create($validatedData);
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil ditambahkan');
+        return redirect()->route('laporan.create')->with('success', 'Laporan berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Laporan $laporan)
     {
         $nav = 'Detail Laporan - ' . $laporan->judul_laporan;
-        return view('laporan.show', compact('laporan', 'nav'));
+        return view('inputlaporan.show', compact('laporan', 'nav'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Laporan $laporan)
     {
         $nav = 'Edit Laporan - ' . $laporan->judul_laporan;
-        return view('laporan.edit', compact('laporan', 'nav'));
+        return view('inputlaporan.edit', compact('laporan', 'nav'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Laporan $laporan)
     {
         $validatedData = $request->validate([
@@ -87,15 +85,53 @@ class LaporanController extends Controller
         ]);
 
         $laporan->update($validatedData);
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil diubah');
+        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil diubah');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Laporan $laporan)
     {
         $laporan->delete();
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dihapus');
+        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil dihapus');
+    }
+
+    public function getReportStatistics()
+    {
+        $sixMonthsAgo = now()->subMonths(5)->startOfMonth();
+        
+        $reports = DB::table('laporan')
+            ->select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as total_reports'),
+                DB::raw('SUM(CASE WHEN status_verifikasi = "Terverifikasi" THEN 1 ELSE 0 END) as verified_reports')
+            )
+            ->where('created_at', '>=', $sixMonthsAgo)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('month')
+            ->get();
+
+        // Initialize arrays with zeros for all months
+        $months = [];
+        $totalReports = array_fill(0, 6, 0);
+        $verifiedReports = array_fill(0, 6, 0);
+
+        // Get last 6 months
+        for ($i = 5; $i >= 0; $i--) {
+            $months[] = now()->subMonths($i)->format('M');
+        }
+
+        // Fill in actual data
+        foreach ($reports as $report) {
+            $monthIndex = array_search(date('M', mktime(0, 0, 0, $report->month, 1)), $months);
+            if ($monthIndex !== false) {
+                $totalReports[$monthIndex] = $report->total_reports;
+                $verifiedReports[$monthIndex] = $report->verified_reports;
+            }
+        }
+
+        return response()->json([
+            'labels' => $months,
+            'totalReports' => $totalReports,
+            'verifiedReports' => $verifiedReports
+        ]);
     }
 }

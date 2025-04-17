@@ -4,19 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PengurusLingkungan;
+use App\Models\Warga;
 use Illuminate\Routing\Controller;
 
 class PengurusLingkunganController extends Controller
 {
+    // public function showPengurus()
+    // {
+    //     return view('pengurus.index');
+    // }
+    
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $nav = 'Pengurus Lingkungan';
-        $pengurusLingkungan = PengurusLingkungan::all();
-
-        return view('pengurusLingkungan.index', compact('pengurusLingkungan', 'nav'));
+        $pengurusData = PengurusLingkungan::all()->map(function($pengurus) {
+            return [
+                'username' => $pengurus->username,
+                'nama_lengkap' => $pengurus->nama_lengkap,
+                'nomor_telepon' => $pengurus->nomor_telepon,
+                'alamat' => $pengurus->alamat
+            ];
+        })->toArray();
+        
+        return view('pengurus.index', compact('pengurusData'));
     }
 
     /**
@@ -33,16 +45,36 @@ class PengurusLingkunganController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-            'nama' => 'required',
-            'email' => 'required',
-            'no_hp' => 'required'
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'username' => 'required|unique:pengurus_lingkungan,username',
+                'password' => 'required|min:6',
+                'nama_lengkap' => 'required',
+                'alamat' => 'required',
+                'nomor_telepon' => 'required|regex:/^[0-9]{10,15}$/'
+            ]);
 
-        PengurusLingkungan::create($validatedData);
-        return redirect()->route('pengurusLingkungan.index')->with('success', 'Pengurus Lingkungan berhasil ditambahkan');
+            // Hash the password before saving
+            $validatedData['password'] = bcrypt($validatedData['password']);
+
+            // Create new pengurus
+            PengurusLingkungan::create($validatedData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Account created successfully'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating account. Please try again.'
+            ], 500);
+        }
     }
 
     /**
@@ -57,35 +89,52 @@ class PengurusLingkunganController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PengurusLingkungan $pengurusLingkungan)
+    public function edit($username)
     {
-        $nav = 'Edit Pengurus Lingkungan - ' . $pengurusLingkungan->nama;
-        return view('pengurusLingkungan.edit', compact('pengurusLingkungan', 'nav'));
+        $pengurus = PengurusLingkungan::where('username', $username)->firstOrFail();
+        return view('pengurus.edit', compact('pengurus'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PengurusLingkungan $pengurusLingkungan)
+    public function update(Request $request, $username)
     {
-        $validatedData = $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-            'nama' => 'required',
-            'email' => 'required',
-            'no_hp' => 'required'
-        ]);
+        try {
+            $pengurus = PengurusLingkungan::where('username', $username)->firstOrFail();
+            
+            $validatedData = $request->validate([
+                'nama_lengkap' => 'required',
+                'alamat' => 'required',
+                'nomor_telepon' => 'required|regex:/^[0-9]{10,15}$/'
+            ]);
 
-        $pengurusLingkungan->update($validatedData);
-        return redirect()->route('pengurusLingkungan.index')->with('success', 'Pengurus Lingkungan berhasil diubah');
+            $pengurus->update($validatedData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Account updated successfully'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating account. Please try again.'
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PengurusLingkungan $pengurusLingkungan)
+    public function destroy($username)
     {
-        $pengurusLingkungan->delete();
-        return redirect()->route('pengurusLingkungan.index')->with('success', 'Pengurus Lingkungan berhasil dihapus');
+        $pengurus = PengurusLingkungan::where('username', $username)->firstOrFail();
+        $pengurus->delete();
+        return redirect()->route('pengurus')->with('success', 'Account deleted successfully');
     }
 }
