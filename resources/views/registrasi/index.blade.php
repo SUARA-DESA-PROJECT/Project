@@ -415,7 +415,7 @@
                         Swal.showLoading()
                     }
                 }).then((result) => {
-                    window.location.href = '{{ route('/') }}';
+                    window.location.href = '{{ route('login-masyarakat') }}';
                 });
             @endif
         });
