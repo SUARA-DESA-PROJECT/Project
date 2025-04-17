@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PengurusLingkungan;
+use Illuminate\Routing\Controller;
 
 class PengurusLingkunganController extends Controller
 {
