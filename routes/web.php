@@ -27,6 +27,7 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 
 // Homepage Route
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
+Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
 
 // Laporan Routes
 Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
