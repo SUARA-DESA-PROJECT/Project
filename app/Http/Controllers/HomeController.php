@@ -23,4 +23,21 @@ class HomeController extends Controller
 
         return view('homepage.homepage', compact('totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
     }
+
+    public function index_warga()
+    {
+        $totalReports = DB::table('laporan')->count();
+        $verifiedReports = DB::table('laporan')
+            ->where('status_verifikasi', 'Terverifikasi')
+            ->count();
+        $totalUsers = DB::table('warga')->count();
+
+        $recentReports = DB::table('laporan')
+            ->select('judul_laporan', 'created_at', 'status_verifikasi')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('homepage.homepage-warga', compact('totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
+    }
 }
