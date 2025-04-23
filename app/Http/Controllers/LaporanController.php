@@ -134,4 +134,12 @@ class LaporanController extends Controller
             'verifiedReports' => $verifiedReports
         ]);
     }
+
+    public function indexVerifikasi()
+    {
+        // Ambil semua laporan yang status_verifikasi-nya 'Belum Diverifikasi'
+        $laporans = Laporan::where('status_verifikasi', 'Belum Diverifikasi')->get();
+    
+        return view('verifikasilap.index', compact('laporans'));
+    }
 }
