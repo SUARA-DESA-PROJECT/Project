@@ -84,6 +84,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <div class="modal-body">
+        {{-- Tambahkan alert di sini --}}
+        <div id="customAlert" class="alert alert-danger" role="alert">
+            Saya ingin makan
+        </div>
         <table class="table border-0">
             <tr>
                 <th style="width: 180px;">Judul Laporan</th>
