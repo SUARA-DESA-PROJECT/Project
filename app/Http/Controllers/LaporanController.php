@@ -139,7 +139,24 @@ class LaporanController extends Controller
     {
         // Ambil semua laporan yang status_verifikasi-nya 'Belum Diverifikasi'
         $laporans = Laporan::where('status_verifikasi', 'Belum Diverifikasi')->get();
-    
         return view('verifikasilap.index', compact('laporans'));
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|string',
+            'status_verifikasi' => 'required|string|in:Belum Diverifikasi,Diverifikasi'
+        ]);
+    
+        $laporan = Laporan::find($request->id);
+        if (!$laporan) {
+            return response()->json(['success' => false, 'message' => 'Laporan not found'], 404);
+        }
+    
+        $laporan->status_verifikasi = $request->status_verifikasi;
+        $laporan->save();
+    
+        return response()->json(['success' => true]);
     }
 }

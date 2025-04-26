@@ -40,20 +40,17 @@
                                 </td>
                                 <td style="padding-left: 8px; padding-right: 8px;">
                                     <button 
-                                        class="btn btn-info btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#detailModal"
+                                        class="btn btn-info btn-sm lihat-selengkapnya"
                                         data-id="{{ $laporan->id_laporan }}"
                                         data-judul="{{ $laporan->judul_laporan }}"
                                         data-deskripsi="{{ $laporan->deskripsi_laporan }}"
-                                        data-tanggal="{{ $laporan->tanggal_pelaporan }}"
+                                        data-tanggal="{{ $laporan->created_at }}"
                                         data-tempat="{{ $laporan->tempat_kejadian }}"
+                                        data-status_penanganan="{{ $laporan->status_penanganan }}"
+                                        data-deskripsi_penanganan="{{ $laporan->deskripsi_penanganan }}"
                                         data-kategori="{{ $laporan->kategori_laporan }}"
-                                        data-status="{{ $laporan->status_verifikasi }}"
-                                        data-penanganan="{{ $laporan->deskripsi_penanganan }}"
-                                        data-tipe="{{ $laporan->tipe_pelapor }}"
-                                        data-warga="{{ $laporan->warga_username }}"
-                                        data-pengurus="{{ $laporan->pengurus_lingkungan_username }}"
+                                        data-jenis="{{ $laporan->kategoriData->jenis_kategori ?? '-' }}"
+                                        data-status_verifikasi="{{ $laporan->status_verifikasi }}"
                                     >
                                         <i class="fa fa-eye"></i> Lihat Selengkapnya
                                     </button>
@@ -143,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var detailModal = document.getElementById('detailModal');
     detailModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
+        document.getElementById('modalIdLaporan').textContent = button.getAttribute('data-id);
         document.getElementById('modalJudul').textContent = button.getAttribute('data-judul');
         document.getElementById('modalDeskripsi').textContent = button.getAttribute('data-deskripsi');
         document.getElementById('modalTanggal').textContent = button.getAttribute('data-tanggal');
@@ -153,6 +151,120 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('modalTipe').textContent = button.getAttribute('data-tipe');
         document.getElementById('modalWarga').textContent = button.getAttribute('data-warga');
         document.getElementById('modalPengurus').textContent = button.getAttribute('data-pengurus');
+    });
+});
+</script>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.lihat-selengkapnya').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const idLaporan = btn.getAttribute('data-id');
+            const judul = btn.getAttribute('data-judul');
+            const deskripsi = btn.getAttribute('data-deskripsi');
+            const tanggal = btn.getAttribute('data-tanggal');
+            const tempat = btn.getAttribute('data-tempat');
+            const statusPenanganan = btn.getAttribute('data-status_penanganan');
+            let deskripsiPenanganan = btn.getAttribute('data-deskripsi_penanganan');
+            const kategori = btn.getAttribute('data-kategori');
+            const jenis = btn.getAttribute('data-jenis');
+            const statusVerifikasi = btn.getAttribute('data-status_verifikasi');
+            
+            if (!deskripsiPenanganan || deskripsiPenanganan.trim() === "") {
+                deskripsiPenanganan = "-";
+            }
+
+            // Build the select HTML for status verifikasi
+            const selectStatus = `
+                <select id="swal_status_verifikasi" class="form-control" style="margin-top:4px;">
+                    <option value="Belum Diverifikasi" ${statusVerifikasi === 'Belum Diverifikasi' ? 'selected' : ''}>Belum Diverifikasi</option>
+                    <option value="Diverifikasi" ${statusVerifikasi === 'Diverifikasi' ? 'selected' : ''}>Diverifikasi</option>
+                </select>
+            `;
+
+            Swal.fire({
+                title: judul,
+                html: `
+                    <b>Deskripsi:</b> ${deskripsi}<br>
+                    <b>Waktu Kejadian:</b> ${tanggal}<br>
+                    <b>Tempat Kejadian:</b> ${tempat}<br>
+                    <b>Status Penanganan:</b> ${statusPenanganan}<br>
+                    <b>Deskripsi Penanganan:</b> ${deskripsiPenanganan}<br>
+                    <b>Kategori Laporan:</b> ${kategori}<br>
+                    <b>Jenis Laporan:</b> ${jenis}<br>
+                    <b>Status Verifikasi:</b> ${selectStatus}
+                `,
+                confirmButtonText: 'Kembali',
+                allowOutsideClick: () => {
+                    const popup = Swal.getPopup()
+                    popup.classList.remove('swal2-show')
+                    setTimeout(() => {
+                        popup.classList.add('animate__animated', 'animate__headShake')
+                    })
+                    setTimeout(() => {
+                        popup.classList.remove('animate__animated', 'animate__headShake')
+                    }, 500)
+                    return false
+                },
+                didOpen: () => {
+                    // Store the original value for comparison
+                    window._originalStatusVerifikasi = statusVerifikasi;
+                },
+                preConfirm: () => {
+                    // Return the selected value for further processing
+                    return document.getElementById('swal_status_verifikasi').value;
+                }
+            }).then((result) => {
+                const newStatus = result.value;
+                if (result.isConfirmed) {
+                    // Only show confirmation if status changed
+                    if (newStatus !== window._originalStatusVerifikasi) {
+                        Swal.fire({
+                            title: "Do you want to save the changes?",
+                            showDenyButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: "Save",
+                            denyButtonText: `Don't save`
+                        }).then((result2) => {
+                            if (result2.isConfirmed) {
+                                // AJAX update to backend
+                                fetch("{{ url('/laporan/update-status') }}", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                    },
+                                    body: JSON.stringify({
+                                        id: idLaporan,
+                                        status_verifikasi: newStatus
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire("Saved!", "", "success").then(() => {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire("Failed to save!", data.message || "", "error");
+                                    }
+                                })
+                                .catch(() => {
+                                    Swal.fire("Failed to save!", "Server error.", "error");
+                                });
+                            } else if (result2.isDenied) {
+                                Swal.fire("Changes are not saved", "", "info");
+                            }
+                        });
+                    }
+                }
+            });
+        });
     });
 });
 </script>

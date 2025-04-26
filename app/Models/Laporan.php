@@ -45,8 +45,8 @@ class Laporan extends Model
         return $this->belongsTo(PengurusLingkungan::class, 'pengurus_lingkungan_username', 'username');
     }
 
-    public function kategori()
+    public function kategoriData()
     {
-        return $this->belongsTo(Kategori::class, 'kategori_laporan', 'nama_kategori');
+        return $this->belongsTo(\App\Models\Kategori::class, 'kategori_laporan', 'nama_kategori');
     }
 }

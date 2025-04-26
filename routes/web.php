@@ -74,3 +74,4 @@ Route::delete('/kategori/{nama_kategori}', [KategoriController::class, 'destroy'
 
 // Verifikasi Laporan Routes
 Route::get('/verifikasilap', [LaporanController::class, 'indexVerifikasi'])->name('verifikasilap.index');
+Route::post('/laporan/update-status', [App\Http\Controllers\LaporanController::class, 'updateStatus']);
