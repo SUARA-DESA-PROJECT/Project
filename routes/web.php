@@ -8,6 +8,7 @@ use App\Http\Controllers\WargaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LaporanPengurusController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -29,6 +30,12 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
 Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
 
+// Route Laporan Warga
+Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
+
+
+
+
 // route to Input Laporan
 Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
 Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
@@ -44,6 +51,16 @@ Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name(
 Route::put('/laporan/{laporan}', [LaporanController::class, 'update'])->name('inputlaporan.update');
 Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('inputlaporan.destroy');
 Route::get('/report-statistics', [LaporanController::class, 'getReportStatistics'])->name('report.statistics');
+
+
+
+// Route Laporan Pengurus (JESANO)
+Route::get('/inputlaporan/create-pengurus', [LaporanPengurusController::class, 'create'])->name('laporan.create-pengurus');
+Route::post('/inputlaporan-pengurus', [LaporanPengurusController::class, 'store'])->name('laporan.store-pengurus');
+
+
+
+
 
 // Pengurus Routes
 Route::get('/pengurus', [PengurusLingkunganController::class, 'index'])->name('pengurus');
