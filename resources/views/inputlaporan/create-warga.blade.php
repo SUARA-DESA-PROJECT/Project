@@ -1,5 +1,5 @@
 <!-- resources/views/inputlaporan/create.blade.php -->
-@extends('layouts.app')
+@extends('layouts.app-warga')
 
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -16,6 +16,10 @@
 
     <form action="{{ route('laporan.store') }}" method="POST" id="formLaporan">
         @csrf
+        <!-- Input tersembunyi untuk username warga -->
+        <input type="hidden" name="warga_username" value="{{ $warga->username }}">
+        <input type="hidden" name="tipe_pelapor" value="Warga">
+
         <div class="mb-3">
             <label for="judul" class="form-label">Judul Laporan</label>
             <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul') is-invalid @enderror" 
@@ -73,29 +77,6 @@
         </div>
 
         <div class="mb-3">
-            <label for="status_penanganan" class="form-label">Status Penanganan</label>
-            <select name="status_penanganan" id="status_penanganan" class="form-control @error('status_penanganan') is-invalid @enderror">
-                <option value="Belum Ditangani" {{ old('status_penanganan') == 'Belum Ditangani' ? 'selected' : '' }}>Belum Ditangani</option>
-                <option value="Sedang Ditangani" {{ old('status_penanganan') == 'Sedang Ditangani' ? 'selected' : '' }}>Sedang Ditangani</option>
-                <option value="Selesai" {{ old('status_penanganan') == 'Selesai' ? 'selected' : '' }}>Selesai Ditangani</option>
-            </select>
-            @error('status_penanganan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="deskripsi_penanganan" class="form-label">Deskripsi Penanganan</label>
-            <textarea name="deskripsi_penanganan" id="deskripsi_penanganan" class="form-control auto-expand @error('deskripsi_penanganan') is-invalid @enderror" 
-                style="min-height: 200px; max-height: 500px; overflow-y: scroll;" 
-                maxlength="10000">{{ old('deskripsi_penanganan') }}</textarea>
-            <small class="text-muted">Maksimal 10000 karakter. Sisa: <span id="charCountPenanganan">10000</span> karakter</small>
-            @error('deskripsi_penanganan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
             <label for="judul_laporan" class="form-label">Kategori Laporan</label>
             <select name="kategori_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
                 <option value="">Pilih Kategori Laporan</option>
@@ -119,44 +100,16 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-
+{{-- 
         <div class="mb-3">
             <label for="tipe_pelapor" class="form-label">Tipe Pelapor</label>
-            <select name="tipe_pelapor" id="tipe_pelapor" class="form-control @error('tipe_pelapor') is-invalid @enderror">
-                <option value="Warga" {{ old('tipe_pelapor') == 'Warga' ? 'selected' : '' }}>Warga</option>
-                <option value="Pengurus" {{ old('tipe_pelapor') == 'Pengurus' ? 'selected' : '' }}>Pengurus</option>
-            </select>
-            @error('tipe_pelapor')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <input type="text" class="form-control" value="Warga" readonly>
         </div>
 
         <div class="mb-3">
             <label for="warga_username" class="form-label">Username Warga</label>
-            <input type="text" name="warga_username" id="warga_username" class="form-control @error('warga_username') is-invalid @enderror" value="{{ old('warga_username') }}">
-            @error('warga_username')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="pengurus_lingkungan_username" class="form-label">Username Pengurus Lingkungan</label>
-            <input type="text" name="pengurus_lingkungan_username" id="pengurus_lingkungan_username" class="form-control @error('pengurus_lingkungan_username') is-invalid @enderror" value="{{ old('pengurus_lingkungan_username') }}">
-            @error('pengurus_lingkungan_username')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="status_verifikasi" class="form-label">Status Verifikasi</label>
-            <select name="status_verifikasi" id="status_verifikasi" class="form-control @error('status_verifikasi') is-invalid @enderror">
-                <option value="Belum Diverifikasi"  {{ old('status_verifikasi') == 'Belum Diverifikasi' ? 'selected' : '' }}>Belum Diverifikasi</option>
-                <option value="Diverifikasi" {{ old('status_verifikasi') == 'Diverifikasi' ? 'selected' : '' }}>Diverifikasi</option>
-            </select>
-            @error('status_verifikasi')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+            <input type="text" class="form-control" value="{{ $warga->username }}" readonly>
+        </div> --}}
 
         <a href="{{ url('/homepage') }}" class="btn btn-secondary">Kembali</a>
         <button type="submit" class="btn btn-primary float-end">Simpan Laporan</button>

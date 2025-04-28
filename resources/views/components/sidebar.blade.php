@@ -15,7 +15,7 @@
                 </a>
             </li>
             <li class="mb-2">
-                <a href="{{route ('laporan.create') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <a href="{{route ('laporan.create-pengurus') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
                     <span class="fa fa-file-text mr-3"></span>Input Laporan
                 </a>
             </li>

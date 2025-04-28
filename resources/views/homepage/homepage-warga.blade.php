@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app-warga')
 
 @section('title', 'Home')
 
@@ -10,7 +10,7 @@
     <div class="welcome-banner reveal-section">
         <div class="decoration"></div>
         
-        <h2>Selamat Datang, {{ $pengurus->username }} di Suara Desa</h2>
+        <h2>Selamat Datang, {{ $warga->username }} di Suara Desa</h2>
         
         <p>
             <strong>Suara Desa</strong> adalah platform pelaporan kejadian berbasis website yang dapat digunakan oleh masyarakat untuk melaporkan berbagai kejadian atau permasalahan di lingkungan sekitar. Dengan Suara Desa, masyarakat dapat berpartisipasi aktif dalam pembangunan dan pengembangan desa.
@@ -19,47 +19,6 @@
         <p>
             Mari gunakan layanan ini dengan bijak untuk membangun desa yang lebih baik. Setiap laporan yang masuk akan diverifikasi dan ditindaklanjuti oleh pihak terkait.
         </p>
-    </div>
-
-    <div class="row reveal-section">
-        <div class="col-md-4 mb-4">
-            <div class="info-box">
-                <div class="info-box-icon">
-                    <i class="fa fa-newspaper-o"></i>
-                </div>
-                <div class="info-box-content">
-                    <h4>Total Laporan</h4>
-                    <div class="number">{{ $totalReports }}</div>
-                    <p>Jumlah laporan yang masuk</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="info-box">
-                <div class="info-box-icon">
-                    <i class="fa fa-check-circle"></i>
-                </div>
-                <div class="info-box-content">
-                    <h4>Laporan Terverifikasi</h4>
-                    <div class="number">{{ $verifiedReports }}</div>
-                    <p>Laporan yang sudah diverifikasi</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="info-box">
-                <div class="info-box-icon">
-                    <i class="fa fa-users"></i>
-                </div>
-                <div class="info-box-content">
-                    <h4>Pengguna</h4>
-                    <div class="number">{{ $totalUsers }}</div>
-                    <p>Jumlah pengguna terdaftar</p>
-                </div>
-            </div>
-        </div>
     </div>
     
     <div class="row mt-4 reveal-section">

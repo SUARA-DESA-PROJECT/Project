@@ -31,7 +31,7 @@ class AuthController extends Controller
             // Store warga data in session
             session(['warga' => $warga]);
             
-            return redirect()->route('homepage')->with('success', 'Login berhasil!');
+            return redirect()->route('homepage-warga')->with('success', 'Login berhasil!');
         }
 
         return back()->withErrors([

@@ -9,6 +9,11 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $pengurus = session('pengurusLingkungan');
+        if (!$pengurus) {
+            return redirect()->route('login-kepaladesa')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         $totalReports = DB::table('laporan')->count();
         $verifiedReports = DB::table('laporan')
             ->where('status_verifikasi', 'Terverifikasi')
@@ -21,6 +26,28 @@ class HomeController extends Controller
             ->limit(5)
             ->get();
 
-        return view('homepage.homepage', compact('totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
+        return view('homepage.homepage', compact('pengurus', 'totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
+    }
+
+    public function index_warga()
+    {
+        $warga = session('warga');
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        $totalReports = DB::table('laporan')->count();
+        $verifiedReports = DB::table('laporan')
+            ->where('status_verifikasi', 'Terverifikasi')
+            ->count();
+        $totalUsers = DB::table('warga')->count();
+
+        $recentReports = DB::table('laporan')
+            ->select('judul_laporan', 'created_at', 'status_verifikasi')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('homepage.homepage-warga', compact('warga', 'totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
     }
 }
