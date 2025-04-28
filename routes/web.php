@@ -82,3 +82,8 @@ Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.s
 Route::get('/kategori/{nama_kategori}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
 Route::put('/kategori/{nama_kategori}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/kategori/{nama_kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+
+// Verifikasi Akun routes
+Route::get('/verifikasi-akun', [WargaController::class, 'verifikasiIndex'])->name('warga.verifikasi');
+Route::put('/verifikasi-akun/{username}/verify', [WargaController::class, 'verifyWarga'])->name('warga.verify');
+Route::put('/verifikasi-akun/{username}/unverify', [WargaController::class, 'unverifyWarga'])->name('warga.unverify');
