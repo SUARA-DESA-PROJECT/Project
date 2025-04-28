@@ -29,6 +29,10 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
 Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
 
+// Peta Persebaran Routes
+Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
+Route::redirect('/peta-persebaran', '/peta-persebaran-warga');
+
 // route to Input Laporan
 Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
 Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
