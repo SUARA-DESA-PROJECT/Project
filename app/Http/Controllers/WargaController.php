@@ -95,4 +95,57 @@ class WargaController extends Controller
         $warga->delete();
         return redirect()->route('warga.index')->with('success', 'Warga berhasil dihapus');
     }
+
+    /**
+     * Display a listing of warga accounts for verification.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function verifikasiIndex(Request $request)
+    {
+        $status = $request->query('status');
+        
+        $query = Warga::query();
+        
+        if ($status) {
+            $query->where('status_verifikasi', $status);
+        }
+        
+        $wargas = $query->get();
+        
+        return view('verifikasiAkun.index', compact('wargas'));
+    }
+    
+    /**
+     * Verify a warga account.
+     *
+     * @param  string  $username
+     * @return \Illuminate\Http\Response
+     */
+    public function verifyWarga($username)
+    {
+        $warga = Warga::where('username', $username)->firstOrFail();
+        $warga->status_verifikasi = 'Terverifikasi';
+        $warga->save();
+        
+        return redirect()->route('warga.verifikasi')
+            ->with('success', 'Akun berhasil diverifikasi.');
+    }
+    
+    /**
+     * Remove verification from a warga account.
+     *
+     * @param  string  $username
+     * @return \Illuminate\Http\Response
+     */
+    public function unverifyWarga($username)
+    {
+        $warga = Warga::where('username', $username)->firstOrFail();
+        $warga->status_verifikasi = 'Belum diverifikasi';
+        $warga->save();
+        
+        return redirect()->route('warga.verifikasi')
+            ->with('success', 'Status verifikasi akun berhasil dihapus.');
+    }
 }

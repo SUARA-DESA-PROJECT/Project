@@ -21,7 +21,8 @@ class Warga extends Model
         'nama_lengkap',
         'nomor_telepon',
         'alamat',
-        'email'
+        'email',
+        'status_verifikasi'
     ];
 
     // One Warga has many Laporan
