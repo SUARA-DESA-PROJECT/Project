@@ -83,6 +83,10 @@ Route::get('/kategori/{nama_kategori}/edit', [KategoriController::class, 'edit']
 Route::put('/kategori/{nama_kategori}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/kategori/{nama_kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
+// Verifikasi Laporan Routes
+Route::get('/verifikasilap', [LaporanController::class, 'indexVerifikasi'])->name('verifikasilap.index');
+Route::post('/laporan/update-status', [App\Http\Controllers\LaporanController::class, 'updateStatus']);
+
 // Verifikasi Akun routes
 Route::get('/verifikasi-akun', [WargaController::class, 'verifikasiIndex'])->name('warga.verifikasi');
 Route::put('/verifikasi-akun/{username}/verify', [WargaController::class, 'verifyWarga'])->name('warga.verify');
