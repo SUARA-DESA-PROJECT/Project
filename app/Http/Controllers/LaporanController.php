@@ -32,25 +32,39 @@ class LaporanController extends Controller
     {
         $kategoris = Kategori::orderBy('nama_kategori')->get();
         $nav = 'Tambah Laporan';
-        return view('inputlaporan.create', compact('kategoris', 'nav'));
+        
+        // Get logged in user information
+        $warga = session('warga');
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        return view('inputlaporan.create-warga', compact('kategoris', 'nav', 'warga'));
     }
 
     public function store(Request $request)
     {
+        // Get logged in user information
+        $warga = session('warga');
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         $validatedData = $request->validate([
             'judul_laporan' => 'required',
             'deskripsi_laporan' => 'required',
             'tanggal_pelaporan' => 'required',
             'tempat_kejadian' => 'required',
-            'status_verifikasi' => 'required',
-            'status_penanganan' => 'required',
-            'deskripsi_penanganan' => 'required',
-            'tipe_pelapor' => 'required',
-            'pengurus_lingkungan_username' => 'required',
-            'warga_username' => 'required',
             'kategori_laporan' => 'required',
-            'time_laporan' => 'required',
         ]);
+
+        // Add automatic data
+        $validatedData['status_verifikasi'] = 'Belum Terverifikasi';
+        $validatedData['status_penanganan'] = 'Belum Ditangani';
+        $validatedData['deskripsi_penanganan'] = '-';
+        $validatedData['tipe_pelapor'] = 'Warga';
+        $validatedData['warga_username'] = $warga->username;
+        $validatedData['time_laporan'] = now();
 
         Laporan::create($validatedData);
         return redirect()->route('laporan.create')->with('success', 'Laporan berhasil ditambahkan');

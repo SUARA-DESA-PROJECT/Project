@@ -9,6 +9,11 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $pengurus = session('pengurusLingkungan');
+        if (!$pengurus) {
+            return redirect()->route('login-kepaladesa')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         $totalReports = DB::table('laporan')->count();
         $verifiedReports = DB::table('laporan')
             ->where('status_verifikasi', 'Terverifikasi')
@@ -21,11 +26,16 @@ class HomeController extends Controller
             ->limit(5)
             ->get();
 
-        return view('homepage.homepage', compact('totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
+        return view('homepage.homepage', compact('pengurus', 'totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
     }
 
     public function index_warga()
     {
+        $warga = session('warga');
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         $totalReports = DB::table('laporan')->count();
         $verifiedReports = DB::table('laporan')
             ->where('status_verifikasi', 'Terverifikasi')
@@ -38,6 +48,20 @@ class HomeController extends Controller
             ->limit(5)
             ->get();
 
-        return view('homepage.homepage-warga', compact('totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
+        return view('homepage.homepage-warga', compact('warga', 'totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
+    }
+
+    public function petaPersebaran()
+    {
+        $reports = DB::table('laporan')
+            ->select('id', 'judul_laporan', 'lokasi', 'status_verifikasi', 'created_at')
+            ->get();
+            
+        return view('peta.persebaran', compact('reports'));
+    }
+
+    public function petaPersebaranWarga()
+    {
+        return view('peta.persebaran-warga');
     }
 }
