@@ -1,64 +1,98 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="container-fluid mt-4" style="padding-left:0; padding-right:0;">
+@section('title', 'Verifikasi Laporan')
 
-    <div class="card" style="border-radius: 12px;">
-        <div class="card-header bg-white">
-            <h2 class="mb-0">Verifikasi Laporan</h2>
+@section('content')
+<div class="container-fluid pl-4">
+    <div class="card" style="margin-left: 0; text-align: left;">
+        <div class="card-header" style="text-align: left;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 style="text-align: left;">Verifikasi Laporan</h1>
+                <div class="dropdown">
+                    <button class="btn" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 120px; width: auto;">
+                        <i class="fa fa-filter mr-2"></i> Filter <i class="fa fa-caret-down ml-2"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                        <a class="dropdown-item" href="{{ route('verifikasilap.index') }}">Semua Data</a>
+                        <a class="dropdown-item" href="{{ route('verifikasilap.index', ['status' => 'Diverifikasi']) }}">Diverifikasi</a>
+                        <a class="dropdown-item" href="{{ route('verifikasilap.index', ['status' => 'Belum Diverifikasi']) }}">Belum Diverifikasi</a>
+                    </div>
+                </div>
+            </div>
         </div>
+        
         <div class="card-body">
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
-
+            
             <div class="table-responsive">
-                <table class="table table-hover" style="width:100%; margin-bottom:0; border-collapse:collapse;">
-                    <thead>
+                <table class="table table-hover" style="text-align: left; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                    <thead style="background-color: #468B94; color: black; font-weight: bold;">
                         <tr>
-                            <th style="padding-left: 8px; padding-right: 8px;">No</th>
-                            <th style="padding-left: 8px; padding-right: 8px;">Judul Laporan</th>
-                            <th style="padding-left: 8px; padding-right: 8px;">Deskripsi</th>
-                            <th style="padding-left: 8px; padding-right: 8px;">Tanggal</th>
-                            <th style="padding-left: 8px; padding-right: 8px;">Status</th>
-                            <th style="padding-left: 8px; padding-right: 8px;">Aksi</th>
+                            <th style="padding: 15px; width: 25%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Judul Laporan</th>
+                            <th style="padding: 15px; width: 15%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Tanggal Pelaporan</th>
+                            <th style="padding: 15px; width: 20%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Tempat Kejadian</th>
+                            <th style="padding: 15px; width: 15%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Status Verifikasi</th>
+                            <th style="padding: 15px; width: 25%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($laporans as $key => $laporan)
-                            <tr>
-                                <td style="padding-left: 8px; padding-right: 8px;">{{ $key + 1 }}</td>
-                                <td style="padding-left: 8px; padding-right: 8px;">{{ $laporan->judul_laporan }}</td>
-                                <td style="padding-left: 8px; padding-right: 8px;">{{ Str::limit($laporan->deskripsi_laporan, 40) }}</td>
-                                <td style="padding-left: 8px; padding-right: 8px;">{{ \Carbon\Carbon::parse($laporan->created_at)->format('d-m-Y') }}</td>
-                                <td style="padding-left: 8px; padding-right: 8px;">
-                                    <span class="badge bg-danger text-white" style="font-size: 1rem; font-weight: normal;">
+                        @forelse($laporans as $laporan)
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 12px 15px; vertical-align: middle; text-align: center;">
+                                    <a href="javascript:void(0)" class="show-laporan-details" 
+                                       data-id="{{ $laporan->id }}"
+                                       data-judul="{{ $laporan->judul_laporan }}"
+                                       data-deskripsi="{{ $laporan->deskripsi_laporan }}"
+                                       data-tanggal="{{ $laporan->tanggal_pelaporan }}"
+                                       data-tempat="{{ $laporan->tempat_kejadian }}"
+                                       data-status="{{ $laporan->status_verifikasi }}"
+                                       data-kategori="{{ $laporan->kategori_laporan }}"
+                                       data-penanganan="{{ $laporan->status_penanganan }}"
+                                       data-deskripsi_penanganan="{{ $laporan->deskripsi_penanganan }}"
+                                       style="color: #333; text-decoration: underline; cursor: pointer;">
+                                        {{ $laporan->judul_laporan }}
+                                    </a>
+                                </td>
+                                <td style="padding: 12px 15px; vertical-align: middle; text-align: center;">
+                                    {{ \Carbon\Carbon::parse($laporan->tanggal_pelaporan)->format('d-m-Y') }}
+                                </td>
+                                <td style="padding: 12px 15px; vertical-align: middle; text-align: center;">
+                                    {{ $laporan->tempat_kejadian }}
+                                </td>
+                                <td style="padding: 12px 15px; text-align: center; vertical-align: middle;">
+                                    <span class="badge" style="padding: 8px 12px; border-radius: 4px; font-size: 13px; font-weight: 500; 
+                                        background-color: {{ $laporan->status_verifikasi == 'Diverifikasi' ? '#28a745' : '#dc3545' }}; 
+                                        color: white; display: inline-block; width: 180px; text-align: center;">
                                         {{ $laporan->status_verifikasi }}
                                     </span>
                                 </td>
-                                <td style="padding-left: 8px; padding-right: 8px;">
-                                    <button 
-                                        class="btn btn-info btn-sm lihat-selengkapnya"
-                                        data-id="{{ $laporan->id_laporan }}"
-                                        data-judul="{{ $laporan->judul_laporan }}"
-                                        data-deskripsi="{{ $laporan->deskripsi_laporan }}"
-                                        data-tanggal="{{ $laporan->created_at }}"
-                                        data-tempat="{{ $laporan->tempat_kejadian }}"
-                                        data-status_penanganan="{{ $laporan->status_penanganan }}"
-                                        data-deskripsi_penanganan="{{ $laporan->deskripsi_penanganan }}"
-                                        data-kategori="{{ $laporan->kategori_laporan }}"
-                                        data-jenis="{{ $laporan->kategoriData->jenis_kategori ?? '-' }}"
-                                        data-status_verifikasi="{{ $laporan->status_verifikasi }}"
-                                    >
-                                        <i class="fa fa-eye"></i> Lihat Selengkapnya
-                                    </button>
+                                <td style="padding: 12px 15px; text-align: center; vertical-align: middle;">
+                                    @if($laporan->status_verifikasi == 'Belum Diverifikasi')
+                                        <form action="{{ route('verifikasilap.verify', $laporan->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn" style="background-color: #28a745; color: white; border-radius: 4px; padding: 8px 12px; width: 180px; font-size: 13px; height: 38px;">
+                                                <i class="fa fa-check"></i> Verifikasi
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('verifikasilap.unverify', $laporan->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn" style="background-color: #dc3545; color: white; border-radius: 4px; padding: 8px 12px; width: 180px; font-size: 13px; height: 38px;">
+                                                <i class="fa fa-times"></i> Hapus Verifikasi
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">Tidak ada laporan yang perlu diverifikasi</td>
+                                <td colspan="5" class="text-center" style="padding: 20px;">Tidak ada data laporan</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -66,206 +100,120 @@
             </div>
         </div>
     </div>
+</div>
 
-    <a href="{{ route('homepage') }}" class="btn btn-secondary mt-3" style="font-weight: bold;">
-        Kembali
+<div class="mt-3">
+    <a href="{{ url('/homepage') }}" class="btn btn-secondary" style="float: left;">
+        Kembali ke Beranda
     </a>
 </div>
-
-<!-- Modal Detail Laporan -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailModalLabel">Detail Laporan</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-      </div>
-      <div class="modal-body">
-        {{-- Tambahkan alert di sini --}}
-        <div id="customAlert" class="alert alert-danger" role="alert">
-            Saya ingin makan
-        </div>
-        <table class="table border-0">
-            <tr>
-                <th style="width: 180px;">Judul Laporan</th>
-                <td id="modalJudul"></td>
-            </tr>
-            <tr>
-                <th>Deskripsi</th>
-                <td id="modalDeskripsi"></td>
-            </tr>
-            <tr>
-                <th>Tanggal Pelaporan</th>
-                <td id="modalTanggal"></td>
-            </tr>
-            <tr>
-                <th>Tempat Kejadian</th>
-                <td id="modalTempat"></td>
-            </tr>
-            <tr>
-                <th>Kategori</th>
-                <td id="modalKategori"></td>
-            </tr>
-            <tr>
-                <th>Status Verifikasi</th>
-                <td id="modalStatus"></td>
-            </tr>
-            <tr>
-                <th>Deskripsi Penanganan</th>
-                <td id="modalPenanganan"></td>
-            </tr>
-            <tr>
-                <th>Tipe Pelapor</th>
-                <td id="modalTipe"></td>
-            </tr>
-            <tr>
-                <th>Username Warga</th>
-                <td id="modalWarga"></td>
-            </tr>
-            <tr>
-                <th>Username Pengurus</th>
-                <td id="modalPengurus"></td>
-            </tr>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    var detailModal = document.getElementById('detailModal');
-    detailModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        document.getElementById('modalIdLaporan').textContent = button.getAttribute('data-id);
-        document.getElementById('modalJudul').textContent = button.getAttribute('data-judul');
-        document.getElementById('modalDeskripsi').textContent = button.getAttribute('data-deskripsi');
-        document.getElementById('modalTanggal').textContent = button.getAttribute('data-tanggal');
-        document.getElementById('modalTempat').textContent = button.getAttribute('data-tempat');
-        document.getElementById('modalKategori').textContent = button.getAttribute('data-kategori');
-        document.getElementById('modalStatus').textContent = button.getAttribute('data-status');
-        document.getElementById('modalPenanganan').textContent = button.getAttribute('data-penanganan');
-        document.getElementById('modalTipe').textContent = button.getAttribute('data-tipe');
-        document.getElementById('modalWarga').textContent = button.getAttribute('data-warga');
-        document.getElementById('modalPengurus').textContent = button.getAttribute('data-pengurus');
-    });
-});
-</script>
 @endsection
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.lihat-selengkapnya').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const idLaporan = btn.getAttribute('data-id');
-            const judul = btn.getAttribute('data-judul');
-            const deskripsi = btn.getAttribute('data-deskripsi');
-            const tanggal = btn.getAttribute('data-tanggal');
-            const tempat = btn.getAttribute('data-tempat');
-            const statusPenanganan = btn.getAttribute('data-status_penanganan');
-            let deskripsiPenanganan = btn.getAttribute('data-deskripsi_penanganan');
-            const kategori = btn.getAttribute('data-kategori');
-            const jenis = btn.getAttribute('data-jenis');
-            const statusVerifikasi = btn.getAttribute('data-status_verifikasi');
-            
-            if (!deskripsiPenanganan || deskripsiPenanganan.trim() === "") {
-                deskripsiPenanganan = "-";
-            }
-
-            // Build the select HTML for status verifikasi
-            const selectStatus = `
-                <select id="swal_status_verifikasi" class="form-control" style="margin-top:4px;">
-                    <option value="Belum Diverifikasi" ${statusVerifikasi === 'Belum Diverifikasi' ? 'selected' : ''}>Belum Diverifikasi</option>
-                    <option value="Diverifikasi" ${statusVerifikasi === 'Diverifikasi' ? 'selected' : ''}>Diverifikasi</option>
-                </select>
-            `;
-
-            Swal.fire({
-                title: judul,
-                html: `
-                    <b>Deskripsi:</b> ${deskripsi}<br>
-                    <b>Waktu Kejadian:</b> ${tanggal}<br>
-                    <b>Tempat Kejadian:</b> ${tempat}<br>
-                    <b>Status Penanganan:</b> ${statusPenanganan}<br>
-                    <b>Deskripsi Penanganan:</b> ${deskripsiPenanganan}<br>
-                    <b>Kategori Laporan:</b> ${kategori}<br>
-                    <b>Jenis Laporan:</b> ${jenis}<br>
-                    <b>Status Verifikasi:</b> ${selectStatus}
-                `,
-                confirmButtonText: 'Kembali',
-                allowOutsideClick: () => {
-                    const popup = Swal.getPopup()
-                    popup.classList.remove('swal2-show')
-                    setTimeout(() => {
-                        popup.classList.add('animate__animated', 'animate__headShake')
-                    })
-                    setTimeout(() => {
-                        popup.classList.remove('animate__animated', 'animate__headShake')
-                    }, 500)
-                    return false
-                },
-                didOpen: () => {
-                    // Store the original value for comparison
-                    window._originalStatusVerifikasi = statusVerifikasi;
-                },
-                preConfirm: () => {
-                    // Return the selected value for further processing
-                    return document.getElementById('swal_status_verifikasi').value;
-                }
-            }).then((result) => {
-                const newStatus = result.value;
-                if (result.isConfirmed) {
-                    // Only show confirmation if status changed
-                    if (newStatus !== window._originalStatusVerifikasi) {
-                        Swal.fire({
-                            title: "Do you want to save the changes?",
-                            showDenyButton: true,
-                            showCancelButton: true,
-                            confirmButtonText: "Save",
-                            denyButtonText: `Don't save`
-                        }).then((result2) => {
-                            if (result2.isConfirmed) {
-                                // AJAX update to backend
-                                fetch("{{ url('/laporan/update-status') }}", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                                    },
-                                    body: JSON.stringify({
-                                        id: idLaporan,
-                                        status_verifikasi: newStatus
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        Swal.fire("Saved!", "", "success").then(() => {
-                                            location.reload();
-                                        });
-                                    } else {
-                                        Swal.fire("Failed to save!", data.message || "", "error");
-                                    }
-                                })
-                                .catch(() => {
-                                    Swal.fire("Failed to save!", "Server error.", "error");
-                                });
-                            } else if (result2.isDenied) {
-                                Swal.fire("Changes are not saved", "", "info");
-                            }
-                        });
+    document.addEventListener('DOMContentLoaded', function() {
+        const verifyForms = document.querySelectorAll('form[action*="verifikasilap"]');
+        verifyForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const isVerify = this.action.includes('verify') && !this.action.includes('unverify');
+                const title = isVerify ? 'Verifikasi Laporan' : 'Hapus Verifikasi';
+                const text = isVerify 
+                    ? 'Apakah Anda yakin ingin memverifikasi laporan ini?' 
+                    : 'Apakah Anda yakin ingin menghapus status verifikasi laporan ini?';
+                const confirmButtonText = isVerify ? 'Ya, Verifikasi' : 'Ya, Hapus Verifikasi';
+                const confirmButtonColor = isVerify ? '#28a745' : '#dc3545';
+                
+                Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: isVerify ? 'question' : 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: confirmButtonColor,
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: confirmButtonText,
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
                     }
-                }
+                });
+            });
+        });
+        
+        const laporanDetailLinks = document.querySelectorAll('.show-laporan-details');
+        laporanDetailLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const judul = this.getAttribute('data-judul');
+                const deskripsi = this.getAttribute('data-deskripsi');
+                const tanggal = this.getAttribute('data-tanggal');
+                const tempat = this.getAttribute('data-tempat');
+                const status = this.getAttribute('data-status');
+                const kategori = this.getAttribute('data-kategori');
+                const penanganan = this.getAttribute('data-penanganan');
+                const deskripsiPenanganan = this.getAttribute('data-deskripsi_penanganan');
+                const isVerified = status === 'Diverifikasi';
+                
+                const htmlContent = `
+                    <div class="text-left">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th style="width: 40%;">ID Laporan</th>
+                                <td>${id}</td>
+                            </tr>
+                            <tr>
+                                <th>Judul Laporan</th>
+                                <td>${judul}</td>
+                            </tr>
+                            <tr>
+                                <th>Deskripsi</th>
+                                <td>${deskripsi}</td>
+                            </tr>
+                            <tr>
+                                <th>Tanggal Pelaporan</th>
+                                <td>${tanggal}</td>
+                            </tr>
+                            <tr>
+                                <th>Tempat Kejadian</th>
+                                <td>${tempat}</td>
+                            </tr>
+                            <tr>
+                                <th>Kategori</th>
+                                <td>${kategori}</td>
+                            </tr>
+                            <tr>
+                                <th>Status Penanganan</th>
+                                <td>${penanganan}</td>
+                            </tr>
+                            <tr>
+                                <th>Deskripsi Penanganan</th>
+                                <td>${deskripsiPenanganan}</td>
+                            </tr>
+                            <tr>
+                                <th>Status Verifikasi</th>
+                                <td>
+                                    <span class="badge" style="background-color: ${isVerified ? '#28a745' : '#dc3545'}; color: white; padding: 5px 10px;">
+                                        ${status}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+                
+                Swal.fire({
+                    title: 'Detail Laporan',
+                    html: htmlContent,
+                    width: 600,
+                    showCancelButton: false,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Tutup',
+                    confirmButtonColor: '#6c757d'
+                });
             });
         });
     });
-});
 </script>
 @endsection

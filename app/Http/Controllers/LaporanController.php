@@ -13,9 +13,7 @@ class LaporanController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            Route::bind('laporan', function ($value) {
-                return Laporan::where('id_laporan', $value)->firstOrFail();
-            });
+            // Tidak perlu custom binding jika pakai id default
             return $next($request);
         });
     }
@@ -149,17 +147,39 @@ class LaporanController extends Controller
         ]);
     }
 
-    public function indexVerifikasi()
+    public function indexVerifikasi(Request $request)
     {
-        // Ambil semua laporan yang status_verifikasi-nya 'Belum Diverifikasi'
-        $laporans = Laporan::where('status_verifikasi', 'Belum Diverifikasi')->get();
+        $status = $request->query('status');
+        $query = Laporan::query();
+    
+        if ($status) {
+            $query->where('status_verifikasi', $status);
+        }
+    
+        $laporans = $query->get();
         return view('verifikasilap.index', compact('laporans'));
+    }
+
+    public function verify($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        $laporan->status_verifikasi = 'Diverifikasi';
+        $laporan->save();
+        return redirect()->route('verifikasilap.index')->with('success', 'Laporan berhasil diverifikasi.');
+    }
+
+    public function unverify($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        $laporan->status_verifikasi = 'Belum Diverifikasi';
+        $laporan->save();
+        return redirect()->route('verifikasilap.index')->with('success', 'Status verifikasi laporan berhasil dihapus.');
     }
 
     public function updateStatus(Request $request)
     {
         $request->validate([
-            'id' => 'required|string',
+            'id' => 'required|integer',
             'status_verifikasi' => 'required|string|in:Belum Diverifikasi,Diverifikasi'
         ]);
     
