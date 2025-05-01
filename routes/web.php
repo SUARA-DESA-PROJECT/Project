@@ -85,7 +85,9 @@ Route::delete('/kategori/{nama_kategori}', [KategoriController::class, 'destroy'
 
 // Verifikasi Laporan Routes
 Route::get('/verifikasilap', [LaporanController::class, 'indexVerifikasi'])->name('verifikasilap.index');
-Route::post('/laporan/update-status', [App\Http\Controllers\LaporanController::class, 'updateStatus']);
+Route::put('/verifikasilap/{id_laporan}/verify', [LaporanController::class, 'verify'])->name('verifikasilap.verify');
+Route::put('/verifikasilap/{id_laporan}/unverify', [LaporanController::class, 'unverify'])->name('verifikasilap.unverify');
+Route::post('/laporan/update-status', [LaporanController::class, 'updateStatus']);
 
 // Verifikasi Akun routes
 Route::get('/verifikasi-akun', [WargaController::class, 'verifikasiIndex'])->name('warga.verifikasi');
