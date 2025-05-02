@@ -17,7 +17,7 @@ class LaporanPengurusController extends Controller
 
         $kategoris = Kategori::orderBy('nama_kategori')->get();
         $nav = 'Tambah Laporan';
-        return view('inputlaporan.create-pengurus', compact('kategoris', 'nav', 'pengurus'));
+        return view('inputlaporan.create', compact('kategoris', 'nav', 'pengurus'));
     }
 
     public function store(Request $request)
@@ -45,6 +45,6 @@ class LaporanPengurusController extends Controller
         $validatedData['time_laporan'] = now();
 
         Laporan::create($validatedData);
-        return redirect()->route('laporan.create-pengurus')->with('success', 'Laporan berhasil ditambahkan');
+        return redirect()->route('inputlaporan.create')->with('success', 'Laporan berhasil ditambahkan');
     }
 } 

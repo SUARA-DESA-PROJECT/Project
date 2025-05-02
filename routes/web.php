@@ -45,7 +45,6 @@ Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('
 Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
 Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
 Route::get('/input-laporan', [LaporanController::class, 'create'])->name('laporan.create');
-Route::post('/input-laporan', [LaporanController::class, 'store'])->name('laporan.store');
 Route::get('/laporan', [LaporanController::class, 'index'])->name('inputlaporan.index');
 Route::get('/laporan/{laporan}', [LaporanController::class, 'show'])->name('inputlaporan.show');
 Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name('inputlaporan.edit');

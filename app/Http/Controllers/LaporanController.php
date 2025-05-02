@@ -67,7 +67,7 @@ class LaporanController extends Controller
         $validatedData['time_laporan'] = now();
 
         Laporan::create($validatedData);
-        return redirect()->route('laporan.create')->with('success', 'Laporan berhasil ditambahkan');
+        return redirect()->route('homepage')->with('success', 'Laporan berhasil ditambahkan');
     }
 
     public function show(Laporan $laporan)
