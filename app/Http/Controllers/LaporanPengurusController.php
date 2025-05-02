@@ -17,7 +17,7 @@ class LaporanPengurusController extends Controller
 
         $kategoris = Kategori::orderBy('nama_kategori')->get();
         $nav = 'Tambah Laporan';
-        return view('inputlaporan.create', compact('kategoris', 'nav', 'pengurus'));
+        return view('inputlaporan.create-pengurus', compact('kategoris', 'nav', 'pengurus'));
     }
 
     public function store(Request $request)
@@ -32,19 +32,60 @@ class LaporanPengurusController extends Controller
             'deskripsi_laporan' => 'required',
             'tanggal_pelaporan' => 'required',
             'tempat_kejadian' => 'required',
+            'status_penanganan' => 'required',
+            'deskripsi_penanganan' => 'required',
             'kategori_laporan' => 'required',
+            'status_verifikasi' => 'required'
         ]);
 
         // Add automatic data
-        $validatedData['status_verifikasi'] = 'Terverifikasi';
-        $validatedData['status_penanganan'] = 'Sedang Ditangani';
-        $validatedData['deskripsi_penanganan'] = 'Ditangani oleh pengurus lingkungan';
         $validatedData['tipe_pelapor'] = 'Pengurus';
         $validatedData['pengurus_lingkungan_username'] = $pengurus->username;
-        $validatedData['warga_username'] = '-';
+        $validatedData['warga_username'] = null;
         $validatedData['time_laporan'] = now();
 
         Laporan::create($validatedData);
-        return redirect()->route('inputlaporan.create')->with('success', 'Laporan berhasil ditambahkan');
+        return redirect()->route('homepage')->with('success', 'Laporan berhasil ditambahkan');
+    }
+
+    public function show(Laporan $laporan)
+    {
+        $nav = 'Detail Laporan - ' . $laporan->judul_laporan;
+        return view('inputlaporan.show', compact('laporan', 'nav'));
+    }
+
+    public function edit(Laporan $laporan)
+    {
+        $kategoris = Kategori::orderBy('nama_kategori')->get();
+        $nav = 'Edit Laporan - ' . $laporan->judul_laporan;
+        return view('inputlaporan.edit-pengurus', compact('laporan', 'kategoris', 'nav'));
+    }
+
+    public function update(Request $request, Laporan $laporan)
+    {
+        $pengurus = session('pengurusLingkungan');
+        if (!$pengurus) {
+            return redirect()->route('login-kepaladesa')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        $validatedData = $request->validate([
+            'judul_laporan' => 'required',
+            'deskripsi_laporan' => 'required',
+            'tanggal_pelaporan' => 'required',
+            'tempat_kejadian' => 'required',
+            'status_verifikasi' => 'required',
+            'status_penanganan' => 'required',
+            'deskripsi_penanganan' => 'required',
+            'kategori_laporan' => 'required'
+        ]);
+
+        $laporan->update($validatedData);
+        return redirect()->route('homepage')->with('success', 'Laporan berhasil diubah');
+    }
+
+    public function destroy(Laporan $laporan)
+    {
+        $laporan->delete();
+        return redirect()->route('homepage')->with('success', 'Laporan berhasil dihapus');
     }
 } 

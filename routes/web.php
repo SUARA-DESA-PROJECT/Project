@@ -34,14 +34,7 @@ Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('hom
 Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
 Route::redirect('/peta-persebaran', '/peta-persebaran-warga');
 
-// Route Laporan Warga
-Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
-
-// route to Input Laporan
-Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
-Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
-
-// Laporan Routes
+// Laporan Routes Warga (RIDWAN)
 Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
 Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
 Route::get('/input-laporan', [LaporanController::class, 'create'])->name('laporan.create');
@@ -55,6 +48,10 @@ Route::get('/report-statistics', [LaporanController::class, 'getReportStatistics
 // Route Laporan Pengurus (JESANO)
 Route::get('/inputlaporan/create-pengurus', [LaporanPengurusController::class, 'create'])->name('laporan.create-pengurus');
 Route::post('/inputlaporan-pengurus', [LaporanPengurusController::class, 'store'])->name('laporan.store-pengurus');
+Route::get('/laporan-pengurus/{laporan}', [LaporanPengurusController::class, 'show'])->name('laporan.show-pengurus');
+Route::get('/laporan-pengurus/{laporan}/edit', [LaporanPengurusController::class, 'edit'])->name('laporan.edit-pengurus');
+Route::put('/laporan-pengurus/{laporan}', [LaporanPengurusController::class, 'update'])->name('laporan.update-pengurus');
+Route::delete('/laporan-pengurus/{laporan}', [LaporanPengurusController::class, 'destroy'])->name('laporan.destroy-pengurus');
 
 // Pengurus Routes
 Route::get('/pengurus', [PengurusLingkunganController::class, 'index'])->name('pengurus');
