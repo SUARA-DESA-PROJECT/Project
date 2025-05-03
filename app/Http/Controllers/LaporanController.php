@@ -57,9 +57,9 @@ class LaporanController extends Controller
         ]);
 
         // Add automatic data
-        $validatedData['status_verifikasi'] = 'Belum Terverifikasi';
+        $validatedData['status_verifikasi'] = 'Belum Diverifikasi';
         $validatedData['status_penanganan'] = 'Belum Ditangani';
-        $validatedData['deskripsi_penanganan'] = '-';
+        $validatedData['deskripsi_penanganan'] = null;
         $validatedData['tipe_pelapor'] = 'Warga';
         $validatedData['warga_username'] = $warga->username;
         $validatedData['time_laporan'] = now();
