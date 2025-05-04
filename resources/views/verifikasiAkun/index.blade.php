@@ -1,4 +1,4 @@
-@extends('layouts.app-warga')
+@extends('layouts.app')
 
 @section('title', 'Verifikasi Akun')
 

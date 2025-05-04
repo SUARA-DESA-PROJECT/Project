@@ -53,11 +53,11 @@ class LaporanController extends Controller
             'deskripsi_laporan' => 'required',
             'tanggal_pelaporan' => 'required',
             'tempat_kejadian' => 'required',
-            'kategori_laporan' => 'required',
+            'kategori_laporan' => 'required'
         ]);
 
         // Add automatic data
-        $validatedData['status_verifikasi'] = 'Belum Diverifikasi';
+        $validatedData['status_verifikasi'] = 'Belum Terverifikasi';
         $validatedData['status_penanganan'] = 'Belum Ditangani';
         $validatedData['deskripsi_penanganan'] = null;
         $validatedData['tipe_pelapor'] = 'Warga';
@@ -192,5 +192,42 @@ class LaporanController extends Controller
         $laporan->save();
     
         return response()->json(['success' => true]);
+    }
+
+    public function riwayatLaporan(Request $request)
+    {
+        $warga = session('warga');
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        $query = Laporan::where('warga_username', $warga->username)
+            ->join('kategori', 'laporan.kategori_laporan', '=', 'kategori.nama_kategori')
+            ->select('laporan.*', 'kategori.jenis_kategori');
+
+        // Filter by status if provided
+        if ($request->has('status')) {
+            $query->where('status_verifikasi', $request->status);
+        }
+
+        // Filter by jenis if provided
+        if ($request->has('jenis')) {
+            $jenis = $request->jenis;
+            if ($jenis === 'Laporan Positif') {
+                $query->where('kategori.jenis_kategori', 'Positif');
+            } elseif ($jenis === 'Laporan Negatif') {
+                $query->where('kategori.jenis_kategori', 'Negatif');
+            }
+        }
+
+        // Filter by status_penanganan if provided
+        if ($request->has('status_penanganan')) {
+            $query->where('laporan.status_penanganan', $request->status_penanganan);
+        }
+
+        $laporans = $query->orderBy('created_at', 'desc')->paginate(10);
+        $nav = 'Riwayat Laporan';
+
+        return view('riwayatlap.index', compact('laporans', 'nav'));
     }
 }

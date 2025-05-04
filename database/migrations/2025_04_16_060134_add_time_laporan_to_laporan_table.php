@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::table('laporan', function (Blueprint $table) {
             $table->time('time_laporan')->nullable();
+            $table->string('jenis_laporan', 20)->nullable();
         });
     }
 
     public function down()
     {
         Schema::table('laporan', function (Blueprint $table) {
-            $table->dropColumn('time_laporan');
+            $table->dropColumn(['time_laporan', 'jenis_laporan']);
         });
     }
 };
