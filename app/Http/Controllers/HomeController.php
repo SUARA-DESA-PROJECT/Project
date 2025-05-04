@@ -50,4 +50,18 @@ class HomeController extends Controller
 
         return view('homepage.homepage-warga', compact('warga', 'totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
     }
+
+    public function petaPersebaran()
+    {
+        $reports = DB::table('laporan')
+            ->select('id', 'judul_laporan', 'lokasi', 'status_verifikasi', 'created_at')
+            ->get();
+            
+        return view('peta.persebaran', compact('reports'));
+    }
+
+    public function petaPersebaranWarga()
+    {
+        return view('peta.persebaran-warga');
+    }
 }

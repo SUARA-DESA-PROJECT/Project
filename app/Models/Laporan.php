@@ -6,12 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Laporan extends Model
-{    use HasFactory;
-
+{
     protected $table = 'laporan';
-    protected $primaryKey = 'id_laporan';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
         'judul_laporan',
@@ -45,8 +41,8 @@ class Laporan extends Model
         return $this->belongsTo(PengurusLingkungan::class, 'pengurus_lingkungan_username', 'username');
     }
 
-    public function kategori()
+    public function kategoriData()
     {
-        return $this->belongsTo(Kategori::class, 'kategori_laporan', 'nama_kategori');
+        return $this->belongsTo(\App\Models\Kategori::class, 'kategori_laporan', 'nama_kategori');
     }
 }

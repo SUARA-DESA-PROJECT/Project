@@ -30,21 +30,14 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
 Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
 
-// Route Laporan Warga
-Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
+// Peta Persebaran Routes
+Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
+Route::redirect('/peta-persebaran', '/peta-persebaran-warga');
 
-
-
-
-// route to Input Laporan
-Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
-Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
-
-// Laporan Routes
+// Laporan Routes Warga (RIDWAN)
 Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
 Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan.store');
 Route::get('/input-laporan', [LaporanController::class, 'create'])->name('laporan.create');
-Route::post('/input-laporan', [LaporanController::class, 'store'])->name('laporan.store');
 Route::get('/laporan', [LaporanController::class, 'index'])->name('inputlaporan.index');
 Route::get('/laporan/{laporan}', [LaporanController::class, 'show'])->name('inputlaporan.show');
 Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name('inputlaporan.edit');
@@ -52,15 +45,13 @@ Route::put('/laporan/{laporan}', [LaporanController::class, 'update'])->name('in
 Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('inputlaporan.destroy');
 Route::get('/report-statistics', [LaporanController::class, 'getReportStatistics'])->name('report.statistics');
 
-
-
 // Route Laporan Pengurus (JESANO)
 Route::get('/inputlaporan/create-pengurus', [LaporanPengurusController::class, 'create'])->name('laporan.create-pengurus');
 Route::post('/inputlaporan-pengurus', [LaporanPengurusController::class, 'store'])->name('laporan.store-pengurus');
-
-
-
-
+Route::get('/laporan-pengurus/{laporan}', [LaporanPengurusController::class, 'show'])->name('laporan.show-pengurus');
+Route::get('/laporan-pengurus/{laporan}/edit', [LaporanPengurusController::class, 'edit'])->name('laporan.edit-pengurus');
+Route::put('/laporan-pengurus/{laporan}', [LaporanPengurusController::class, 'update'])->name('laporan.update-pengurus');
+Route::delete('/laporan-pengurus/{laporan}', [LaporanPengurusController::class, 'destroy'])->name('laporan.destroy-pengurus');
 
 // Pengurus Routes
 Route::get('/pengurus', [PengurusLingkunganController::class, 'index'])->name('pengurus');
@@ -87,3 +78,14 @@ Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.s
 Route::get('/kategori/{nama_kategori}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
 Route::put('/kategori/{nama_kategori}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/kategori/{nama_kategori}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+
+// Verifikasi Laporan Routes
+Route::get('/verifikasilap', [LaporanController::class, 'indexVerifikasi'])->name('verifikasilap.index');
+Route::put('/verifikasilap/{id_laporan}/verify', [LaporanController::class, 'verify'])->name('verifikasilap.verify');
+Route::put('/verifikasilap/{id_laporan}/unverify', [LaporanController::class, 'unverify'])->name('verifikasilap.unverify');
+Route::post('/laporan/update-status', [LaporanController::class, 'updateStatus']);
+
+// Verifikasi Akun routes
+Route::get('/verifikasi-akun', [WargaController::class, 'verifikasiIndex'])->name('warga.verifikasi');
+Route::put('/verifikasi-akun/{username}/verify', [WargaController::class, 'verifyWarga'])->name('warga.verify');
+Route::put('/verifikasi-akun/{username}/unverify', [WargaController::class, 'unverifyWarga'])->name('warga.unverify');

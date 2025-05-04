@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('nomor_telepon', 15);
             $table->string('alamat', 100);
             $table->string('email')->unique();
+            $table->string('status_verifikasi', 255)->default('Belum diverifikasi');
             $table->timestamps();
         });
     }
