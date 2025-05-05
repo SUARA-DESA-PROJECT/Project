@@ -48,7 +48,7 @@
                     @forelse($recentReports as $report)
                         <li class="notification-item">
                             <i class="fa {{ $report->status_verifikasi == 'Terverifikasi' ? 'fa-check' : 'fa-file-text' }}"></i>
-                            <span>Laporan "{{ $report->judul_laporan }}" {{ $report->status_verifikasi == 'Terverifikasi' ? 'telah diverifikasi' : 'baru diterima' }}</span>
+                            <span>Laporan "{{ $report->judul_laporan }}" {{ $report->status_verifikasi == 'Terverifikasi' ? 'telah diverifikasi' : 'telah dikirim' }}</span>
                             <div class="notification-time">{{ \Carbon\Carbon::parse($report->created_at)->locale('id')->diffForHumans() }}</div>
                         </li>
                     @empty
@@ -97,7 +97,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Statistik Laporan 6 Bulan Terakhir',
+                            text: 'Statistik Laporan Anda dalam 6 Bulan Terakhir',
                             padding: 20
                         },
                         legend: {
