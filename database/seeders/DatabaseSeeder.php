@@ -216,7 +216,7 @@ class DatabaseSeeder extends Seeder
                 'deskripsi_laporan' => 'Penyelenggaraan festival budaya dan pagelaran seni tradisional',
                 'tanggal_pelaporan' => '2024-03-20',
                 'tempat_kejadian' => 'Desa Buahbatu',
-                'status_verifikasi' => 'Belum terverifikasi',
+                'status_verifikasi' => 'Belum Diverifikasi',
                 'status_penanganan' => 'Belum ditangani',
                 'tipe_pelapor' => 'Warga',
                 'warga_username' => 'warga3',
