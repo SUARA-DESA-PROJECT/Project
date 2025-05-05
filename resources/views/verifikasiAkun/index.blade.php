@@ -7,7 +7,7 @@
     <div class="card" style="margin-left: 0; text-align: left;">
         <div class="card-header" style="text-align: left;">
             <div class="d-flex justify-content-between align-items-center">
-                <h1 style="text-align: left;">Verifikasi Akun Pengguna</h1>
+                <h2 style="text-align: left;">Verifikasi Akun Pengguna</h2>
                 <div class="dropdown">
                     <button class="btn" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 120px; width: auto;">
                         <i class="fa fa-filter mr-2"></i> Filter <i class="fa fa-caret-down ml-2"></i>

@@ -147,6 +147,64 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function getReportStatisticsWarga(Request $request)
+    {
+        // Get the username from the request
+        $username = $request->query('username');
+        
+        if (!$username) {
+            // If no username provided, try to get from session
+            $warga = session('warga');
+            if ($warga) {
+                $username = $warga->username;
+            } else {
+                return response()->json([
+                    'error' => 'No username provided and no user logged in'
+                ], 400);
+            }
+        }
+        
+        $sixMonthsAgo = now()->subMonths(5)->startOfMonth();
+        
+        // Filter reports by username
+        $reports = DB::table('laporan')
+            ->select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as total_reports'),
+                DB::raw('SUM(CASE WHEN status_verifikasi = "Terverifikasi" THEN 1 ELSE 0 END) as verified_reports')
+            )
+            ->where('created_at', '>=', $sixMonthsAgo)
+            ->where('warga_username', $username) // Filter by username
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('month')
+            ->get();
+
+        // Initialize arrays with zeros for all months
+        $months = [];
+        $totalReports = array_fill(0, 6, 0);
+        $verifiedReports = array_fill(0, 6, 0);
+
+        // Get last 6 months
+        for ($i = 5; $i >= 0; $i--) {
+            $months[] = now()->subMonths($i)->format('M');
+        }
+
+        // Fill in actual data
+        foreach ($reports as $report) {
+            $monthIndex = array_search(date('M', mktime(0, 0, 0, $report->month, 1)), $months);
+            if ($monthIndex !== false) {
+                $totalReports[$monthIndex] = $report->total_reports;
+                $verifiedReports[$monthIndex] = $report->verified_reports;
+            }
+        }
+
+        return response()->json([
+            'labels' => $months,
+            'totalReports' => $totalReports,
+            'verifiedReports' => $verifiedReports
+        ]);
+    }
+
     public function indexVerifikasi(Request $request)
     {
         $status = $request->query('status');
