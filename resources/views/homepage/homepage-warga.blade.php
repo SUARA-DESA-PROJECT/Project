@@ -39,13 +39,23 @@
                     <i class="fa fa-bell"></i> Notifikasi Terbaru
                 </h4>
                 <ul class="notification-list">
-                    @foreach($recentReports as $report)
+                    <!-- @if(isset($debug))
+                        <li class="notification-item">
+                            <span>Debug: Username: {{ $debug['current_username'] }}, Total Reports: {{ $debug['total_reports_in_db'] }}, User Reports: {{ $debug['reports_for_user'] }}</span>
+                        </li>
+                    @endif -->
+                    
+                    @forelse($recentReports as $report)
                         <li class="notification-item">
                             <i class="fa {{ $report->status_verifikasi == 'Terverifikasi' ? 'fa-check' : 'fa-file-text' }}"></i>
-                            <span>Laporan "{{ $report->judul_laporan }}" {{ $report->status_verifikasi == 'Terverifikasi' ? 'telah diverifikasi' : 'baru diterima' }}</span>
+                            <span>Laporan "{{ $report->judul_laporan }}" {{ $report->status_verifikasi == 'Terverifikasi' ? 'telah diverifikasi' : 'telah dikirim' }}</span>
                             <div class="notification-time">{{ \Carbon\Carbon::parse($report->created_at)->locale('id')->diffForHumans() }}</div>
                         </li>
-                    @endforeach
+                    @empty
+                        <li class="notification-item">
+                            <span>Belum ada laporan terbaru</span>
+                        </li>
+                    @endforelse
                 </ul>
             </div>
         </div>
@@ -59,7 +69,7 @@
     const ctx = document.getElementById('reportStatChart').getContext('2d');
     let myChart;
 
-    fetch('{{ route("report.statistics") }}')
+    fetch('{{ route("report.statistics-warga") }}')
         .then(response => response.json())
         .then(data => {
             myChart = new Chart(ctx, {
@@ -87,7 +97,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Statistik Laporan 6 Bulan Terakhir',
+                            text: 'Statistik Laporan Anda dalam 6 Bulan Terakhir',
                             padding: 20
                         },
                         legend: {

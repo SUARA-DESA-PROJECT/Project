@@ -45,6 +45,7 @@ Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name(
 Route::put('/laporan/{laporan}', [LaporanController::class, 'update'])->name('inputlaporan.update');
 Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('inputlaporan.destroy');
 Route::get('/report-statistics', [LaporanController::class, 'getReportStatistics'])->name('report.statistics');
+Route::get('/report-statistics-warga', [LaporanController::class, 'getReportStatisticsWarga'])->name('report.statistics-warga');
 
 // Route Laporan Pengurus (JESANO)
 Route::get('/inputlaporan/create-pengurus', [LaporanPengurusController::class, 'create'])->name('laporan.create-pengurus');
