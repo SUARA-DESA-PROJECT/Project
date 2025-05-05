@@ -42,11 +42,23 @@ class HomeController extends Controller
             ->count();
         $totalUsers = DB::table('warga')->count();
 
+        // Get all reports to check if there are any in the database
+        $allReports = DB::table('laporan')->get();
+        
+        // Filter recent reports by the logged-in user's username
         $recentReports = DB::table('laporan')
-            ->select('judul_laporan', 'created_at', 'status_verifikasi')
+            ->select('judul_laporan', 'created_at', 'status_verifikasi', 'warga_username')
+            ->where('warga_username', $warga->username)
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
+
+        // Add debugging information
+        $debug = [
+            'current_username' => $warga->username,
+            'total_reports_in_db' => count($allReports),
+            'reports_for_user' => count($recentReports),
+        ];
 
         return view('homepage.homepage-warga', compact('warga', 'totalReports', 'verifiedReports', 'totalUsers', 'recentReports'));
     }
