@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Laporan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -14,39 +13,49 @@ class DashboardController extends Controller
         // Get total reports
         $totalReports = Laporan::count();
         
-        // Get reports by status
-        $inProcessCount = Laporan::where('status_penanganan', 'Sudah ditangani')->count();
+        // Get reports by verification status
+        $verifiedCount = Laporan::where('status_verifikasi', 'Diverifikasi')->count();
         $unverifiedCount = Laporan::where('status_verifikasi', 'Belum terverifikasi')->count();
-
-        // Get category distribution with positive/negative counts
-        $verifiedCount = Laporan::where('status_verifikasi', 'Terverifikasi')->count();
+        $inProcessCount = Laporan::where('status_penanganan', 'Sudah ditangani')->count();
     
-        // Get reports by category
-        $reportsByCategory = Laporan::select('kategori_laporan', DB::raw('count(*) as total'))
-            ->groupBy('kategori_laporan')
-            ->get();
-
         // Get reports by location
         $reportsByLocation = Laporan::select('tempat_kejadian as lokasi', DB::raw('count(*) as total'))
             ->groupBy('tempat_kejadian')
             ->get();
 
-        // Get last 7 days reports
-        $lastSevenDays = Laporan::select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
-            ->whereBetween('created_at', [Carbon::now()->subDays(6), Carbon::now()])
+        // Get weekly reports data
+        $weeklyReports = DB::table('laporan')
+            ->select(DB::raw('YEAR(tanggal_pelaporan) as year, 
+                             WEEK(tanggal_pelaporan) as week, 
+                             COUNT(*) as total'))
+            ->whereYear('tanggal_pelaporan', date('Y'))
+            ->groupBy('year', 'week')
+            ->orderBy('year')
+            ->orderBy('week')
+            ->get();
+
+        // Get daily reports data
+        $dailyReports = DB::table('laporan')
+            ->select(DB::raw('DATE(tanggal_pelaporan) as date'), DB::raw('COUNT(*) as total'))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
+        // Get category distribution
+        $categoryDistribution = DB::table('laporan')
+            ->select('kategori_laporan', DB::raw('COUNT(*) as total'))
+            ->groupBy('kategori_laporan')
+            ->get();
+
         return view('dashboard.index', compact(
             'totalReports',
-            'inProcessCount',
-            'unverifiedCount',
-            'reportsByCategory',
-            'reportsByLocation',
-            'lastSevenDays',
             'verifiedCount',
-            'unverifiedCount'
+            'unverifiedCount',
+            'inProcessCount',
+            'reportsByLocation',
+            'weeklyReports',
+            'dailyReports',
+            'categoryDistribution'
         ));
     }
 }

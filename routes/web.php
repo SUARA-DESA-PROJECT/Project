@@ -9,6 +9,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanPengurusController;
+use App\Http\Controllers\ResponController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -89,3 +90,9 @@ Route::post('/laporan/update-status', [LaporanController::class, 'updateStatus']
 Route::get('/verifikasi-akun', [WargaController::class, 'verifikasiIndex'])->name('warga.verifikasi');
 Route::put('/verifikasi-akun/{username}/verify', [WargaController::class, 'verifyWarga'])->name('warga.verify');
 Route::put('/verifikasi-akun/{username}/unverify', [WargaController::class, 'unverifyWarga'])->name('warga.unverify');
+
+// Respon Laporan Routes
+Route::get('/respon-laporan', [ResponController::class, 'index'])->name('respon.index');
+Route::get('/respon-laporan/{id}/edit', [ResponController::class, 'edit'])->name('respon.edit');
+Route::put('/respon-laporan/{id}', [ResponController::class, 'update'])->name('respon.update');
+Route::get('/test-respon-edit/{laporan}', function($laporan) {dd('Test route working', $laporan);})->name('test.respon');
