@@ -19,6 +19,7 @@
         }
     </style>
     @yield('styles')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
 		<div class="wrapper d-flex align-items-stretch">
@@ -36,4 +37,4 @@
     <script src="{{ asset('js/main.js') }}"></script>
     @yield('scripts')
   </body>
-</html> 
+</html>
