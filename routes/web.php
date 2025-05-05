@@ -30,10 +30,8 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 // Homepage Route
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
 Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
-
-// Peta Persebaran Routes
 Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
-Route::redirect('/peta-persebaran', '/peta-persebaran-warga');
+
 
 // Laporan Routes Warga (RIDWAN)
 Route::get('/inputlaporan/create', [LaporanController::class, 'create'])->name('laporan.create');
