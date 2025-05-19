@@ -29,8 +29,10 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 
 // Homepage Route
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
-Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
-Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
+    Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
+});
 
 
 // Laporan Routes Warga (RIDWAN)
@@ -96,3 +98,7 @@ Route::get('/respon-laporan', [ResponController::class, 'index'])->name('respon.
 Route::get('/respon-laporan/{id}/edit', [ResponController::class, 'edit'])->name('respon.edit');
 Route::put('/respon-laporan/{id}', [ResponController::class, 'update'])->name('respon.update');
 Route::get('/test-respon-edit/{laporan}', function($laporan) {dd('Test route working', $laporan);})->name('test.respon');
+
+// Profile routes
+Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
