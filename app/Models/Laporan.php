@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Laporan extends Model
 {
-    protected $table = 'laporan';
+    use HasFactory;
 
+    protected $table = 'laporan';
+    
     protected $fillable = [
         'judul_laporan',
         'deskripsi_laporan',
@@ -44,5 +46,13 @@ class Laporan extends Model
     public function kategoriData()
     {
         return $this->belongsTo(\App\Models\Kategori::class, 'kategori_laporan', 'nama_kategori');
+    }
+
+    /**
+     * Get the komentars for the laporan.
+     */
+    public function komentars()
+    {
+        return $this->hasMany(Komentar::class, 'laporan_id');
     }
 }

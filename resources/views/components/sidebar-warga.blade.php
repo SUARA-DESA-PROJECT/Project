@@ -24,6 +24,11 @@
                 </a>
             </li>
             <li class="mb-2">
+                <a href="{{ route('komentar.index') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                    <span class="fa fa-comments mr-3"></span>Forum Diskusi
+                </a>
+            </li>
+            <li class="mb-2">
                 <a href="{{ route('peta.persebaran.warga') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
                     <span class="fa fa-map-marker mr-3"></span>Peta Persebaran
                 </a>
