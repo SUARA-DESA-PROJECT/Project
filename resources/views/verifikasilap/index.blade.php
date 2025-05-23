@@ -102,11 +102,11 @@
     </div>
 </div>
 
-<div class="mt-3">
+<!-- <div class="mt-3">
     <a href="{{ url('/homepage-warga') }}" class="btn btn-secondary" style="float: left;">
         Kembali ke Beranda
     </a>
-</div>
+</div> -->
 @endsection
 
 @section('scripts')

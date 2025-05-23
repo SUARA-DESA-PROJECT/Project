@@ -176,11 +176,11 @@
     </div>
 </div>
 
-<div class="mt-3 mb-5">
+<!-- <div class="mt-3 mb-5">
     <a href="{{ url('/homepage-warga') }}" class="btn btn-secondary" style="float: left;">
         Kembali ke Beranda
     </a>
-</div>
+</div> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>

@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanPengurusController;
 use App\Http\Controllers\ResponController;
+use App\Http\Controllers\KomentarWargaController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -96,3 +97,11 @@ Route::get('/respon-laporan', [ResponController::class, 'index'])->name('respon.
 Route::get('/respon-laporan/{id}/edit', [ResponController::class, 'edit'])->name('respon.edit');
 Route::put('/respon-laporan/{id}', [ResponController::class, 'update'])->name('respon.update');
 Route::get('/test-respon-edit/{laporan}', function($laporan) {dd('Test route working', $laporan);})->name('test.respon');
+
+// Komentar Routes
+// Komentar Warga Routes
+Route::get('/forum-diskusi', [KomentarWargaController::class, 'index'])->name('komentar.index');
+Route::post('/komentar', [KomentarWargaController::class, 'store'])->name('komentar.store');
+Route::get('/komentar/{komentar}/edit', [KomentarWargaController::class, 'edit'])->name('komentar.edit');
+Route::put('/komentar/{komentar}', [KomentarWargaController::class, 'update'])->name('komentar.update');
+Route::delete('/komentar/{komentar}', [KomentarWargaController::class, 'destroy'])->name('komentar.destroy');
