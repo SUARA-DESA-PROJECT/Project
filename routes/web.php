@@ -98,6 +98,10 @@ Route::get('/respon-laporan/{id}/edit', [ResponController::class, 'edit'])->name
 Route::put('/respon-laporan/{id}', [ResponController::class, 'update'])->name('respon.update');
 Route::get('/test-respon-edit/{laporan}', function($laporan) {dd('Test route working', $laporan);})->name('test.respon');
 
+// Profile routes
+Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+
 // Komentar Routes
 // Komentar Warga Routes
 Route::get('/forum-diskusi', [KomentarWargaController::class, 'index'])->name('komentar.index');
