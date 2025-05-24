@@ -76,8 +76,8 @@ class LaporanController extends Controller
 
     public function edit(Laporan $laporan)
     {
-        $nav = 'Edit Laporan - ' . $laporan->judul_laporan;
-        return view('inputlaporan.edit', compact('laporan', 'nav'));
+        $kategoris = Kategori::orderBy('nama_kategori')->get();
+        return view('riwayatlap.update', compact('laporan', 'kategoris'));
     }
 
     public function update(Request $request, Laporan $laporan)
@@ -87,17 +87,11 @@ class LaporanController extends Controller
             'deskripsi_laporan' => 'required',
             'tanggal_pelaporan' => 'required',
             'tempat_kejadian' => 'required',
-            'status_verifikasi' => 'required',
-            'status_penanganan' => 'required',
-            'deskripsi_penanganan' => 'required',
-            'tipe_pelapor' => 'required',
-            'pengurus_lingkungan_username' => 'required',
-            'warga_username' => 'required',
             'kategori_laporan' => 'required'
         ]);
 
         $laporan->update($validatedData);
-        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil diubah');
+        return redirect()->route('riwayat-laporan.index')->with('success', 'Laporan berhasil diperbarui');
     }
 
     public function destroy(Laporan $laporan)
