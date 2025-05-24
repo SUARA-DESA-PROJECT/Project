@@ -57,7 +57,7 @@ class LaporanController extends Controller
         ]);
 
         // Add automatic data
-        $validatedData['status_verifikasi'] = 'Belum Terverifikasi';
+        $validatedData['status_verifikasi'] = 'Belum Diverifikasi';
         $validatedData['status_penanganan'] = 'Belum Ditangani';
         $validatedData['deskripsi_penanganan'] = null;
         $validatedData['tipe_pelapor'] = 'Warga';
@@ -114,7 +114,7 @@ class LaporanController extends Controller
             ->select(
                 DB::raw('MONTH(created_at) as month'),
                 DB::raw('COUNT(*) as total_reports'),
-                DB::raw('SUM(CASE WHEN status_verifikasi = "Terverifikasi" THEN 1 ELSE 0 END) as verified_reports')
+                DB::raw('SUM(CASE WHEN status_verifikasi = "Diverifikasi" THEN 1 ELSE 0 END) as verified_reports')
             )
             ->where('created_at', '>=', $sixMonthsAgo)
             ->groupBy(DB::raw('MONTH(created_at)'))
@@ -171,7 +171,7 @@ class LaporanController extends Controller
             ->select(
                 DB::raw('MONTH(created_at) as month'),
                 DB::raw('COUNT(*) as total_reports'),
-                DB::raw('SUM(CASE WHEN status_verifikasi = "Terverifikasi" THEN 1 ELSE 0 END) as verified_reports')
+                DB::raw('SUM(CASE WHEN status_verifikasi = "Diverifikasi" THEN 1 ELSE 0 END) as verified_reports')
             )
             ->where('created_at', '>=', $sixMonthsAgo)
             ->where('warga_username', $username) // Filter by username
