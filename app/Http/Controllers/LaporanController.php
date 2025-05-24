@@ -85,19 +85,24 @@ class LaporanController extends Controller
         $validatedData = $request->validate([
             'judul_laporan' => 'required',
             'deskripsi_laporan' => 'required',
-            'tanggal_pelaporan' => 'required',
+            'tanggal_pelaporan' => 'required|date',
+            'time_laporan' => 'required',
             'tempat_kejadian' => 'required',
             'kategori_laporan' => 'required'
         ]);
 
-        $laporan->update($validatedData);
-        return redirect()->route('riwayat-laporan.index')->with('success', 'Laporan berhasil diperbarui');
+        try {
+            $laporan->update($validatedData);
+            return redirect()->route('riwayat-laporan.index')->with('success', 'Laporan berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui laporan.');
+        }
     }
 
     public function destroy(Laporan $laporan)
     {
         $laporan->delete();
-        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil dihapus');
+        return redirect()->route('riwayat-laporan.index')->with('success', 'Laporan berhasil dihapus');
     }
 
     public function getReportStatistics()

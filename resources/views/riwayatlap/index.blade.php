@@ -110,7 +110,7 @@
                                     <form action="{{ route('inputlaporan.destroy', $laporan->id) }}" method="POST" style="display: inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus laporan ini?')">
+                                        <button type="submit" class="btn btn-danger btn-sm delete-laporan" title="Hapus">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </form>
@@ -201,6 +201,7 @@
 </div> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         // Event listener untuk menampilkan modal detail laporan
@@ -227,6 +228,27 @@
             
             // Tampilkan modal
             $('#detailLaporanModal').modal('show');
+        });
+
+        // Event listener untuk tombol delete
+        $('.delete-laporan').click(function(e) {
+            e.preventDefault();
+            const form = $(this).closest('form');
+            
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus laporan ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
 </script>

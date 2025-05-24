@@ -2,7 +2,6 @@
 @extends('layouts.app-warga')
 
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container mt-4">
     <h2>Update Laporan</h2>
@@ -111,26 +110,86 @@
     </form>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+// Move the form submission handler outside of DOMContentLoaded
+const formLaporan = document.getElementById('formLaporan');
+if (formLaporan) {
+    formLaporan.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: "Konfirmasi Simpan",
+            text: "Apakah Anda yakin ingin menyimpan laporan ini?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#4a90e2",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Simpan!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Cek semua field yang wajib diisi
+                const requiredFields = [
+                    'judul_laporan',
+                    'deskripsi_laporan',
+                    'tanggal_pelaporan',
+                    'time_laporan',
+                    'tempat_kejadian',
+                    'kategori_laporan'
+                ];
+                let isValid = true;
+                for (let field of requiredFields) {
+                    const el = document.getElementsByName(field)[0];
+                    if (el && !el.value.trim()) {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Silahkan isi semua formulir!",
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Berhasil!",
+                    text: "Laporan Anda telah berhasil disimpan.",
+                    icon: "success",
+                    confirmButtonColor: "#4a90e2"
+                }).then(() => {
+                    this.submit();
+                });
+            }
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const kategoriSelect = document.getElementById('judul_laporan');
     const jenisLaporanInput = document.getElementById('kategori_laporan');
 
-    kategoriSelect.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        if (selectedOption.value === "") {
-            jenisLaporanInput.value = "";
-            return;
-        }
-        
-        const jenisKategori = selectedOption.getAttribute('data-jenis');
-        jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
-    });
+    if (kategoriSelect) {
+        kategoriSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value === "") {
+                jenisLaporanInput.value = "";
+                return;
+            }
+            
+            const jenisKategori = selectedOption.getAttribute('data-jenis');
+            jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
+        });
 
-    if (kategoriSelect.value) {
-        const selectedOption = kategoriSelect.options[kategoriSelect.selectedIndex];
-        const jenisKategori = selectedOption.getAttribute('data-jenis');
-        jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
+        if (kategoriSelect.value) {
+            const selectedOption = kategoriSelect.options[kategoriSelect.selectedIndex];
+            const jenisKategori = selectedOption.getAttribute('data-jenis');
+            jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
+        }
     }
 
     function autoExpandPenanganan(textarea) {
@@ -158,65 +217,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             document.getElementById('charCountPenanganan').style.color = '';
         }
-    });
-
-    document.getElementById('formLaporan').addEventListener('submit', function(e) {
-        e.preventDefault(); 
-
-        Swal.fire({
-            title: "Konfirmasi Simpan",
-            text: "Apakah Anda yakin ingin menyimpan laporan ini?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#4a90e2",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Simpan!",
-            cancelButtonText: "Batal"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Cek semua field yang wajib diisi
-                const requiredFields = [
-                    'judul_laporan',
-                    'deskripsi_laporan',
-                    'tanggal_pelaporan',
-                    'time_laporan',
-                    'tempat_kejadian',
-                    'status_penanganan',
-                    'deskripsi_penanganan',
-                    'kategori_laporan',
-                    'tipe_pelapor',
-                    'warga_username',
-                    'pengurus_lingkungan_username',
-                    'status_verifikasi'
-                ];
-                let isValid = true;
-                for (let field of requiredFields) {
-                    const el = document.getElementsByName(field)[0];
-                    if (el && !el.value.trim()) {
-                        isValid = false;
-                        break;
-                    }
-                }
-
-                if (!isValid) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Silahkan isi semua formulir!",
-                    });
-                    return;
-                }
-
-                Swal.fire({
-                    title: "Berhasil!",
-                    text: "Laporan Anda telah berhasil disimpan.",
-                    icon: "success",
-                    confirmButtonColor: "#4a90e2"
-                }).then(() => {
-                    this.submit(); 
-                });
-            }
-        });
     });
 });
 </script>
