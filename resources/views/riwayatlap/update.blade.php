@@ -458,5 +458,18 @@ document.addEventListener('DOMContentLoaded', function() {
         justify-content: center;
     }
 }
+
+/* Tambahan khusus untuk select agar teks tidak terpotong */
+select.form-control {
+    height: auto;
+    min-height: 48px; /* atau sesuai kebutuhan */
+    font-size: 1rem;
+    padding-right: 2.5rem; /* ruang untuk icon dropdown */
+    line-height: 1.5;
+    box-sizing: border-box;
+    /* Untuk memastikan teks tidak terpotong */
+    overflow: visible;
+    white-space: normal;
+}
 </style>
 @endsection
