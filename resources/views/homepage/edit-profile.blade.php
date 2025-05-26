@@ -67,6 +67,40 @@
                         @enderror
                     </div>
 
+                    <hr class="my-4">
+                    <h5 class="mb-3">Ubah Password</h5>
+                    
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label">Password Baru</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control @error('new_password') is-invalid @enderror" 
+                                id="new_password" name="new_password">
+                            <button class="btn border-0 bg-transparent" type="button" id="toggleNewPassword">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                            @error('new_password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new_password_confirmation" class="form-label">Konfirmasi Password Baru</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control @error('new_password_confirmation') is-invalid @enderror" 
+                                id="new_password_confirmation" name="new_password_confirmation">
+                            <button class="btn border-0 bg-transparent" type="button" id="toggleConfirmPassword">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                            @error('new_password_confirmation')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div id="password-match-error" class="invalid-feedback" style="display: none;">
+                                Password tidak cocok
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('homepage-warga') }}" class="btn btn-secondary">Kembali</a>
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -91,4 +125,49 @@
         });
     </script>
 @endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleNewPassword = document.getElementById('toggleNewPassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const newPasswordInput = document.getElementById('new_password');
+        const confirmPasswordInput = document.getElementById('new_password_confirmation');
+        const passwordMatchError = document.getElementById('password-match-error');
+        const submitButton = document.querySelector('button[type="submit"]');
+
+        // Function to check password match
+        function checkPasswordMatch() {
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (confirmPassword && newPassword !== confirmPassword) {
+                confirmPasswordInput.classList.add('is-invalid');
+                passwordMatchError.style.display = 'block';
+                submitButton.disabled = true;
+            } else {
+                confirmPasswordInput.classList.remove('is-invalid');
+                passwordMatchError.style.display = 'none';
+                submitButton.disabled = false;
+            }
+        }
+
+        // Add event listeners for password matching
+        newPasswordInput.addEventListener('input', checkPasswordMatch);
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+        toggleNewPassword.addEventListener('click', function() {
+            const type = newPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            newPasswordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    });
+</script>
 @endsection

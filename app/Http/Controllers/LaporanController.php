@@ -288,4 +288,15 @@ class LaporanController extends Controller
 
         return view('riwayatlap.index', compact('laporans', 'nav'));
     }
+
+    public function getLaporanData()
+    {
+        $laporans = Laporan::select('judul_laporan', 'deskripsi_laporan', 'tempat_kejadian', 'tanggal_pelaporan', 'status_verifikasi', 'status_penanganan', 'latitude', 'longitude')
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return response()->json($laporans);
+    }
 }

@@ -27,17 +27,24 @@ class ProfileController extends Controller
             'email' => 'required|string|email|max:255|unique:warga,email,' . $user->username . ',username',
             'nomor_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
+            'new_password' => 'nullable|min:6|confirmed',
         ]);
 
         $user->nama_lengkap = $validatedData['nama_lengkap'];
         $user->email = $validatedData['email'];
         $user->nomor_telepon = $validatedData['nomor_telepon'];
         $user->alamat = $validatedData['alamat'];
+
+        // Update password if provided
+        if ($request->filled('new_password')) {
+            $user->password = bcrypt($validatedData['new_password']);
+        }
+
         $user->save();
 
         // Update session data
         session(['warga' => $user]);
 
-        return redirect()->back()->with('success', 'Profile updated successfully');
+        return redirect()->back()->with('success', 'Profile berhasil diperbarui');
     }
 }
