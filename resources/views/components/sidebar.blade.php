@@ -44,6 +44,11 @@
                     <span class="fa fa-dashboard mr-3"></span>Dashboard
                 </a>
             </li>
+            <li class="mb-2">
+                <a href="{{ route('pengurus.riwayat.index') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                    <span class="fa fa-history mr-3"></span>Riwayat Laporan
+                </a>
+            </li>
         </ul>
 
         <div class="footer">
@@ -65,4 +70,4 @@
         transition: all 0.3s ease;
         box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-</style> 
+</style>

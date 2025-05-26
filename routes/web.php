@@ -102,3 +102,34 @@ Route::get('/test-respon-edit/{laporan}', function($laporan) {dd('Test route wor
 // Profile routes
 Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
 Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+<<<<<<< Updated upstream
+=======
+
+// Komentar Routes
+// Komentar Warga Routes
+Route::get('/forum-diskusi', [KomentarWargaController::class, 'index'])->name('komentar.index');
+Route::post('/komentar', [KomentarWargaController::class, 'store'])->name('komentar.store');
+Route::get('/komentar/{komentar}/edit', [KomentarWargaController::class, 'edit'])->name('komentar.edit');
+Route::put('/komentar/{komentar}', [KomentarWargaController::class, 'update'])->name('komentar.update');
+Route::delete('/komentar/{komentar}', [KomentarWargaController::class, 'destroy'])->name('komentar.destroy');
+
+// Pengurus Laporan Routes
+Route::prefix('pengurus')->group(function () {
+    Route::get('/riwayat-laporan', [LaporanPengurusController::class, 'index'])->name('laporanpengurus.index');
+    Route::get('/riwayat-laporan/{id}/edit', [LaporanPengurusController::class, 'edit'])->name('laporanpengurus.edit');
+    Route::put('/riwayat-laporan/{id}', [LaporanPengurusController::class, 'update'])->name('laporanpengurus.update');
+    Route::delete('/riwayat-laporan/{id}', [LaporanPengurusController::class, 'destroy'])->name('laporanpengurus.destroy');
+});
+
+// Riwayat Laporan Pengurus Routes
+Route::prefix('pengurus')->group(function () {
+    Route::get('/riwayat-laporan-saya', [RiwayatLaporanPengurusController::class, 'index'])
+        ->name('pengurus.riwayat.index');
+    Route::get('/riwayat-laporan-saya/{id}/edit', [RiwayatLaporanPengurusController::class, 'edit'])
+        ->name('pengurus.riwayat.edit');
+    Route::put('/riwayat-laporan-saya/{id}', [RiwayatLaporanPengurusController::class, 'update'])
+        ->name('pengurus.riwayat.update');
+    Route::delete('/riwayat-laporan-saya/{id}', [RiwayatLaporanPengurusController::class, 'destroy'])
+        ->name('pengurus.riwayat.destroy');
+});
+>>>>>>> Stashed changes
