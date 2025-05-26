@@ -33,14 +33,13 @@ class HomeController extends Controller
 
     public function index_warga()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login-masyarakat')->with('error', 'Please login first');
+        $warga = session('warga');
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu');
         }
-
-        $warga = Auth::user();
         
         $recentReports = DB::table('laporan')
-            ->where('username', $warga->username)
+            ->where('warga_username', $warga->username)
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
