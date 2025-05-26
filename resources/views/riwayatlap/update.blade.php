@@ -1,135 +1,160 @@
-<!-- resources/views/inputlaporan/create.blade.php -->
 @extends('layouts.app-warga')
 
 @section('content')
 
-<div class="container mt-4">
-    <h2>Update Laporan</h2>
-    <p>Halaman ini digunakan untuk mengupdate laporan yang telah dibuat sebelumnya.</p>
+<div class="update-container">
+    <div class="update-header">
+        <h2><i class="fas fa-edit"></i> Update Laporan</h2>
+        <p class="update-subtitle">Perbarui informasi laporan Anda dengan data terbaru</p>
+    </div>
 
     @if(session('success'))
         <div class="alert alert-success">
-            {{ session('success') }}
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
         </div>
     @endif
 
     {{-- filepath: c:\Users\HP\Documents\GitHub\Project\resources\views\riwayatlap\update.blade.php --}}
-    <form action="{{ route('inputlaporan.update', $laporan->id) }}" method="POST" id="formLaporan">
+    <form action="{{ route('inputlaporan.update', $laporan->id) }}" method="POST" id="formLaporan" class="update-form">
         @csrf
-        @method('PUT') <!-- Method spoofing untuk PUT -->
+        @method('PUT')
 
-        <!-- Input tersembunyi untuk username warga -->
         <input type="hidden" name="warga_username" value="{{ $laporan->warga_username }}">
         <input type="hidden" name="tipe_pelapor" value="{{ $laporan->tipe_pelapor }}">
 
-        <div class="mb-3">
-            <label for="judul" class="form-label">Judul Laporan</label>
-            <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul_laporan') is-invalid @enderror" 
-                value="{{ old('judul_laporan', $laporan->judul_laporan) }}" placeholder="Masukkan judul laporan">
-            @error('judul_laporan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="deskripsi_laporan" class="form-label">Deskripsi Laporan</label>
-            <textarea name="deskripsi_laporan" id="deskripsi_laporan" class="form-control auto-expand @error('deskripsi_laporan') is-invalid @enderror" 
-                style="min-height: 200px; max-height: 500px; overflow-y: scroll;" 
-                maxlength="10000">{{ old('deskripsi_laporan', $laporan->deskripsi_laporan) }}</textarea>
-            <small class="text-muted">Maksimal 10000 karakter. Sisa: <span id="charCount">10000</span> karakter</small>
-            @error('deskripsi_laporan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="tanggal_pelaporan" class="form-label">Waktu Kejadian</label>
-            <div class="row">
-                <div class="col-md-6 mb-2">
-                    <label for="Date" class="form-label">Tanggal</label>    
-                    <input type="date" name="tanggal_pelaporan" id="tanggal_pelaporan" class="form-control @error('tanggal_pelaporan') is-invalid @enderror" 
-                        value="{{ old('tanggal_pelaporan', $laporan->tanggal_pelaporan) }}" placeholder="Pilih Tanggal">
-                    @error('tanggal_pelaporan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+        <div class="form-grid">
+            <div class="form-card">
+                <div class="form-header">
+                    <i class="fas fa-heading"></i>
+                    <label for="judul" class="form-label">Judul Laporan</label>
                 </div>
-                <div class="col-md-6">
-                    <label for="time" class="form-label">Jam</label>    
-                    <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" 
-                        value="{{ old('time_laporan', $laporan->time_laporan) }}" placeholder="Pilih Jam">
-                    @error('time_laporan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul_laporan') is-invalid @enderror" 
+                    value="{{ old('judul_laporan', $laporan->judul_laporan) }}" placeholder="Masukkan judul laporan">
+                @error('judul_laporan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-card full-width">
+                <div class="form-header">
+                    <i class="fas fa-align-left"></i>
+                    <label for="deskripsi_laporan" class="form-label">Deskripsi Laporan</label>
                 </div>
+                <textarea name="deskripsi_laporan" id="deskripsi_laporan" class="form-control auto-expand @error('deskripsi_laporan') is-invalid @enderror" 
+                    style="min-height: 200px; max-height: 500px; overflow-y: scroll;" 
+                    maxlength="10000">{{ old('deskripsi_laporan', $laporan->deskripsi_laporan) }}</textarea>
+                @error('deskripsi_laporan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <i class="fas fa-calendar-alt"></i>
+                    <label for="tanggal_pelaporan" class="form-label">Tanggal Kejadian</label>
+                </div>
+                <input type="date" name="tanggal_pelaporan" id="tanggal_pelaporan" class="form-control @error('tanggal_pelaporan') is-invalid @enderror" 
+                    value="{{ old('tanggal_pelaporan', $laporan->tanggal_pelaporan) }}" placeholder="Pilih Tanggal">
+                @error('tanggal_pelaporan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <i class="fas fa-clock"></i>
+                    <label for="time" class="form-label">Waktu Kejadian</label>
+                </div>
+                <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" 
+                    value="{{ old('time_laporan', $laporan->time_laporan) }}" placeholder="Pilih Jam">
+                @error('time_laporan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
+                </div>
+                <select name="tempat_kejadian" id="desa" class="form-control @error('tempat_kejadian') is-invalid @enderror">
+                    <option value="">Pilih Desa/Kelurahan</option>
+                    <option value="Bojongsari" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
+                    <option value="Bojongsoang" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Bojongsoang' ? 'selected' : '' }}>Bojongsoang</option>
+                    <option value="Buahbatu" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Buahbatu' ? 'selected' : '' }}>Buahbatu</option>
+                    <option value="Cipagalo" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Cipagalo' ? 'selected' : '' }}>Cipagalo</option>
+                    <option value="Lengkong" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Lengkong' ? 'selected' : '' }}>Lengkong</option>
+                    <option value="Tegalluar" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Tegalluar' ? 'selected' : '' }}>Tegalluar</option>
+                </select>
+                @error('tempat_kejadian')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <i class="fas fa-tags"></i>
+                    <label for="kategori_laporan" class="form-label">Kategori Laporan</label>
+                </div>
+                <select name="kategori_laporan" id="judul_laporan" class="form-control @error('kategori_laporan') is-invalid @enderror">
+                    <option value="">Pilih Kategori Laporan</option>
+                    @foreach($kategoris as $kategori)
+                        <option value="{{ $kategori->nama_kategori }}" {{ old('kategori_laporan', $laporan->kategori_laporan) == $kategori->nama_kategori ? 'selected' : '' }}
+                            data-jenis="{{ $kategori->jenis_kategori }}">
+                            {{ $kategori->nama_kategori }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('kategori_laporan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <i class="fas fa-info-circle"></i>
+                    <label for="kategori_laporan" class="form-label">Jenis Laporan</label>
+                </div>
+                <input type="text" name="jenis_laporan" id="kategori_laporan" class="form-control" readonly 
+                    value="{{ old('jenis_laporan', $laporan->jenis_laporan) }}" placeholder="Jenis laporan akan muncul otomatis">
+                @error('kategori_laporan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
-        <div class="mb-3">
-            <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
-            <select name="tempat_kejadian" id="desa" class="form-control @error('tempat_kejadian') is-invalid @enderror">
-                <option value="">Pilih Desa/Kelurahan</option>
-                <option value="Bojongsari" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
-                <option value="Bojongsoang" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Bojongsoang' ? 'selected' : '' }}>Bojongsoang</option>
-                <option value="Buahbatu" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Buahbatu' ? 'selected' : '' }}>Buahbatu</option>
-                <option value="Cipagalo" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Cipagalo' ? 'selected' : '' }}>Cipagalo</option>
-                <option value="Lengkong" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Lengkong' ? 'selected' : '' }}>Lengkong</option>
-                <option value="Tegalluar" {{ old('tempat_kejadian', $laporan->tempat_kejadian) == 'Tegalluar' ? 'selected' : '' }}>Tegalluar</option>
-            </select>
-            @error('tempat_kejadian')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+        <div class="form-actions">
+            <a href="{{ url('/homepage') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Update Laporan
+            </button>
         </div>
-
-        <div class="mb-3">
-            <label for="kategori_laporan" class="form-label">Kategori Laporan</label>
-            <select name="kategori_laporan" id="judul_laporan" class="form-control @error('kategori_laporan') is-invalid @enderror">
-                <option value="">Pilih Kategori Laporan</option>
-                @foreach($kategoris as $kategori)
-                    <option value="{{ $kategori->nama_kategori }}" {{ old('kategori_laporan', $laporan->kategori_laporan) == $kategori->nama_kategori ? 'selected' : '' }}
-                        data-jenis="{{ $kategori->jenis_kategori }}">
-                        {{ $kategori->nama_kategori }}
-                    </option>
-                @endforeach
-            </select>
-            @error('kategori_laporan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="kategori_laporan" class="form-label">Jenis Laporan</label>
-            <input type="text" name="jenis_laporan" id="kategori_laporan" class="form-control" readonly 
-                value="{{ old('jenis_laporan', $laporan->jenis_laporan) }}" placeholder="Jenis laporan akan muncul otomatis">
-            @error('kategori_laporan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <a href="{{ url('/homepage') }}" class="btn btn-secondary">Kembali</a>
-        <button type="submit" class="btn btn-primary float-end">Update Laporan</button>
     </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-// Move the form submission handler outside of DOMContentLoaded
 const formLaporan = document.getElementById('formLaporan');
 if (formLaporan) {
     formLaporan.addEventListener('submit', function(e) {
         e.preventDefault();
 
         Swal.fire({
-            title: "Konfirmasi Simpan",
-            text: "Apakah Anda yakin ingin menyimpan laporan ini?",
+            title: "Konfirmasi Update",
+            text: "Apakah Anda yakin ingin mengupdate laporan ini?",
             icon: "question",
             showCancelButton: true,
-            confirmButtonColor: "#4a90e2",
+            confirmButtonColor: "#468B94",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Simpan!",
-            cancelButtonText: "Batal"
+            confirmButtonText: "Ya, Update!",
+            cancelButtonText: "Batal",
+            customClass: {
+                popup: 'animated fadeInDown'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Cek semua field yang wajib diisi
                 const requiredFields = [
                     'judul_laporan',
                     'deskripsi_laporan',
@@ -152,15 +177,21 @@ if (formLaporan) {
                         icon: "error",
                         title: "Oops...",
                         text: "Silahkan isi semua formulir!",
+                        customClass: {
+                            popup: 'animated shake'
+                        }
                     });
                     return;
                 }
 
                 Swal.fire({
                     title: "Berhasil!",
-                    text: "Laporan Anda telah berhasil disimpan.",
+                    text: "Laporan Anda telah berhasil diupdate.",
                     icon: "success",
-                    confirmButtonColor: "#4a90e2"
+                    confirmButtonColor: "#468B94",
+                    customClass: {
+                        popup: 'animated fadeInDown'
+                    }
                 }).then(() => {
                     this.submit();
                 });
@@ -192,160 +223,145 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function autoExpandPenanganan(textarea) {
-        textarea.style.height = 'auto';
-        
-        const newHeight = Math.min(textarea.scrollHeight, 500);
-        
-        textarea.style.height = newHeight + 'px';
-        
-        textarea.style.overflowY = 'scroll';
+    const textarea = document.getElementById('deskripsi_laporan');
+    const charCount = document.getElementById('charCount');
+
+    if (textarea && charCount) {
+        textarea.addEventListener('input', function() {
+            const maxLength = 10000;
+            const currentLength = this.value.length;
+            const remaining = maxLength - currentLength;
+            charCount.textContent = remaining;
+            
+            if (remaining < 20) {
+                charCount.style.color = '#dc3545';
+            } else {
+                charCount.style.color = '';
+            }
+        });
     }
-
-    autoExpandPenanganan(document.getElementById('deskripsi_penanganan'));
-
-    document.getElementById('deskripsi_penanganan').addEventListener('input', function() {
-        autoExpandPenanganan(this);
-        
-        const maxLength = 10000;
-        const currentLength = this.value.length;
-        const remaining = maxLength - currentLength;
-        document.getElementById('charCountPenanganan').textContent = remaining;
-        
-        if (remaining < 20) {
-            document.getElementById('charCountPenanganan').style.color = '#dc3545';
-        } else {
-            document.getElementById('charCountPenanganan').style.color = '';
-        }
-    });
 });
 </script>
 
 <style>
-textarea::-webkit-scrollbar {
-    width: 8px;
-}
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 
-textarea::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-textarea::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-textarea::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-.auto-expand {
-    resize: none;
-    transition: height 0.1s ease-out;
-}
-
-.container {
-    max-width: 98vw;      
+.update-container {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 10px 12px;   
+    padding: 2rem;
+    background: #f8f9fa;
+    min-height: 100vh;
 }
 
-h2 {
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.mb-3 {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-    position: relative;
-    border-left: 4px solid #468B94;
-}
-
-.welcome-banner {
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.update-header {
     text-align: center;
-    margin-bottom: 30px;
-    position: relative;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.welcome-banner h2 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 2em;
+.update-header h2 {
+    color: #468B94;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
 }
 
-.welcome-banner p {
+.update-subtitle {
     color: #666;
-    line-height: 1.6;
-    margin-bottom: 15px;
+    font-size: 1.1rem;
 }
 
-.welcome-banner strong {
-    color:rgb(37, 136, 60);
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.decoration {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: #28a745;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+.form-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.form-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: #468B94;
+}
+
+.form-header i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
 }
 
 .form-label {
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
-    display: block;
+    margin: 0;
 }
 
 .form-control {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 8px 12px;
-    transition: all 0.3s ease;
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s;
 }
 
 .form-control:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+    border-color: #468B94;
+    box-shadow: 0 0 0 0.2rem rgba(70, 139, 148, 0.25);
 }
 
-select.form-control {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1em;
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .btn {
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.btn i {
+    font-size: 1.1rem;
 }
 
 .btn-primary {
-    background-color: #4a90e2;
-    border-color: #4a90e2;
+    background-color: #468B94;
+    border-color: #468B94;
 }
 
 .btn-primary:hover {
-    background-color: #357abd;
-    border-color: #357abd;
+    background-color: #3a7a82;
+    border-color: #3a7a82;
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -355,53 +371,17 @@ select.form-control {
 
 .btn-secondary:hover {
     background-color: #5a6268;
-    border-color: #545b62;
+    border-color: #5a6268;
+    transform: translateY(-1px);
 }
 
-.invalid-feedback {
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 4px;
-}
-
-.text-muted {
-    color: #6c757d !important;
-    font-size: 0.875rem;
-    margin-top: 4px;
-}
-
-/* Status badges */
-.badge {
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.badge-negatif {
-    background-color: #dc3545;
-    color: white;
-}
-
-.badge-positif {
-    background-color: #28a745;
-    color: white;
-}
-
-/* Row styling */
-.row {
-    margin: 0 -10px;
-}
-
-.col-md-6 {
-    padding: 0 10px;
-}
-
-/* Alert styling */
 .alert {
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .alert-success {
@@ -410,32 +390,73 @@ select.form-control {
     color: #155724;
 }
 
-.form-section-header {
-    border-bottom: 2px solid #eee;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+.alert i {
+    font-size: 1.2rem;
 }
 
-
-.col-md-6 .form-label {
-    font-size: 0.9rem;  
-    margin-bottom: 4px;  
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
 }
 
-.col-md-6 .form-control {
-    padding: 6px 10px;  
-    font-size: 0.9rem;  
-    height: 35px;      
+.text-muted {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: block;
 }
 
-
-.mb-3 .row .col-md-6 {
-    margin-bottom: 0;    
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.mb-3 > .form-label {
-    margin-bottom: 12px; 
-    font-size: 1rem;     
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.animated {
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+}
+
+.fadeInDown {
+    animation-name: fadeInDown;
+}
+
+.shake {
+    animation-name: shake;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .update-container {
+        padding: 1rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 </style>
 @endsection
