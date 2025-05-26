@@ -103,7 +103,7 @@
             <div class="col-xl-4 col-md-6">
                 <div class="icon-box">
                   <div class="icon"><i class="bi bi-person-gear"></i></div>
-                  <h4 class="title"><a href="" class="stretched-link">Admin</a></h4>
+                  <h4 class="title"><a href="{{ route('login-admin') }}" class="stretched-link">Admin</a></h4>
                 </div>
             </div><!--End Icon Box -->
 

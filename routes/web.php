@@ -13,6 +13,7 @@ use App\Http\Controllers\ResponController;
 use App\Http\Controllers\KomentarWargaController;
 use App\Models\Laporan;
 use App\Http\Controllers\ProfilePengurusController;
+use App\Http\Controllers\AdminController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -29,6 +30,20 @@ Route::post('/logout-masyarakat', [AuthController::class, 'logoutMasyarakat'])->
 Route::get('/login-kepaladesa', [AuthController::class, 'showLoginFormKepdes'])->name('login-kepaladesa');
 Route::post('/login-kepaladesa', [AuthController::class, 'loginPengurus'])->name('login.pengurus');
 Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name('logout.pengurus');
+Route::get('/login-admin', [AuthController::class, 'showLoginFormAdmin'])->name('login-admin');
+Route::post('/login-admin', [AuthController::class, 'loginAdmin'])->name('login.admin');
+Route::post('/logout-admin', [AuthController::class, 'logoutAdmin'])->name('logout.admin');
+
+// Admin Routes
+Route::middleware(['auth.admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+    Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
+    Route::get('/admin/{admin}', [AdminController::class, 'show'])->name('admin.show');
+    Route::get('/admin/{admin}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/{admin}', [AdminController::class, 'update'])->name('admin.update');
+    Route::delete('/admin/{admin}', [AdminController::class, 'destroy'])->name('admin.destroy');
+});
 
 // Homepage Route
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
