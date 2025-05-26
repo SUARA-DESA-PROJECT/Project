@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanPengurusController;
 use App\Http\Controllers\ResponController;
 use App\Http\Controllers\KomentarWargaController;
+use App\Models\Laporan;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -46,6 +47,7 @@ Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name
 Route::get('/report-statistics', [LaporanController::class, 'getReportStatistics'])->name('report.statistics');
 Route::get('/riwayat-laporan', [LaporanController::class, 'riwayatLaporan'])->name('riwayat-laporan.index');
 Route::get('/report-statistics-warga', [LaporanController::class, 'getReportStatisticsWarga'])->name('report.statistics-warga');
+Route::get('/export-pdf', [LaporanController::class, 'exportPDF'])->name('export-pdf');
 
 // Route Laporan Pengurus (JESANO)
 Route::get('/inputlaporan/create-pengurus', [LaporanPengurusController::class, 'create'])->name('laporan.create-pengurus');

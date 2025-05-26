@@ -8,18 +8,23 @@
         <div class="card-header" style="text-align: left;">
             <div class="d-flex justify-content-between align-items-center">
                 <h1 style="text-align: left;">Riwayat Laporan</h1>
-                <div class="dropdown">
-                    <button class="btn" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 120px; width: auto;">
-                        <i class="fa fa-filter mr-2"></i> Filter <i class="fa fa-caret-down ml-2"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="filterDropdown">
-                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index') }}">Semua Data</a>
-                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Diverifikasi']) }}">Diverifikasi</a>
-                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Belum Diverifikasi']) }}">Belum Diverifikasi</a>
-                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['jenis' => 'Laporan Positif']) }}">Laporan Positif</a>
-                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['jenis' => 'Laporan Negatif']) }}">Laporan Negatif</a>
-                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status_penanganan' => 'Sudah Ditangani']) }}">Sudah Ditangani</a>
-                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status_penanganan' => 'Belum Ditangani']) }}">Belum Ditangani</a>
+                <div class="d-flex align-items-center">
+                    <a href="{{ url('/export-pdf') }}?{{ http_build_query(request()->query()) }}" class="btn mr-2" style="background-color: #3942ef; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <i class="fa fa-file-pdf-o mr-2"></i> Cetak PDF
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 120px; width: auto;">
+                            <i class="fa fa-filter mr-2"></i> Filter <i class="fa fa-caret-down ml-2"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index') }}">Semua Data</a>
+                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Diverifikasi']) }}">Diverifikasi</a>
+                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Belum Diverifikasi']) }}">Belum Diverifikasi</a>
+                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['jenis' => 'Laporan Positif']) }}">Laporan Positif</a>
+                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['jenis' => 'Laporan Negatif']) }}">Laporan Negatif</a>
+                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status_penanganan' => 'Sudah Ditangani']) }}">Sudah Ditangani</a>
+                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status_penanganan' => 'Belum Ditangani']) }}">Belum Ditangani</a>
+                        </div>
                     </div>
                 </div>
             </div>
