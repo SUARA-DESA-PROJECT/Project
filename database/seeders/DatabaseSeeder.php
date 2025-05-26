@@ -238,5 +238,9 @@ class DatabaseSeeder extends Seeder
         foreach ($laporanData as $laporan) {
             Laporan::create($laporan);
         }
+
+        $this->call([
+            LocationSeeder::class,
+        ]);
     }
 }
