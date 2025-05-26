@@ -14,26 +14,29 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        $user = auth()->user();
-        
+        $sessionWarga = session('warga');
+        if (!$sessionWarga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // Fetch the user from the database using username
+        $user = \App\Models\Warga::where('username', $sessionWarga->username)->first();
+
         $validatedData = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:wargas,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:warga,email,' . $user->username . ',username',
             'nomor_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
-            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $user->nama_lengkap = $validatedData['nama_lengkap'];
         $user->email = $validatedData['email'];
         $user->nomor_telepon = $validatedData['nomor_telepon'];
         $user->alamat = $validatedData['alamat'];
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($validatedData['password']);
-        }
-
         $user->save();
+
+        // Update session data
+        session(['warga' => $user]);
 
         return redirect()->back()->with('success', 'Profile updated successfully');
     }
