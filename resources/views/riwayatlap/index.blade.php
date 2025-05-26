@@ -12,6 +12,11 @@
                     <button class="btn" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 120px; width: auto;">
                         <i class="fa fa-filter mr-2"></i> Filter <i class="fa fa-caret-down ml-2"></i>
                     </button>
+                    {{-- button input new laporan --}}
+                    <a href="{{ route('laporan.create') }}" class="btn btn-primary" style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); min-width: 120px; width: auto;">
+                        <i class="fa fa-plus mr-2"></i> Buat Laporan
+                    </a>
+
                     <div class="dropdown-menu" aria-labelledby="filterDropdown">
                         <a class="dropdown-item" href="{{ route('riwayat-laporan.index') }}">Semua Data</a>
                         <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Diverifikasi']) }}">Diverifikasi</a>
@@ -44,6 +49,7 @@
                             <th style="padding: 15px; width: 15%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Jenis Laporan</th>
                             <th style="padding: 15px; width: 15%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Status Verifikasi</th>
                             <th style="padding: 15px; width: 15%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Status Penanganan</th>
+                            <th style="padding: 15px; width: 15%; font-size: 14px; font-weight: bold; color: black; text-align: center; vertical-align: middle;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,10 +103,22 @@
                                         {{ $laporan->status_penanganan }}
                                     </span>
                                 </td>
+                                <td style="padding: 12px 15px; text-align: center; display: flex; justify-content: center; align-items: center;">
+                                    <a href="{{ route('inputlaporan.edit', $laporan->id) }}" class="btn btn-warning btn-sm" style="margin-right: 5px;" title="Edit">
+                                        <i class="fa fa-pencil-alt"></i>
+                                    </a>
+                                    <form action="{{ route('inputlaporan.destroy', $laporan->id) }}" method="POST" style="display: inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm delete-laporan" title="Hapus">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center" style="padding: 20px;">Tidak ada data laporan</td>
+                                <td colspan="9" class="text-center" style="padding: 20px;">Tidak ada data laporan</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -183,6 +201,7 @@
 </div> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         // Event listener untuk menampilkan modal detail laporan
@@ -209,6 +228,27 @@
             
             // Tampilkan modal
             $('#detailLaporanModal').modal('show');
+        });
+
+        // Event listener untuk tombol delete
+        $('.delete-laporan').click(function(e) {
+            e.preventDefault();
+            const form = $(this).closest('form');
+            
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus laporan ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
 </script>

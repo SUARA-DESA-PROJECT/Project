@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanPengurusController;
 use App\Http\Controllers\ResponController;
+use App\Http\Controllers\KomentarWargaController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -29,10 +30,8 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 
 // Homepage Route
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
-Route::middleware(['auth'])->group(function () {
-    Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
-    Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
-});
+Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
+Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
 
 
 // Laporan Routes Warga (RIDWAN)
@@ -41,8 +40,10 @@ Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan
 Route::get('/input-laporan', [LaporanController::class, 'create'])->name('laporan.create');
 Route::get('/laporan', [LaporanController::class, 'index'])->name('inputlaporan.index');
 Route::get('/laporan/{laporan}', [LaporanController::class, 'show'])->name('inputlaporan.show');
+
 Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name('inputlaporan.edit');
 Route::put('/laporan/{laporan}', [LaporanController::class, 'update'])->name('inputlaporan.update');
+
 Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('inputlaporan.destroy');
 Route::get('/report-statistics', [LaporanController::class, 'getReportStatistics'])->name('report.statistics');
 Route::get('/riwayat-laporan', [LaporanController::class, 'riwayatLaporan'])->name('riwayat-laporan.index');
@@ -102,3 +103,11 @@ Route::get('/test-respon-edit/{laporan}', function($laporan) {dd('Test route wor
 // Profile routes
 Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
 Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+
+// Komentar Routes
+// Komentar Warga Routes
+Route::get('/forum-diskusi', [KomentarWargaController::class, 'index'])->name('komentar.index');
+Route::post('/komentar', [KomentarWargaController::class, 'store'])->name('komentar.store');
+Route::get('/komentar/{komentar}/edit', [KomentarWargaController::class, 'edit'])->name('komentar.edit');
+Route::put('/komentar/{komentar}', [KomentarWargaController::class, 'update'])->name('komentar.update');
+Route::delete('/komentar/{komentar}', [KomentarWargaController::class, 'destroy'])->name('komentar.destroy');
