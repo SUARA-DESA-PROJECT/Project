@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -9,11 +10,23 @@ class ProfileController extends Controller
 {
     public function edit()
     {
-        return view('homepage.edit-profile');
+        $warga = session('warga');
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // Get fresh data from database
+        $warga = Warga::where('username', $warga->username)->first();
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Data warga tidak ditemukan.');
+        }
+
+        return view('homepage.edit-profile', compact('warga'));
     }
 
     public function update(Request $request)
     {
+
         $sessionWarga = session('warga');
         if (!$sessionWarga) {
             return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
@@ -21,26 +34,36 @@ class ProfileController extends Controller
 
         // Fetch the user from the database using username
         $user = \App\Models\Warga::where('username', $sessionWarga->username)->first();
-
+        
+          // Get fresh data from database
+        $warga = Warga::where('username', $warga->username)->first();
+        if (!$warga) {
+            return redirect()->route('login-masyarakat')->with('error', 'Data warga tidak ditemukan.');
+        }      
+      
         $validatedData = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:warga,email,' . $user->username . ',username',
+
             'nomor_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
             'new_password' => 'nullable|min:6|confirmed',
         ]);
 
-        $user->nama_lengkap = $validatedData['nama_lengkap'];
-        $user->email = $validatedData['email'];
-        $user->nomor_telepon = $validatedData['nomor_telepon'];
-        $user->alamat = $validatedData['alamat'];
+        $warga->nama_lengkap = $validatedData['nama_lengkap'];
+        $warga->email = $validatedData['email'];
+        $warga->nomor_telepon = $validatedData['nomor_telepon'];
+        $warga->alamat = $validatedData['alamat'];
 
-        // Update password if provided
         if ($request->filled('new_password')) {
             $user->password = bcrypt($validatedData['new_password']);
+
         }
 
-        $user->save();
+        $warga->save();
+
+        // Update session data
+        session(['warga' => $warga]);
 
         // Update session data
         session(['warga' => $user]);

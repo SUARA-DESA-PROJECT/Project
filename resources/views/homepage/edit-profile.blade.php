@@ -31,6 +31,7 @@
                         <small class="text-muted">Username tidak dapat diubah</small>
                     </div>
 
+
                     <div class="mb-3">
                         <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror" 
@@ -79,6 +80,7 @@
                                 <i class="fa fa-eye"></i>
                             </button>
                             @error('new_password')
+
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

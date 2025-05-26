@@ -11,6 +11,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanPengurusController;
 use App\Http\Controllers\ResponController;
 use App\Http\Controllers\KomentarWargaController;
+use App\Models\Laporan;
+use App\Http\Controllers\ProfilePengurusController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -40,12 +42,15 @@ Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan
 Route::get('/input-laporan', [LaporanController::class, 'create'])->name('laporan.create');
 Route::get('/laporan', [LaporanController::class, 'index'])->name('inputlaporan.index');
 Route::get('/laporan/{laporan}', [LaporanController::class, 'show'])->name('inputlaporan.show');
+
 Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name('inputlaporan.edit');
 Route::put('/laporan/{laporan}', [LaporanController::class, 'update'])->name('inputlaporan.update');
+
 Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('inputlaporan.destroy');
 Route::get('/report-statistics', [LaporanController::class, 'getReportStatistics'])->name('report.statistics');
 Route::get('/riwayat-laporan', [LaporanController::class, 'riwayatLaporan'])->name('riwayat-laporan.index');
 Route::get('/report-statistics-warga', [LaporanController::class, 'getReportStatisticsWarga'])->name('report.statistics-warga');
+Route::get('/export-pdf', [LaporanController::class, 'exportPDF'])->name('export-pdf');
 
 // Route Laporan Pengurus (JESANO)
 Route::get('/inputlaporan/create-pengurus', [LaporanPengurusController::class, 'create'])->name('laporan.create-pengurus');
@@ -109,3 +114,7 @@ Route::post('/komentar', [KomentarWargaController::class, 'store'])->name('komen
 Route::get('/komentar/{komentar}/edit', [KomentarWargaController::class, 'edit'])->name('komentar.edit');
 Route::put('/komentar/{komentar}', [KomentarWargaController::class, 'update'])->name('komentar.update');
 Route::delete('/komentar/{komentar}', [KomentarWargaController::class, 'destroy'])->name('komentar.destroy');
+
+// Profile Pengurus Routes
+Route::get('/profile-pengurus/edit', [ProfilePengurusController::class, 'edit'])->name('profile-pengurus.edit');
+Route::put('/profile-pengurus/update', [ProfilePengurusController::class, 'update'])->name('profile-pengurus.update');

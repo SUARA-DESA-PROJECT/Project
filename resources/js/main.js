@@ -11,6 +11,7 @@
 
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
+        $('#content').toggleClass('sidebar-active');
     });
 
 })(jQuery); 

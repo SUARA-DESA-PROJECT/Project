@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Laporan;
+use App\Models\Kategori;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Laporan;
 use Illuminate\Support\Facades\Route;
-use App\Models\Kategori;
 
 class LaporanController extends Controller
 {
@@ -76,8 +78,8 @@ class LaporanController extends Controller
 
     public function edit(Laporan $laporan)
     {
-        $nav = 'Edit Laporan - ' . $laporan->judul_laporan;
-        return view('inputlaporan.edit', compact('laporan', 'nav'));
+        $kategoris = Kategori::orderBy('nama_kategori')->get();
+        return view('riwayatlap.update', compact('laporan', 'kategoris'));
     }
 
     public function update(Request $request, Laporan $laporan)
@@ -85,25 +87,24 @@ class LaporanController extends Controller
         $validatedData = $request->validate([
             'judul_laporan' => 'required',
             'deskripsi_laporan' => 'required',
-            'tanggal_pelaporan' => 'required',
+            'tanggal_pelaporan' => 'required|date',
+            'time_laporan' => 'required',
             'tempat_kejadian' => 'required',
-            'status_verifikasi' => 'required',
-            'status_penanganan' => 'required',
-            'deskripsi_penanganan' => 'required',
-            'tipe_pelapor' => 'required',
-            'pengurus_lingkungan_username' => 'required',
-            'warga_username' => 'required',
             'kategori_laporan' => 'required'
         ]);
 
-        $laporan->update($validatedData);
-        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil diubah');
+        try {
+            $laporan->update($validatedData);
+            return redirect()->route('riwayat-laporan.index')->with('success', 'Laporan berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui laporan.');
+        }
     }
 
     public function destroy(Laporan $laporan)
     {
         $laporan->delete();
-        return redirect()->route('inputlaporan.index')->with('success', 'Laporan berhasil dihapus');
+        return redirect()->route('riwayat-laporan.index')->with('success', 'Laporan berhasil dihapus');
     }
 
     public function getReportStatistics()
@@ -289,6 +290,7 @@ class LaporanController extends Controller
         return view('riwayatlap.index', compact('laporans', 'nav'));
     }
 
+
     public function getLaporanData()
     {
         $laporans = Laporan::select('judul_laporan', 'deskripsi_laporan', 'tempat_kejadian', 'tanggal_pelaporan', 'status_verifikasi', 'status_penanganan', 'latitude', 'longitude')
@@ -298,5 +300,43 @@ class LaporanController extends Controller
             ->get();
             
         return response()->json($laporans);
+
+    public function exportPDF(Request $request)
+    {
+        $query = Laporan::join('kategori', 'laporan.kategori_laporan', '=', 'kategori.nama_kategori')
+            ->select('laporan.*', 'kategori.jenis_kategori');
+        
+        // Filter by status if provided
+        if ($request->has('status')) {
+            $query->where('status_verifikasi', $request->status);
+        }
+    
+        // Filter by jenis if provided
+        if ($request->has('jenis')) {
+            $jenis = $request->jenis;
+            if ($jenis === 'Laporan Positif') {
+                $query->where('kategori.jenis_kategori', 'Positif');
+            } elseif ($jenis === 'Laporan Negatif') {
+                $query->where('kategori.jenis_kategori', 'Negatif');
+            }
+        }
+    
+        // Filter by status_penanganan if provided
+        if ($request->has('status_penanganan')) {
+            $query->where('laporan.status_penanganan', $request->status_penanganan);
+        }
+        
+        // Filter by warga username if user is logged in
+        $warga = session('warga');
+        if ($warga) {
+            $query->where('warga_username', $warga->username);
+        }
+        
+        $laporans = $query->get();
+        
+        $pdf = app('dompdf.wrapper');
+        $pdf->setPaper('a4', 'landscape');
+        $pdf->loadView('pdf.riwayat-laporan', ['laporans' => $laporans]);
+        return $pdf->download('EXPORT-LAPORAN-'.now()->timestamp.'.pdf');
     }
 }
