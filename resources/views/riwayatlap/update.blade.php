@@ -177,10 +177,12 @@ if (formLaporan) {
                         icon: "error",
                         title: "Oops...",
                         text: "Silahkan isi semua formulir!",
+                        allowOutsideClick: true,
+                        allowEscapeKey: true,
                         customClass: {
                             popup: 'animated shake'
                         }
-                    });
+                    }).then(() => {});
                     return;
                 }
 
