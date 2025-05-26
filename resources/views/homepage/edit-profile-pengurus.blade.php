@@ -1,14 +1,14 @@
-@extends('layouts.app-warga')
+@extends('layouts.app')
 
-@section('title', 'Edit Profile')
+@section('title', 'Edit Profile Pengurus')
 
 @section('content')
-<div class="container mt-4">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="mb-0">Edit Profile</h4>
+                    <h4 class="mb-0">Edit Profile Pengurus</h4>
                 </div>
                 <div class="card-body">
                     @if(session('success'))
@@ -17,30 +17,26 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('profile.update') }}">
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('profile-pengurus.update') }}" method="POST">
                         @csrf
                         @method('PUT')
 
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" value="{{ $warga->username }}" readonly>
-                            <small class="text-muted">Username tidak dapat diubah</small>
+                            <input type="text" class="form-control" id="username" value="{{ $pengurus->username }}" disabled>
                         </div>
 
                         <div class="mb-3">
                             <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
                             <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror" 
-                                id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap', $warga->nama_lengkap) }}">
+                                id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap', $pengurus->nama_lengkap) }}">
                             @error('nama_lengkap')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                id="email" name="email" value="{{ old('email', $warga->email) }}">
-                            @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -48,7 +44,7 @@
                         <div class="mb-3">
                             <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
                             <input type="text" class="form-control @error('nomor_telepon') is-invalid @enderror" 
-                                id="nomor_telepon" name="nomor_telepon" value="{{ old('nomor_telepon', $warga->nomor_telepon) }}">
+                                id="nomor_telepon" name="nomor_telepon" value="{{ old('nomor_telepon', $pengurus->nomor_telepon) }}">
                             @error('nomor_telepon')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -57,17 +53,16 @@
                         <div class="mb-3">
                             <label for="alamat" class="form-label">Alamat</label>
                             <textarea class="form-control @error('alamat') is-invalid @enderror" 
-                                id="alamat" name="alamat" rows="3">{{ old('alamat', $warga->alamat) }}</textarea>
+                                id="alamat" name="alamat" rows="3">{{ old('alamat', $pengurus->alamat) }}</textarea>
                             @error('alamat')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password Baru (opsional)</label>
+                            <label for="password" class="form-label">Password Baru (kosongkan jika tidak ingin mengubah)</label>
                             <input type="password" class="form-control @error('password') is-invalid @enderror" 
                                 id="password" name="password">
-                            <small class="text-muted">Biarkan kosong jika tidak ingin mengubah password</small>
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -80,7 +75,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('homepage-warga') }}" class="btn btn-secondary">Kembali</a>
+                            <a href="{{ route('homepage') }}" class="btn btn-secondary">Kembali</a>
                             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </div>
                     </form>
