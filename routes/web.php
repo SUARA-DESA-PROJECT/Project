@@ -14,6 +14,7 @@ use App\Http\Controllers\KomentarWargaController;
 use App\Models\Laporan;
 use App\Http\Controllers\ProfilePengurusController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KomentarPengurusController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -133,3 +134,11 @@ Route::delete('/komentar/{komentar}', [KomentarWargaController::class, 'destroy'
 // Profile Pengurus Routes
 Route::get('/profile-pengurus/edit', [ProfilePengurusController::class, 'edit'])->name('profile-pengurus.edit');
 Route::put('/profile-pengurus/update', [ProfilePengurusController::class, 'update'])->name('profile-pengurus.update');
+
+// Komentar Pengurus Routes
+Route::get('/komentarpengurus', [KomentarPengurusController::class, 'index'])->name('komentarpengurus.index');
+Route::post('/komentarpengurus', [KomentarPengurusController::class, 'store'])->name('komentarpengurus.store');
+Route::get('/komentarpengurus/{komentar}/edit', [KomentarPengurusController::class, 'edit'])->name('komentarpengurus.edit');
+Route::put('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'update'])->name('komentarpengurus.update');
+Route::delete('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'destroy'])->name('komentarpengurus.destroy');
+
