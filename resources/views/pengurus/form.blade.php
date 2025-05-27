@@ -53,7 +53,8 @@
         }
 
         .container {
-            max-width: 600px;
+            width: 100%;
+            max-width: 100%;
             margin: 0 auto;
             opacity: 0;
             transform: translateY(20px);
@@ -79,7 +80,7 @@
         }
 
         .header h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
             opacity: 0;
             transform: translateY(-20px);
@@ -114,6 +115,8 @@
             transform: translateY(30px);
             animation: formCardFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             animation-delay: 0.8s;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         @keyframes formCardFadeIn {
@@ -125,6 +128,12 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
         }
 
         .form-group {
@@ -139,6 +148,10 @@
         .form-group:nth-child(3) { animation-delay: 1.4s; }
         .form-group:nth-child(4) { animation-delay: 1.6s; }
         .form-group:nth-child(5) { animation-delay: 1.8s; }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
 
         @keyframes formGroupFadeIn {
             from {
@@ -160,14 +173,15 @@
             margin-bottom: 0.5rem;
             color: #2c3e50;
             font-weight: 500;
+            font-size: 1.1rem;
         }
 
         input {
             width: 100%;
-            padding: 0.8rem;
+            padding: 1rem;
             border: 1px solid #e1e8f0;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
         }
 
@@ -181,10 +195,10 @@
         .submit-btn {
             background-color: #4CAF50;
             color: white;
-            padding: 12px 24px;
+            padding: 1rem 2rem;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             width: 100%;
@@ -192,6 +206,7 @@
             transform: translateY(20px);
             animation: buttonFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             animation-delay: 2s;
+            margin-top: 1rem;
         }
 
         @keyframes buttonFadeIn {
@@ -216,7 +231,7 @@
             margin-top: 1rem;
             color: #64748b;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 1rem;
             opacity: 0;
             transform: translateY(20px);
             animation: buttonFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -226,6 +241,25 @@
         .back-btn:hover {
             color: #2c3e50;
         }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            input {
+                padding: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -234,36 +268,38 @@
 
     <div class="container">
         <div class="header">
-            <h1>Add New Account</h1>
-            <p>Fill in the details below</p>
+            <h1>Tambah Akun</h1>
+            <p>Isi kelengkapan data akun</p>
         </div>
 
         <div class="form-card">
             <form id="addAccountForm" action="{{ route('pengurus.store') }}" method="POST">
                 @csrf
-                <div class="form-group">
-                    <label for="nama_lengkap">Nama</label>
-                    <input type="text" id="nama_lengkap" name="nama_lengkap" required>
-                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nama_lengkap">Nama</label>
+                        <input type="text" id="nama_lengkap" name="nama_lengkap" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="alamat">Alamat</label>
-                    <input type="text" id="alamat" name="alamat" required>
-                </div>
+                    <div class="form-group">
+                        <label for="nomor_telepon">No HP</label>
+                        <input type="tel" id="nomor_telepon" name="nomor_telepon" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="nomor_telepon">No HP</label>
-                    <input type="tel" id="nomor_telepon" name="nomor_telepon" required>
+                    <div class="form-group full-width">
+                        <label for="alamat">Alamat</label>
+                        <input type="text" id="alamat" name="alamat" required>
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-btn">Submit</button>

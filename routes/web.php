@@ -11,6 +11,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanPengurusController;
 use App\Http\Controllers\ResponController;
 use App\Http\Controllers\RiwayatLaporanPengurusController;
+use App\Http\Controllers\KomentarWargaController;
+use App\Models\Laporan;
+use App\Http\Controllers\ProfilePengurusController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KomentarPengurusController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -27,13 +32,25 @@ Route::post('/logout-masyarakat', [AuthController::class, 'logoutMasyarakat'])->
 Route::get('/login-kepaladesa', [AuthController::class, 'showLoginFormKepdes'])->name('login-kepaladesa');
 Route::post('/login-kepaladesa', [AuthController::class, 'loginPengurus'])->name('login.pengurus');
 Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name('logout.pengurus');
+Route::get('/login-admin', [AuthController::class, 'showLoginFormAdmin'])->name('login-admin');
+Route::post('/login-admin', [AuthController::class, 'loginAdmin'])->name('login.admin');
+Route::post('/logout-admin', [AuthController::class, 'logoutAdmin'])->name('logout.admin');
+
+// Admin Routes
+Route::middleware(['auth.admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+    Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
+    Route::get('/admin/{admin}', [AdminController::class, 'show'])->name('admin.show');
+    Route::get('/admin/{admin}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/{admin}', [AdminController::class, 'update'])->name('admin.update');
+    Route::delete('/admin/{admin}', [AdminController::class, 'destroy'])->name('admin.destroy');
+});
 
 // Homepage Route
 Route::get('/homepage', [HomeController::class, 'index'])->name('homepage');
-Route::middleware(['auth'])->group(function () {
-    Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
-    Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
-});
+Route::get('/homepage-warga', [HomeController::class, 'index_warga'])->name('homepage-warga');
+Route::get('/peta-persebaran-warga', [HomeController::class, 'petaPersebaranWarga'])->name('peta.persebaran.warga');
 
 
 // Laporan Routes Warga (RIDWAN)
@@ -42,12 +59,15 @@ Route::post('/inputlaporan', [LaporanController::class, 'store'])->name('laporan
 Route::get('/input-laporan', [LaporanController::class, 'create'])->name('laporan.create');
 Route::get('/laporan', [LaporanController::class, 'index'])->name('inputlaporan.index');
 Route::get('/laporan/{laporan}', [LaporanController::class, 'show'])->name('inputlaporan.show');
+
 Route::get('/laporan/{laporan}/edit', [LaporanController::class, 'edit'])->name('inputlaporan.edit');
 Route::put('/laporan/{laporan}', [LaporanController::class, 'update'])->name('inputlaporan.update');
+
 Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy'])->name('inputlaporan.destroy');
 Route::get('/report-statistics', [LaporanController::class, 'getReportStatistics'])->name('report.statistics');
 Route::get('/riwayat-laporan', [LaporanController::class, 'riwayatLaporan'])->name('riwayat-laporan.index');
 Route::get('/report-statistics-warga', [LaporanController::class, 'getReportStatisticsWarga'])->name('report.statistics-warga');
+Route::get('/export-pdf', [LaporanController::class, 'exportPDF'])->name('export-pdf');
 
 // Route Laporan Pengurus (JESANO)
 Route::get('/inputlaporan/create-pengurus', [LaporanPengurusController::class, 'create'])->name('laporan.create-pengurus');
@@ -131,3 +151,14 @@ Route::prefix('pengurus')->group(function () {
     Route::delete('/riwayat-laporan-saya/{id}', [RiwayatLaporanPengurusController::class, 'destroy'])
         ->name('pengurus.riwayat.destroy');
 });
+
+// Profile Pengurus Routes
+Route::get('/profile-pengurus/edit', [ProfilePengurusController::class, 'edit'])->name('profile-pengurus.edit');
+Route::put('/profile-pengurus/update', [ProfilePengurusController::class, 'update'])->name('profile-pengurus.update');
+
+// Komentar Pengurus Routes
+Route::get('/komentarpengurus', [KomentarPengurusController::class, 'index'])->name('komentarpengurus.index');
+Route::post('/komentarpengurus', [KomentarPengurusController::class, 'store'])->name('komentarpengurus.store');
+Route::get('/komentarpengurus/{komentar}/edit', [KomentarPengurusController::class, 'edit'])->name('komentarpengurus.edit');
+Route::put('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'update'])->name('komentarpengurus.update');
+Route::delete('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'destroy'])->name('komentarpengurus.destroy');

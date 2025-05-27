@@ -16,8 +16,7 @@
                             <i class="fa fa-user-circle fa-4x"></i>
                         </div>
                         <div class="profile-info">
-                            <h3>{{ $warga->username }}</h3>
-                            <p class="text-muted">Warga Desa</p>
+                            <h3>{{ $warga->nama_lengkap }}</h3>
                             <a href="{{ route('profile.edit') }}" class="btn btn-sm mt-2" style="background-color: #468b94; color: white;">
                                 <i class="fa fa-edit"></i> Edit Profile
                             </a>

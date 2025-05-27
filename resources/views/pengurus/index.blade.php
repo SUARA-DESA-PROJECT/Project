@@ -34,6 +34,31 @@
             text-align: center;
             margin-bottom: 3rem;
             color: #2c3e50;
+            position: relative;
+        }
+
+        .home-btn {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .home-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-50%) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
         .header p {
@@ -66,74 +91,53 @@
             margin-bottom: 1rem;
         }
 
-        .accounts-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            padding: 1rem;
-        }
-
-        .account-card {
+        .table-container {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
             padding: 2rem;
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
+            overflow-x: auto;
         }
 
-        .account-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-            background: rgba(255, 255, 255, 0.95);
+        .accounts-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
         }
 
-        .account-card h2 {
+        .accounts-table th,
+        .accounts-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e1e8f0;
+        }
+
+        .accounts-table th {
+            background-color: #f8fafc;
             color: #2c3e50;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            border-bottom: 2px solid #e1e8f0;
-            padding-bottom: 0.5rem;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
         }
 
-        .account-info {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .info-label {
-            font-size: 0.9rem;
-            color: #64748b;
-            margin-bottom: 0.3rem;
-        }
-
-        .info-value {
-            font-size: 1.1rem;
-            color: #334155;
-            font-weight: 500;
+        .accounts-table tr:hover {
+            background-color: #f8fafc;
         }
 
         .action-buttons {
             display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            justify-content: center;
+            gap: 0.5rem;
         }
 
         .edit-btn, .delete-btn {
-            padding: 8px 16px;
+            padding: 6px 12px;
             border: none;
             border-radius: 6px;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             text-decoration: none;
             text-align: center;
-            width: 100px;
         }
 
         .edit-btn {
@@ -143,6 +147,7 @@
 
         .edit-btn:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
         }
 
         .delete-btn {
@@ -152,23 +157,28 @@
 
         .delete-btn:hover {
             background-color: #c0392b;
-        }
-
-        @media (max-width: 1200px) {
-            .accounts-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 992px) {
-            .accounts-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
-            .accounts-grid {
-                grid-template-columns: 1fr;
+            .table-container {
+                padding: 1rem;
+            }
+
+            .accounts-table th,
+            .accounts-table td {
+                padding: 0.75rem;
+            }
+
+            .home-btn {
+                position: static;
+                transform: none;
+                margin-bottom: 1rem;
+                display: inline-block;
+            }
+
+            .home-btn:hover {
+                transform: translateY(-2px);
             }
         }
 
@@ -466,43 +476,44 @@
 
     <div class="container">
         <div class="header">
+            <a href="http://localhost:8000" class="home-btn">Home</a>
             <h1>Manajemen Akun</h1>
             <p>Lihat dan kelola akun pengguna</p>
             <a href="{{ route('pengurus.form') }}" class="add-account-btn">Tambah Akun Baru</a>
         </div>
 
-        <div class="accounts-grid">
-            @foreach($pengurusData as $p)
-            <div class="account-card">
-                <h2>Detail Akun</h2>
-                <div class="account-info">
-                    <div class="info-item">
-                        <span class="info-label">Nama Lengkap</span>
-                        <span class="info-value">{{ $p['nama_lengkap'] }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Nama Pengguna</span>
-                        <span class="info-value">{{ $p['username'] }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Alamat</span>
-                        <span class="info-value">{{ $p['alamat'] }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Nomor Telepon</span>
-                        <span class="info-value">{{ $p['nomor_telepon'] }}</span>
-                    </div>
-                    <div class="action-buttons">
-                        <button onclick="openEditForm('{{ $p['username'] }}', '{{ $p['nama_lengkap'] }}', '{{ $p['alamat'] }}', '{{ $p['nomor_telepon'] }}')" class="edit-btn">Ubah</button>
-                        <form action="{{ route('pengurus.destroy', $p['username']) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="delete-btn">Hapus</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            @endforeach
+        <div class="table-container">
+            <table class="accounts-table">
+                <thead>
+                    <tr>
+                        <th>Nama Lengkap</th>
+                        <th>Username</th>
+                        <th>Alamat</th>
+                        <th>Nomor Telepon</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($pengurusData as $p)
+                    <tr>
+                        <td>{{ $p['nama_lengkap'] }}</td>
+                        <td>{{ $p['username'] }}</td>
+                        <td>{{ $p['alamat'] }}</td>
+                        <td>{{ $p['nomor_telepon'] }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button onclick="openEditForm('{{ $p['username'] }}', '{{ $p['nama_lengkap'] }}', '{{ $p['alamat'] }}', '{{ $p['nomor_telepon'] }}')" class="edit-btn">Ubah</button>
+                                <form action="{{ route('pengurus.destroy', $p['username']) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="delete-btn">Hapus</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 

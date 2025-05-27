@@ -18,10 +18,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create default admin
-        Admin::create([
-            'username' => 'admin',
-            'password' => bcrypt('admin123')
+        $this->call([
+            AdminSeeder::class,
+            LocationSeeder::class,
         ]);
 
         // Create Pengurus Lingkungan

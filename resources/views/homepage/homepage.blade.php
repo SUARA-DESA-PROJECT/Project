@@ -7,6 +7,26 @@
 @endsection
 
 @section('content')
+    <div class="profile-section reveal-section">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fa fa-user-circle fa-4x"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h3>{{ $pengurus->username }}</h3>
+                            <p class="text-muted">Pengurus Lingkungan</p>
+                            <a href="{{ route('profile-pengurus.edit') }}" class="btn btn-sm mt-2" style="background-color: #468b94; color: white;">
+                                <i class="fa fa-edit"></i> Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="welcome-banner reveal-section">
         <div class="decoration"></div>
         

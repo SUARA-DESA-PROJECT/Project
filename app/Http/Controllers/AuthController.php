@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Warga;
 use App\Models\PengurusLingkungan;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -77,6 +78,39 @@ class AuthController extends Controller
     {
         session()->forget('pengurusLingkungan');
         return redirect()->route('login-kepaladesa')->with('success', 'Anda telah berhasil logout.');
+    }
+
+    // Controller login admin
+    public function showLoginFormAdmin()
+    {
+        return view('Login.loginadmin');
+    }
+
+    public function loginAdmin(Request $request)
+    {
+        $credentials = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
+        $admin = Admin::where('username', $credentials['username'])->first();
+
+        if ($admin && Hash::check($credentials['password'], $admin->password)) {
+            // Store admin data in session
+            session(['admin' => $admin]);
+            
+            return redirect()->route('pengurus')->with('success', 'Login berhasil!');
+        }
+
+        return back()->withErrors([
+            'username' => 'Username atau password yang Anda masukkan salah.',
+        ])->onlyInput('username');
+    }
+
+    public function logoutAdmin()
+    {
+        session()->forget('admin');
+        return redirect()->route('login-admin')->with('success', 'Anda telah berhasil logout.');
     }
 
 } 
