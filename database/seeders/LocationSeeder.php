@@ -15,12 +15,12 @@ class LocationSeeder extends Seeder
     {
         $locations = [
             [
-                'name' => 'Bojongsoang Tengah',
+                'name' => 'Bojongsoang',
                 'latitude' => -6.9557189,
                 'longitude' => 107.6542139,
             ],
             [
-                'name' => 'Cipagalo Tengah',
+                'name' => 'Cipagalo',
                 'latitude' => -6.9703054,
                 'longitude' => 107.6540877,
             ],
