@@ -300,7 +300,9 @@ class LaporanController extends Controller
             ->get();
             
         return response()->json($laporans);
-
+    
+    }
+    
     public function exportPDF(Request $request)
     {
         $query = Laporan::join('kategori', 'laporan.kategori_laporan', '=', 'kategori.nama_kategori')
