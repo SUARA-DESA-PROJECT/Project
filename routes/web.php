@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanPengurusController;
 use App\Http\Controllers\ResponController;
+use App\Http\Controllers\RiwayatLaporanPengurusController;
 use App\Http\Controllers\KomentarWargaController;
 use App\Models\Laporan;
 use App\Http\Controllers\ProfilePengurusController;
@@ -131,6 +132,26 @@ Route::get('/komentar/{komentar}/edit', [KomentarWargaController::class, 'edit']
 Route::put('/komentar/{komentar}', [KomentarWargaController::class, 'update'])->name('komentar.update');
 Route::delete('/komentar/{komentar}', [KomentarWargaController::class, 'destroy'])->name('komentar.destroy');
 
+// Pengurus Laporan Routes
+Route::prefix('pengurus')->group(function () {
+    Route::get('/riwayat-laporan', [LaporanPengurusController::class, 'index'])->name('laporanpengurus.index');
+    Route::get('/riwayat-laporan/{id}/edit', [LaporanPengurusController::class, 'edit'])->name('laporanpengurus.edit');
+    Route::put('/riwayat-laporan/{id}', [LaporanPengurusController::class, 'update'])->name('laporanpengurus.update');
+    Route::delete('/riwayat-laporan/{id}', [LaporanPengurusController::class, 'destroy'])->name('laporanpengurus.destroy');
+});
+
+// Riwayat Laporan Pengurus Routes
+Route::prefix('pengurus')->group(function () {
+    Route::get('/riwayat-laporan-saya', [RiwayatLaporanPengurusController::class, 'index'])
+        ->name('pengurus.riwayat.index');
+    Route::get('/riwayat-laporan-saya/{id}/edit', [RiwayatLaporanPengurusController::class, 'edit'])
+        ->name('pengurus.riwayat.edit');
+    Route::put('/riwayat-laporan-saya/{id}', [RiwayatLaporanPengurusController::class, 'update'])
+        ->name('pengurus.riwayat.update');
+    Route::delete('/riwayat-laporan-saya/{id}', [RiwayatLaporanPengurusController::class, 'destroy'])
+        ->name('pengurus.riwayat.destroy');
+});
+
 // Profile Pengurus Routes
 Route::get('/profile-pengurus/edit', [ProfilePengurusController::class, 'edit'])->name('profile-pengurus.edit');
 Route::put('/profile-pengurus/update', [ProfilePengurusController::class, 'update'])->name('profile-pengurus.update');
@@ -141,4 +162,3 @@ Route::post('/komentarpengurus', [KomentarPengurusController::class, 'store'])->
 Route::get('/komentarpengurus/{komentar}/edit', [KomentarPengurusController::class, 'edit'])->name('komentarpengurus.edit');
 Route::put('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'update'])->name('komentarpengurus.update');
 Route::delete('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'destroy'])->name('komentarpengurus.destroy');
-
