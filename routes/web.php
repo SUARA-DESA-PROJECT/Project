@@ -138,6 +138,12 @@ Route::prefix('pengurus')->group(function () {
     Route::get('/riwayat-laporan/{id}/edit', [LaporanPengurusController::class, 'edit'])->name('laporanpengurus.edit');
     Route::put('/riwayat-laporan/{id}', [LaporanPengurusController::class, 'update'])->name('laporanpengurus.update');
     Route::delete('/riwayat-laporan/{id}', [LaporanPengurusController::class, 'destroy'])->name('laporanpengurus.destroy');
+
+    // Kelola Laporan Pengurus Routes
+    Route::get('/kelola-laporan', [RiwayatLaporanPengurusController::class, 'index'])->name('pengurus.kelola-laporan.index');
+    Route::get('/kelola-laporan/{id}/edit', [RiwayatLaporanPengurusController::class, 'edit'])->name('pengurus.kelola-laporan.edit');
+    Route::put('/kelola-laporan/{id}', [RiwayatLaporanPengurusController::class, 'update'])->name('pengurus.kelola-laporan.update');
+    Route::delete('/kelola-laporan/{id}', [RiwayatLaporanPengurusController::class, 'destroy'])->name('pengurus.kelola-laporan.destroy');
 });
 
 // Riwayat Laporan Pengurus Routes
@@ -150,6 +156,7 @@ Route::prefix('pengurus')->group(function () {
         ->name('pengurus.riwayat.update');
     Route::delete('/riwayat-laporan-saya/{id}', [RiwayatLaporanPengurusController::class, 'destroy'])
         ->name('pengurus.riwayat.destroy');
+    Route::get('/export-pdf', [LaporanPengurusController::class, 'exportPDF'])->name('export-pdf');
 });
 
 // Profile Pengurus Routes
