@@ -16,7 +16,7 @@
                             <i class="fa fa-user-circle fa-4x"></i>
                         </div>
                         <div class="profile-info">
-                            <h3>{{ $pengurus->username }}</h3>
+                            <h3>{{ $pengurus->nama_lengkap }}</h3>
                             <p class="text-muted">Pengurus Lingkungan</p>
                             <a href="{{ route('profile-pengurus.edit') }}" class="btn btn-sm mt-2" style="background-color: #468b94; color: white;">
                                 <i class="fa fa-edit"></i> Edit Profile
@@ -30,7 +30,7 @@
     <div class="welcome-banner reveal-section">
         <div class="decoration"></div>
         
-        <h2>Selamat Datang, {{ $pengurus->username }} di Suara Desa</h2>
+        <h2>Selamat Datang, {{ $pengurus->nama_lengkap }} di Suara Desa</h2>
         
         <p>
             <strong>Suara Desa</strong> adalah platform pelaporan kejadian berbasis website yang dapat digunakan oleh masyarakat untuk melaporkan berbagai kejadian atau permasalahan di lingkungan sekitar. Dengan Suara Desa, masyarakat dapat berpartisipasi aktif dalam pembangunan dan pengembangan desa.

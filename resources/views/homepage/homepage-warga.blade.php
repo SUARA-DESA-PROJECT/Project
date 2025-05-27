@@ -29,7 +29,7 @@
     <div class="welcome-banner reveal-section">
         <div class="decoration"></div>
         
-        <h2>Selamat Datang, {{ $warga->username }} di Suara Desa</h2>
+        <h2>Selamat Datang, {{ $warga->nama_lengkap }} di Suara Desa</h2>
         
         <p>
             <strong>Suara Desa</strong> adalah platform pelaporan kejadian berbasis website yang dapat digunakan oleh masyarakat untuk melaporkan berbagai kejadian atau permasalahan di lingkungan sekitar. Dengan Suara Desa, masyarakat dapat berpartisipasi aktif dalam pembangunan dan pengembangan desa.
