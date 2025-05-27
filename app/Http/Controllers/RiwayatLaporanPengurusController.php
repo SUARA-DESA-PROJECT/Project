@@ -10,8 +10,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions; 
 use Illuminate\Foundation\Configuration\Middleware;
 
-
-
 class RiwayatLaporanPengurusController extends Controller
 {
     public function __construct()
@@ -23,7 +21,7 @@ class RiwayatLaporanPengurusController extends Controller
 
     public function index(Request $request)
     {
-        $pengurus = session('pengurus');
+        $pengurus = session('pengurusLingkungan');
         if (!$pengurus) {
             return redirect()->back()->with('error', 'Akses tidak diizinkan.');
         }
@@ -58,7 +56,7 @@ class RiwayatLaporanPengurusController extends Controller
 
     public function edit($id)
     {
-        $pengurus = session('pengurus');
+        $pengurus = session('pengurusLingkungan');
         if (!$pengurus) {
             return redirect()->back()->with('error', 'Akses tidak diizinkan.');
         }
@@ -73,7 +71,7 @@ class RiwayatLaporanPengurusController extends Controller
 
     public function update(Request $request, $id)
     {
-        $pengurus = session('pengurus');
+        $pengurus = session('pengurusLingkungan');
         if (!$pengurus) {
             return redirect()->back()->with('error', 'Akses tidak diizinkan.');
         }
@@ -103,7 +101,7 @@ class RiwayatLaporanPengurusController extends Controller
 
     public function destroy($id)
     {
-        $pengurus = session('pengurus');
+        $pengurus = session('pengurusLingkungan');
         if (!$pengurus) {
             return redirect()->back()->with('error', 'Akses tidak diizinkan.');
         }

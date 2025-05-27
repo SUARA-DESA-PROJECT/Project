@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanPengurusController;
 use App\Http\Controllers\ResponController;
+use App\Http\Controllers\RiwayatLaporanPengurusController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -102,8 +103,6 @@ Route::get('/test-respon-edit/{laporan}', function($laporan) {dd('Test route wor
 // Profile routes
 Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
 Route::put('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-<<<<<<< Updated upstream
-=======
 
 // Komentar Routes
 // Komentar Warga Routes
@@ -132,4 +131,3 @@ Route::prefix('pengurus')->group(function () {
     Route::delete('/riwayat-laporan-saya/{id}', [RiwayatLaporanPengurusController::class, 'destroy'])
         ->name('pengurus.riwayat.destroy');
 });
->>>>>>> Stashed changes
