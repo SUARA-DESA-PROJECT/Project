@@ -22,16 +22,16 @@ class Laporan extends Model
         'tipe_pelapor',
         'pengurus_lingkungan_username',
         'warga_username',
-        'kategori_laporan',
-        'time_laporan'
+        'kategori_laporan'
     ];
 
-    protected $casts = [
-        'tanggal_pelaporan' => 'date',
-        'status_verifikasi' => 'string',
-        'status_penanganan' => 'string',
-        'time_laporan' => 'string' 
-    ];
+    /**
+     * Get the location associated with this laporan
+     */
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'tempat_kejadian', 'name');
+    }
 
     public function warga()
     {
@@ -45,14 +45,6 @@ class Laporan extends Model
 
     public function kategoriData()
     {
-        return $this->belongsTo(\App\Models\Kategori::class, 'kategori_laporan', 'nama_kategori');
-    }
-
-    /**
-     * Get the komentars for the laporan.
-     */
-    public function komentars()
-    {
-        return $this->hasMany(Komentar::class, 'laporan_id');
+        return $this->belongsTo(Kategori::class, 'kategori_laporan', 'nama_kategori');
     }
 }

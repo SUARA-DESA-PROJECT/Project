@@ -41,6 +41,7 @@ return new class extends Migration
                   ->references('nama_kategori')
                   ->on('kategori')
                   ->onDelete('cascade');
+                  
         });
     }
 
