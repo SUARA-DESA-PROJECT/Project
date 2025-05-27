@@ -49,7 +49,7 @@
                             <a href="{{ route('pengurus.kelola-laporan.edit', $laporan->id) }}" 
                                class="btn" 
                                style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                                <i class="fas fa-edit mr-1"></i> Edit
+                                <i class="fas fa-pencil-alt-mr-1"></i> Edit
                             </a>
                             <form action="{{ route('pengurus.kelola-laporan.destroy', $laporan->id) }}" method="POST" style="display: inline-block;">
                                 @csrf
