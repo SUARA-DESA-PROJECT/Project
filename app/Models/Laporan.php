@@ -47,4 +47,12 @@ class Laporan extends Model
     {
         return $this->belongsTo(Kategori::class, 'kategori_laporan', 'nama_kategori');
     }
+
+    /**
+     * Get the comments for this laporan.
+     */
+    public function komentars()
+    {
+        return $this->hasMany(Komentar::class, 'laporan_id');
+    }
 }

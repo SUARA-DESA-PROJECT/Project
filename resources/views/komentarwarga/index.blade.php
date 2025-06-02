@@ -327,7 +327,9 @@
                                     <div class="comment-header">
                                         <div class="comment-user">
                                             {{ $komentar->username }}
-                                            <small>({{ $komentar->tipe_user == 'warga' ? 'Warga' : 'Petugas' }})</small>
+                                            @if($komentar->tipe_user == 'pengurus')
+                                            <i class="fa fa-check-circle verified-badge" title="Petugas Desa" style="color: #1DA1F2;"></i>
+                                            @endif
                                         </div>
                                         <div class="comment-time">{{ \Carbon\Carbon::parse($komentar->created_at)->locale('id')->diffForHumans() }}</div>
                                     </div>
