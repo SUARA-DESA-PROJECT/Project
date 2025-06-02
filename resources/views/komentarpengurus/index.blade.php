@@ -350,7 +350,7 @@
                                     <div class="comment-content">
                                         {{ $komentar->isi_komentar }}
                                     </div>
-                                    @if(session('pengurus_lingkungan') && $komentar->tipe_user == 'pengurus' && $komentar->username == session('pengurus_lingkungan')->username)
+                                    @if(session('pengurusLingkungan') && $komentar->tipe_user == 'pengurus' && $komentar->username == session('pengurusLingkungan')->username)
                                     <div class="comment-actions">
                                         <a href="javascript:void(0)" onclick="openEditModal('{{ $komentar->id }}', '{{ addslashes($komentar->isi_komentar) }}')" class="comment-action edit-btn">Edit</a>
                                         <form action="{{ route('komentarpengurus.destroy', $komentar->id) }}" method="POST" style="display: inline-block; margin: 0; padding: 0; line-height: 1;" id="delete-form-{{ $komentar->id }}">
