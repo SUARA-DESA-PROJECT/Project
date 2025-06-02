@@ -61,7 +61,7 @@ class KomentarPengurusController extends Controller
 
         $komentar = DB::table('komentar')->where('id', $id)->first();
         
-        if (!$komentar || $komentar->tipe_user != 'pengurus' || $komentar->username != session('pengurus')->username) {
+        if (!$komentar || $komentar->tipe_user != 'pengurus' || $komentar->username != session('pengurusLingkungan')->username) {
             return redirect()->route('komentarpengurus.index')->with('error', 'Anda tidak memiliki akses untuk mengedit komentar ini');
         }
 
@@ -79,7 +79,7 @@ class KomentarPengurusController extends Controller
     {
         $komentar = DB::table('komentar')->where('id', $id)->first();
         
-        if (!$komentar || $komentar->tipe_user != 'pengurus' || $komentar->username != session('pengurus')->username) {
+        if (!$komentar || $komentar->tipe_user != 'pengurus' || $komentar->username != session('pengurusLingkungan')->username) {
             return redirect()->route('komentarpengurus.index')->with('error', 'Anda tidak memiliki akses untuk menghapus komentar ini');
         }
 
@@ -92,7 +92,7 @@ class KomentarPengurusController extends Controller
     {
         $komentar = DB::table('komentar')->where('id', $id)->first();
         
-        if (!$komentar || $komentar->tipe_user != 'pengurus' || $komentar->username != session('pengurus')->username) {
+        if (!$komentar || $komentar->tipe_user != 'pengurus' || $komentar->username != session('pengurusLingkungan')->username) {
             return redirect()->route('komentarpengurus.index')->with('error', 'Anda tidak memiliki akses untuk mengedit komentar ini');
         }
 

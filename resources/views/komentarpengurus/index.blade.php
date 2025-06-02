@@ -350,13 +350,13 @@
                                     <div class="comment-content">
                                         {{ $komentar->isi_komentar }}
                                     </div>
-                                    @if(session('pengurus_lingkungan') && $komentar->tipe_user == 'pengurus' && $komentar->username == session('pengurus_lingkungan')->username)
+                                    @if(session('pengurusLingkungan') && $komentar->tipe_user == 'pengurus' && $komentar->username == session('pengurusLingkungan')->username)
                                     <div class="comment-actions">
                                         <a href="javascript:void(0)" onclick="openEditModal('{{ $komentar->id }}', '{{ addslashes($komentar->isi_komentar) }}')" class="comment-action edit-btn">Edit</a>
-                                        <form action="{{ route('komentarpengurus.destroy', $komentar->id) }}" method="POST" style="display: inline-block; margin: 0; padding: 0; line-height: 1;">
+                                        <form action="{{ route('komentarpengurus.destroy', $komentar->id) }}" method="POST" style="display: inline-block; margin: 0; padding: 0; line-height: 1;" id="delete-form-{{ $komentar->id }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="comment-action" style="line-height: 1; vertical-align: baseline;" onclick="return confirm('Apakah Anda yakin ingin menghapus komentar ini?')">Hapus</button>
+                                            <button type="button" class="comment-action" style="line-height: 1; vertical-align: baseline;" onclick="confirmDelete({{ $komentar->id }})">Hapus</button>
                                         </form>
                                     </div>
                                     @endif
@@ -467,6 +467,23 @@
                 form.appendChild(comment);
                 document.body.appendChild(form);
                 form.submit();
+            }
+        });
+    }
+    
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Komentar yang dihapus tidak dapat dikembalikan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#468B94',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
             }
         });
     }

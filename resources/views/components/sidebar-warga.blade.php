@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <nav id="sidebar" class="active" style="background-color: #C4D6C4;">
     <div class="custom-menu" style="text-align: right; padding-right: 15px;">
         <button type="button" id="sidebarCollapse" class="btn" style="position: relative; right: -15px; background-color: #468B94; color: white; border: none;">
@@ -30,8 +31,17 @@
             </li>
             <li class="mb-2">
                 <a href="{{ route('peta.persebaran.warga') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
-                    <span class="fa fa-map-marker mr-3"></span>Peta Persebaran
+                    <span class="fa fa-map-marker mr-3" style="width: 15px;"></span>Peta Persebaran
                 </a>
+            </li>
+            <li class="mb-2">
+                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                    @csrf
+                    <a onclick="this.closest('form').submit(); return false;" style="background-color: #dc3545; color: white; border-radius: 10px; padding: 10px 15px; display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease; cursor: pointer;">
+                        <i class="fa fa-power-off" style="width: 18px;"></i>
+                        <span style="margin-left: 12px;">Keluar</span>
+                    </a>
+                </form>
             </li>
         </ul>
 
