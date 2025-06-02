@@ -17,7 +17,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('assets/img/bg-kepaladesa.jpeg');
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('assets/img/bg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;

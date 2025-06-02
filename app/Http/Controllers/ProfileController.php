@@ -33,18 +33,15 @@ class ProfileController extends Controller
         }
 
         // Fetch the user from the database using username
-        $user = \App\Models\Warga::where('username', $sessionWarga->username)->first();
-        
-          // Get fresh data from database
-        $warga = Warga::where('username', $warga->username)->first();
+        $warga = \App\Models\Warga::where('username', $sessionWarga->username)->first();
+
         if (!$warga) {
             return redirect()->route('login-masyarakat')->with('error', 'Data warga tidak ditemukan.');
-        }      
-      
+        }
+
         $validatedData = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:warga,email,' . $user->username . ',username',
-
+            'email' => 'required|string|email|max:255|unique:warga,email,' . $warga->username . ',username',
             'nomor_telepon' => 'required|string|max:15',
             'alamat' => 'required|string',
             'new_password' => 'nullable|min:6|confirmed',
@@ -56,17 +53,13 @@ class ProfileController extends Controller
         $warga->alamat = $validatedData['alamat'];
 
         if ($request->filled('new_password')) {
-            $user->password = bcrypt($validatedData['new_password']);
-
+            $warga->password = bcrypt($validatedData['new_password']);
         }
 
         $warga->save();
 
-        // Update session data
+        // Update session data with the potentially updated warga object
         session(['warga' => $warga]);
-
-        // Update session data
-        session(['warga' => $user]);
 
         return redirect()->back()->with('success', 'Profile berhasil diperbarui');
     }
