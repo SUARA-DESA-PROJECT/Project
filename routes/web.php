@@ -15,6 +15,7 @@ use App\Models\Laporan;
 use App\Http\Controllers\ProfilePengurusController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KomentarPengurusController;
+use App\Http\Controllers\LogoutController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -34,6 +35,7 @@ Route::post('/logout-pengurus', [AuthController::class, 'logoutPengurus'])->name
 Route::get('/login-admin', [AuthController::class, 'showLoginFormAdmin'])->name('login-admin');
 Route::post('/login-admin', [AuthController::class, 'loginAdmin'])->name('login.admin');
 Route::post('/logout-admin', [AuthController::class, 'logoutAdmin'])->name('logout.admin');
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 // Admin Routes
 Route::middleware(['auth.admin'])->group(function () {
