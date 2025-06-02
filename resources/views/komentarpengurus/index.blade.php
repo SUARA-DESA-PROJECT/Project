@@ -133,6 +133,7 @@
     
     .comment-user {
         font-weight: 600;
+        color: #14171a;
         margin-right: 10px;
     }
     
