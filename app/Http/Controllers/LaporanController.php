@@ -44,30 +44,34 @@ class LaporanController extends Controller
 
     public function store(Request $request)
     {
-        // Get logged in user information
         $warga = session('warga');
         if (!$warga) {
             return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        $validatedData = $request->validate([
-            'judul_laporan' => 'required',
-            'deskripsi_laporan' => 'required',
-            'tanggal_pelaporan' => 'required',
-            'tempat_kejadian' => 'required',
-            'kategori_laporan' => 'required'
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'judul_laporan' => 'required',
+                'deskripsi_laporan' => 'required',
+                'tanggal_pelaporan' => 'required',
+                'tempat_kejadian' => 'required',
+                'kategori_laporan' => 'required'
+            ]);
 
-        // Add automatic data
-        $validatedData['status_verifikasi'] = 'Belum Diverifikasi';
-        $validatedData['status_penanganan'] = 'Belum Ditangani';
-        $validatedData['deskripsi_penanganan'] = null;
-        $validatedData['tipe_pelapor'] = 'Warga';
-        $validatedData['warga_username'] = $warga->username;
-        $validatedData['time_laporan'] = now();
+            // Add automatic data
+            $validatedData['status_verifikasi'] = 'Belum Diverifikasi';
+            $validatedData['status_penanganan'] = 'Belum Ditangani';
+            $validatedData['deskripsi_penanganan'] = null;
+            $validatedData['tipe_pelapor'] = 'Warga';
+            $validatedData['warga_username'] = $warga->username;
 
-        Laporan::create($validatedData);
-        return redirect()->route('homepage-warga')->with('success', 'Laporan berhasil ditambahkan');
+            Laporan::create($validatedData);
+            
+            return back()->with('success', 'Laporan berhasil ditambahkan');
+        } catch (\Exception $e) {
+            \Log::error('Error saving laporan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
+        }
     }
 
     public function show(Laporan $laporan)

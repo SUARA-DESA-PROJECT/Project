@@ -10,6 +10,8 @@
 		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 		<link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         #content {
             background-color: white;
@@ -37,4 +39,4 @@
     <script src="{{ asset('js/main.js') }}"></script>
     @yield('scripts')
   </body>
-</html> 
+</html>

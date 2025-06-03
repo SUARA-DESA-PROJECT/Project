@@ -2,20 +2,19 @@
 @extends('layouts.app-warga')
 
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <div class="container mt-4">
     <h2>Input Laporan</h2>
     <p>Silahkan mengisi seluruh formulir berikut ini untuk memberikan informasi laporan :</p>
 
-    @if(session('success'))
+    <!-- @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    @endif
+    @endif -->
 
     <form action="{{ route('laporan.store') }}" method="POST" id="formLaporan">
         @csrf
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Input tersembunyi untuk username warga -->
         <input type="hidden" name="warga_username" value="{{ $warga->username }}">
         <input type="hidden" name="tipe_pelapor" value="Warga">
@@ -116,6 +115,57 @@
     </form>
 </div>
 
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.getElementById('formLaporan').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: "Apakah Anda yakin ingin menyimpan laporan ini?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#468B94',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Simpan!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Create form and submit
+            const form = this;
+            const formData = new FormData(form);
+            
+            // Add CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            // Submit form normally
+            form.submit();
+        }
+    });
+});
+
+// Check for flash messages
+@if(session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        confirmButtonColor: '#468B94'
+    });
+@endif
+
+@if(session('error'))
+    Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: '{{ session('error') }}',
+        confirmButtonColor: '#d33'
+    });
+@endif
+</script>
+@endsection
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const kategoriSelect = document.getElementById('judul_laporan');
@@ -166,67 +216,315 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('formLaporan').addEventListener('submit', function(e) {
-        e.preventDefault(); 
+        e.preventDefault();
+        
+        const form = this;
+        const formData = new FormData(form);
 
-        Swal.fire({
-            title: "Konfirmasi Simpan",
-            text: "Apakah Anda yakin ingin menyimpan laporan ini?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#4a90e2",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Simpan!",
-            cancelButtonText: "Batal"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Cek semua field yang wajib diisi
-                const requiredFields = [
-                    'judul_laporan',
-                    'deskripsi_laporan',
-                    'tanggal_pelaporan',
-                    'time_laporan',
-                    'tempat_kejadian',
-                    'status_penanganan',
-                    'deskripsi_penanganan',
-                    'kategori_laporan',
-                    'tipe_pelapor',
-                    'warga_username',
-                    'pengurus_lingkungan_username',
-                    'status_verifikasi'
-                ];
-                let isValid = true;
-                for (let field of requiredFields) {
-                    const el = document.getElementsByName(field)[0];
-                    if (el && !el.value.trim()) {
-                        isValid = false;
-                        break;
-                    }
-                }
-
-                if (!isValid) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Silahkan isi semua formulir!",
-                    });
-                    return;
-                }
-
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
                 Swal.fire({
-                    title: "Berhasil!",
-                    text: "Laporan Anda telah berhasil disimpan.",
-                    icon: "success",
-                    confirmButtonColor: "#4a90e2"
+                    title: 'Berhasil!',
+                    text: data.message,
+                    icon: 'success'
                 }).then(() => {
-                    this.submit(); 
+                    window.location.href = data.redirect;
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: data.message,
+                    icon: 'error'
                 });
             }
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Terjadi kesalahan saat menyimpan data',
+                icon: 'error'
+            });
         });
     });
 });
 </script>
 
 <style>
+/* Animasi dasar */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInPop {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.98);
+    }
+    50% {
+        transform: translateX(3px) scale(1.01);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Animasi untuk form sections */
+.mb-3 {
+    animation: slideInPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Sequence animation untuk form fields */
+.mb-3:nth-child(1) { animation-delay: 0.1s; }
+.mb-3:nth-child(2) { animation-delay: 0.2s; }
+.mb-3:nth-child(3) { animation-delay: 0.3s; }
+.mb-3:nth-child(4) { animation-delay: 0.4s; }
+.mb-3:nth-child(5) { animation-delay: 0.5s; }
+
+/* Hover animation untuk form sections */
+.mb-3:hover {
+    transform: translateY(-3px);
+}
+
+/* Form control animations */
+.form-control {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    transform: translateY(-1px);
+}
+
+/* Button hover animation */
+.btn {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Title animation */
+h2 {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* Error message animation */
+.invalid-feedback {
+    animation: slideInPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Success state animation */
+.is-valid {
+    animation: scaleIn 0.3s ease-out;
+}
+
+/* Loading animation */
+@keyframes formLoading {
+    0% { opacity: 0.8; }
+    50% { opacity: 0.5; }
+    100% { opacity: 0.8; }
+}
+
+.form-loading:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.8);
+    animation: formLoading 1s infinite;
+}
+
+/* Animasi untuk form elements */
+.mb-3 {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animasi untuk feedback messages */
+.invalid-feedback, .alert {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animasi untuk form inputs saat focus */
+.form-control:focus {
+    animation: pulseGlow 0.3s ease-out;
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(70,139,148,0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(70,139,148,0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(70,139,148,0);
+    }
+}
+
+/* Animasi untuk buttons */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:active {
+    animation: buttonClick 0.2s ease-out;
+}
+
+@keyframes buttonClick {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Animasi untuk select dropdown */
+select.form-control {
+    transition: all 0.3s ease;
+}
+
+select.form-control:focus {
+    animation: selectGlow 0.3s ease-out;
+}
+
+@keyframes selectGlow {
+    0% {
+        background-color: rgba(70,139,148,0.1);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+/* Container responsif dengan animasi */
+.container {
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .mb-3 {
+        margin-bottom: 15px;
+    }
+}
+
+/* Animasi loading untuk form submission */
+.form-loading {
+    position: relative;
+}
+
+.form-loading:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.8);
+    animation: formLoading 1s infinite;
+}
+
+@keyframes formLoading {
+    0% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0.8;
+    }
+}
+
+/* Animasi untuk textarea auto-expand */
+.auto-expand {
+    transition: height 0.2s ease-out;
+}
+
+/* Animasi untuk error states */
+.is-invalid {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* Animasi untuk success feedback */
+.is-valid {
+    animation: successPulse 0.5s ease-out;
+}
+
+@keyframes successPulse {
+    0% { box-shadow: 0 0 0 0 rgba(40,167,69,0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(40,167,69,0); }
+    100% { box-shadow: 0 0 0 0 rgba(40,167,69,0); }
+}
+
+/* Hover effects untuk form sections */
+.mb-3:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2), 0 4px 8px rgba(70,139,148,0.15);
+}
+
 textarea::-webkit-scrollbar {
     width: 8px;
 }
@@ -296,7 +594,6 @@ h2 {
 .form-control:focus {
     border-color: #468B94;
     box-shadow: 0 0 0 0.2rem rgba(70,139,148,0.25), 0 2px 4px rgba(0,0,0,0.1);  /* Added subtle shadow */
-    transform: translateY(-1px);
 }
 
 select.form-control {
