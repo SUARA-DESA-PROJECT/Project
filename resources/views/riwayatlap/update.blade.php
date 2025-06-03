@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="update-container">
+<div class="update-container" style="background-color: #ffffff">
     <div class="update-header">
         <h2><i class="fas fa-edit"></i> Update Laporan</h2>
         <p class="update-subtitle">Perbarui informasi laporan Anda dengan data terbaru</p>
@@ -65,8 +65,16 @@
                     <i class="fas fa-clock"></i>
                     <label for="time" class="form-label">Waktu Kejadian</label>
                 </div>
-                <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" 
-                    value="{{ old('time_laporan', $laporan->time_laporan) }}" placeholder="Pilih Jam">
+                <input type="time" 
+                       name="time_laporan" 
+                       id="time_laporan" 
+                       class="form-control @error('time_laporan') is-invalid @enderror" 
+                       value="{{ old('time_laporan', date('H:i', strtotime($laporan->time_laporan))) }}" 
+                       placeholder="Pilih Jam">
+                <!-- <div class="text-muted mt-2">
+                    <i class="fas fa-info-circle"></i>
+                    Waktu tercatat: {{ date('H:i', strtotime($laporan->time_laporan)) }}
+                </div> -->
                 @error('time_laporan')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -249,8 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 
 .update-container {
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
     padding: 2rem;
     background: #f8f9fa;
     min-height: 100vh;
@@ -278,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(12, 1fr);
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -288,7 +295,34 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
+}
+
+/* Judul Laporan - full width */
+.form-card:nth-child(1) {
+    grid-column: span 12;
+}
+
+/* Deskripsi - full width */
+.form-card:nth-child(2) {
+    grid-column: span 12;
+}
+
+/* Tanggal & Waktu - 2 columns each */
+.form-card:nth-child(3),
+.form-card:nth-child(4) {
+    grid-column: span 6;
+}
+
+/* Tempat & Kategori - 2 columns each */
+.form-card:nth-child(5),
+.form-card:nth-child(6) {
+    grid-column: span 6;
+}
+
+/* Jenis Laporan - full width */
+.form-card:nth-child(7) {
+    grid-column: span 12;
 }
 
 .form-card:hover {
@@ -446,18 +480,8 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 1rem;
     }
 
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-actions {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .btn {
-        width: 100%;
-        justify-content: center;
+    .form-card {
+        grid-column: span 12 !important;
     }
 }
 

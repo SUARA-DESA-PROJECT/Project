@@ -266,47 +266,16 @@ h2 {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(70,139,148,0.1);  /* Increased shadow */
     margin-bottom: 20px;
     position: relative;
     border-left: 4px solid #468B94;
+    transition: transform 0.3s, box-shadow 0.3s;  /* Smoother transition */
 }
 
-.welcome-banner {
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-align: center;
-    margin-bottom: 30px;
-    position: relative;
-}
-
-.welcome-banner h2 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 2em;
-}
-
-.welcome-banner p {
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-.welcome-banner strong {
-    color:rgb(37, 136, 60);
-}
-
-.decoration {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: #28a745;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+.mb-3:hover {
+    transform: translateY(-3px);  /* Slightly more lift */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2), 0 4px 8px rgba(70,139,148,0.15);  /* Bigger shadow on hover */
 }
 
 .form-label {
@@ -314,18 +283,20 @@ h2 {
     color: #333;
     margin-bottom: 8px;
     display: block;
+    transition: color 0.3s ease;  /* Added transition */
 }
 
 .form-control {
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 8px 12px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease;  /* Enhanced transition */
 }
 
 .form-control:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+    border-color: #468B94;
+    box-shadow: 0 0 0 0.2rem rgba(70,139,148,0.25), 0 2px 4px rgba(0,0,0,0.1);  /* Added subtle shadow */
+    transform: translateY(-1px);
 }
 
 select.form-control {
@@ -334,13 +305,14 @@ select.form-control {
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 1em;
+    transition: all 0.3s ease;  /* Added transition */
 }
 
 .btn {
     padding: 10px 20px;
     border-radius: 4px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease;  /* Enhanced transition */
 }
 
 .btn-primary {

@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <nav id="sidebar" class="active" style="background-color: #C4D6C4;">
-    <div class="custom-menu" style="text-align: right; padding-right: 15px;">
-        <button type="button" id="sidebarCollapse" class="btn" style="position: relative; right: -15px; background-color: #468B94; color: white; border: none;">
-            <i class="fa fa-bars"></i>
+<div class="custom-menu" style="text-align: right; padding-right: 15px;">
+        <button type="button" id="sidebarCollapse" class="btn" style="position: relative; right: -15px; background-color: #468B94; color: white; border: none; 
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0;">            <i class="fa fa-bars"></i>
             <span class="sr-only">Toggle Menu</span>
         </button>
     </div>

@@ -3,7 +3,6 @@
 @section('title', 'Forum Diskusi')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/homepage/style.css') }}">
 <style>
     .forum-container {
         max-width: 100%;
@@ -268,6 +267,12 @@
         resize: none;
         margin-bottom: 15px;
     }
+
+    h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
 </style>
 @endsection
 
@@ -275,8 +280,8 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-12">
-            <h2 class="mb-4">Forum Diskusi Laporan</h2>
-            <p class="mb-4">Diskusikan laporan yang telah terverifikasi dengan warga lain dan petugas desa.</p>
+            <h2>Forum Diskusi Laporan</h2>
+            <p>Diskusikan laporan yang telah terverifikasi dengan warga lain dan petugas desa.</p>
             
             <div class="forum-container">
                 @if($verifiedReports->count() > 0)
