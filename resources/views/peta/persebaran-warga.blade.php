@@ -84,7 +84,7 @@
             });
             
             // Add a label with the region name
-            layer.bindTooltip(feature.properties.name + '<br>' + feature.properties.density + ' kejadian', {
+            layer.bindTooltip(feature.properties.name, {
                 permanent: true,
                 direction: 'center',
                 className: 'region-label'
