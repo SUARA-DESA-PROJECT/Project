@@ -249,13 +249,22 @@ class LaporanController extends Controller
         $laporan->save();
         return redirect()->route('verifikasilap.index')->with('success', 'Laporan berhasil diverifikasi.');
     }
-
+    
     public function unverify($id)
     {
         $laporan = Laporan::findOrFail($id);
         $laporan->status_verifikasi = 'Belum Diverifikasi';
         $laporan->save();
         return redirect()->route('verifikasilap.index')->with('success', 'Status verifikasi laporan berhasil dihapus.');
+    }
+
+    public function reject($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        $laporan->status_verifikasi = 'Ditolak';
+        $laporan->save();
+        
+        return redirect()->route('verifikasilap.index')->with('success', 'Laporan berhasil ditolak');
     }
 
     public function updateStatus(Request $request)

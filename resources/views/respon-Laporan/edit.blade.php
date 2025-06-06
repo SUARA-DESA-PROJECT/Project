@@ -306,7 +306,8 @@ document.getElementById('updateForm').addEventListener('submit', function(e) {
         confirmButtonColor: '#468B94',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Ya, Update!',
-        cancelButtonText: 'Batal'
+        cancelButtonText: 'Batal',
+        reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
             this.submit();

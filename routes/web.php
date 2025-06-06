@@ -110,6 +110,7 @@ Route::get('/verifikasilap', [LaporanController::class, 'indexVerifikasi'])->nam
 Route::put('/verifikasilap/{id_laporan}/verify', [LaporanController::class, 'verify'])->name('verifikasilap.verify');
 Route::put('/verifikasilap/{id_laporan}/unverify', [LaporanController::class, 'unverify'])->name('verifikasilap.unverify');
 Route::post('/laporan/update-status', [LaporanController::class, 'updateStatus']);
+Route::put('/verifikasilap/{id}/reject', [LaporanController::class, 'reject'])->name('verifikasilap.reject');
 
 // Verifikasi Akun routes
 Route::get('/verifikasi-akun', [WargaController::class, 'verifikasiIndex'])->name('warga.verifikasi');

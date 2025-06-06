@@ -28,11 +28,11 @@
         </div>
         
         <div class="card-body p-0"> <!-- Remove padding -->
-            @if(session('success'))
+            <!-- @if(session('success'))
                 <div class="alert alert-success m-3">
                     {{ session('success') }}
                 </div>
-            @endif
+            @endif -->
             
             <div class="table-responsive">
                 <table class="table table-hover">
@@ -513,6 +513,32 @@ tr:hover .user-details {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Check for success message from session
+        @if(session('success'))
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'OK',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: true,
+                allowOutsideClick: true
+            });
+        @endif
+
+        // Check for error message from session
+        @if(session('error'))
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                icon: 'error',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'OK'
+            });
+        @endif
+
         // Add confirmation for verify and unverify actions
         const verifyForms = document.querySelectorAll('form[action*="verify"]');
         
@@ -535,9 +561,21 @@ tr:hover .user-details {
                     confirmButtonColor: confirmButtonColor,
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: confirmButtonText,
-                    cancelButtonText: 'Batal'
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        // Show loading
+                        Swal.fire({
+                            title: 'Memproses...',
+                            text: 'Sedang mengubah status verifikasi',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
                         this.submit();
                     }
                 });
@@ -673,6 +711,47 @@ tr:hover .user-details {
         });
     });
 </script>
+
+<style>
+/* Add custom styles for SweetAlert */
+.swal2-popup.user-details-popup {
+    border-radius: 10px;
+}
+
+.user-details-modal .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-color: #dee2e6;
+}
+
+.user-details-modal .table td {
+    border-color: #dee2e6;
+}
+
+.user-details-modal .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.user-details-modal .status-badge.verified {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.user-details-modal .status-badge.unverified {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.user-details-modal .status-badge i {
+    margin-right: 4px;
+}
+</style>
 @endsection
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">

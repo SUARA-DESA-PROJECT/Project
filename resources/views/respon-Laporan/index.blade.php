@@ -11,13 +11,7 @@
             confirmButtonColor: '#468B94',
             timer: 3000,
             timerProgressBar: true,
-            position: 'center',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp'
-            }
+            position: 'center'
         });
     @endif
 </script>

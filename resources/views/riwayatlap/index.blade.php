@@ -3,609 +3,470 @@
 @section('title', 'Riwayat Laporan')
 
 @section('content')
+<div class="container-fluid pl-4">
+    <h2 class="mt-4">Riwayat Laporan</h2>
+    <p class="text-muted">Riwayat laporan yang telah Anda buat akan muncul di sini.</p>
 
-<div class="container-fluid mt-4" style="background: #ffffff">  
-    <div class="row">
-        <div class="col-12">
-            <h2>Riwayat Laporan</h2>
-            <p>Riwayat laporan yang telah Anda buat akan muncul di sini.</p>
-            <div class="main-card">
-                <div class="d-flex justify-content-end mb-3 button-group">
-                    <a href="{{ url('/export-pdf') }}?{{ http_build_query(request()->query()) }}" class="btn-custom">
-                        <i class="fa fa-file-pdf-o mr-2"></i> Cetak PDF
-                    </a>
-                    <div class="dropdown">
-                        <button class="btn-custom" type="button" id="filterDropdown" data-toggle="dropdown">
-                            <i class="fa fa-filter mr-2"></i> Filter <i class="fa fa-caret-down ml-2"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index') }}">Semua Data</a>
-                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Diverifikasi']) }}">Diverifikasi</a>
-                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Belum Diverifikasi']) }}">Belum Diverifikasi</a>
-                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['jenis' => 'Laporan Positif']) }}">Laporan Positif</a>
-                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['jenis' => 'Laporan Negatif']) }}">Laporan Negatif</a>
-                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status_penanganan' => 'Sudah Ditangani']) }}">Sudah Ditangani</a>
-                            <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status_penanganan' => 'Belum Ditangani']) }}">Belum Ditangani</a>
-                        </div>
-                    </div>
-                    <a href="{{ route('laporan.create') }}" class="btn-custom">
-                        <i class="fa fa-plus mr-2"></i> Buat Laporan
-                    </a>
+    <div class="card riwayat-card" style="margin-left: 0; text-align: left;">
+        <div class="card-header riwayat-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="fas fa-history me-1"></i>
+                    Daftar Riwayat Laporan
                 </div>
-
-                <div class="laporan-list">
-                    @forelse($laporans as $laporan)
-                    <div class="laporan-item">
-                        <div class="laporan-header">
-                            <h3 class="laporan-title">{{ $laporan->judul_laporan }}</h3>
-                            <div class="action-buttons">
-                                <a href="{{ route('inputlaporan.edit', $laporan->id) }}" class="btn-action-small edit">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                                <form action="{{ route('inputlaporan.destroy', $laporan->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-action-small delete">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="laporan-content">
-                            <div class="info-group">
-                                <label><i class="fa fa-calendar"></i> Tanggal:</label>
-                                <span>{{ $laporan->tanggal_pelaporan }}</span>
-                            </div>
-                            <div class="info-group">
-                                <label><i class="fa fa-map-marker"></i> Lokasi:</label>
-                                <span>{{ $laporan->tempat_kejadian }}</span>
-                            </div>
-                            <div class="info-group">
-                                <label><i class="fa fa-tag"></i> Kategori:</label>
-                                <span>{{ $laporan->kategori_laporan }}</span>
-                            </div>
-                            <div class="status-badges">
-                                <span class="badge {{ $laporan->jenis_kategori == 'Positif' ? 'badge-positif' : 'badge-negatif' }}">
-                                    {{ $laporan->jenis_kategori }}
-                                </span>
-                                <span class="badge {{ $laporan->status_verifikasi == 'Diverifikasi' ? 'badge-verif' : 'badge-unverif' }}">
-                                    {{ $laporan->status_verifikasi }}
-                                </span>
-                                <span class="badge {{ $laporan->status_penanganan == 'Sudah Ditangani' ? 'badge-ditangani' : 'badge-belum' }}">
-                                    {{ $laporan->status_penanganan }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    @empty
-                    <div class="no-data">
-                        <i class="fa fa-info-circle fa-2x mb-2"></i>
-                        <p>Belum ada laporan yang dibuat</p>
-                    </div>
-                    @endforelse
-                </div>
-            <!-- </div> -->
-        <!-- </div>
-    </div> -->
-
-    <!-- Modal Detail Laporan -->
-    <div class="modal fade" id="detailLaporanModal" tabindex="-1" role="dialog" aria-labelledby="detailLaporanModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #468B94; color: white;">
-                    <h5 class="modal-title" id="detailLaporanModalLabel">Detail Laporan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                <div class="dropdown d-flex align-items-center" style="gap: 12px;">
+                    <a href="{{ url('/export-pdf') }}?{{ http_build_query(request()->query()) }}" 
+                       class="btn mr-2" 
+                       style="background-color: #3942ef; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-right: 10px;">
+                        <i class="fas fa-file-pdf mr-2"></i> Cetak PDF
+                    </a>
+                    <button class="btn" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" 
+                            style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-right: 10px;">
+                        <i class="fas fa-filter mr-2"></i> Filter <i class="fas fa-caret-down ml-2"></i>
                     </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Judul Laporan:</label>
-                                <p id="modal-judul"></p>
-                            </div>
-                            <div class="form-group">
-                                <label class="font-weight-bold">Deskripsi Laporan:</label>
-                                <p id="modal-deskripsi" style="white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;"></p>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="font-weight-bold">Tanggal Pelaporan:</label>
-                                        <p id="modal-tanggal"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="font-weight-bold">Tempat Kejadian:</label>
-                                        <p id="modal-tempat"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="font-weight-bold">Kategori Laporan:</label>
-                                        <p id="modal-kategori"></p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="font-weight-bold">Jenis Laporan:</label>
-                                        <p id="modal-jenis"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="font-weight-bold">Status Verifikasi:</label>
-                                        <p id="modal-status"></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="font-weight-bold">Status Penanganan:</label>
-                                        <p id="modal-status-penanganan"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index') }}">Semua Data</a>
+                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Diverifikasi']) }}">Diverifikasi</a>
+                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status' => 'Belum Diverifikasi']) }}">Belum Diverifikasi</a>
+                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['jenis' => 'Laporan Positif']) }}">Laporan Positif</a>
+                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['jenis' => 'Laporan Negatif']) }}">Laporan Negatif</a>
+                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status_penanganan' => 'Sudah Ditangani']) }}">Sudah Ditangani</a>
+                        <a class="dropdown-item" href="{{ route('riwayat-laporan.index', ['status_penanganan' => 'Belum Ditangani']) }}">Belum Ditangani</a>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <a href="{{ route('laporan.create') }}" 
+                       class="btn" 
+                       style="background-color: #468B94; color: white; border-radius: 6px; padding: 6px 15px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <i class="fas fa-plus mr-2"></i> Buat Laporan
+                    </a>
                 </div>
             </div>
         </div>
+        
+        <div class="card-body">
+            @forelse($laporans as $laporan)
+                <div class="laporan-card">
+                    <div class="laporan-card-header">
+                        <div class="laporan-card-title">
+                            <i class="fas fa-file-alt"></i> {{ $laporan->judul_laporan }}
+                        </div>
+                        <div class="action-buttons">
+                            <button type="button" class="btn-action-small edit" onclick="window.location='{{ route('inputlaporan.edit', $laporan->id) }}'">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form action="{{ route('inputlaporan.destroy', $laporan->id) }}" method="POST" class="d-inline delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn-action-small delete delete-btn" data-id="{{ $laporan->id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="laporan-card-body">
+                        <div class="laporan-card-row">
+                            <span class="laporan-label"><i class="fas fa-align-left"></i> Deskripsi:</span>
+                            <span class="laporan-value">{{ \Illuminate\Support\Str::limit($laporan->deskripsi_laporan, 100) }}</span>
+                        </div>
+                        <div class="laporan-card-row">
+                            <span class="laporan-label"><i class="fas fa-calendar-alt"></i> Tanggal:</span>
+                            <span class="laporan-value">{{ \Carbon\Carbon::parse($laporan->tanggal_pelaporan)->format('d-m-Y') }}</span>
+                        </div>
+                        <div class="laporan-card-row">
+                            <span class="laporan-label"><i class="fas fa-map-marker-alt"></i> Tempat:</span>
+                            <span class="laporan-value">{{ $laporan->tempat_kejadian }}</span>
+                        </div>
+                        <div class="laporan-card-row">
+                            <span class="laporan-label"><i class="fas fa-tags"></i> Kategori:</span>
+                            <span class="laporan-value">{{ $laporan->kategori_laporan }}</span>
+                        </div>
+                        
+                        <!-- Status labels in horizontal row -->
+                        <div class="status-labels-container">
+                            <div class="status-label">
+                                @if($laporan->jenis_kategori == 'Positif')
+                                    <span class="badge badge-pill badge-success">Laporan Positif</span>
+                                @else
+                                    <span class="badge badge-pill badge-danger">Laporan Negatif</span>
+                                @endif
+                            </div>
+                            <div class="status-label">
+                                @if($laporan->status_verifikasi == 'Diverifikasi')
+                                    <span class="badge badge-pill badge-success">{{ $laporan->status_verifikasi }}</span>
+                                @else
+                                    <span class="badge badge-pill badge-warning">{{ $laporan->status_verifikasi }}</span>
+                                @endif
+                            </div>
+                            <div class="status-label">
+                                @if($laporan->status_penanganan == 'Sudah Ditangani')
+                                    <span class="badge badge-pill badge-success">{{ $laporan->status_penanganan }}</span>
+                                @else
+                                    <span class="badge badge-pill badge-danger">{{ $laporan->status_penanganan }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="text-center" style="padding: 40px;">
+                    <i class="fas fa-info-circle fa-3x mb-3" style="color: #6c757d; opacity: 0.5;"></i>
+                    <p style="color: #6c757d;">Belum ada laporan yang dibuat</p>
+                </div>
+            @endforelse
+            
+            <div class="pagination-wrapper">
+                {{ $laporans->appends(request()->query())->links() }}
+            </div>
+        </div>
     </div>
+</div>
 
-    <!-- <div class="mt-3 mb-5">
-        <a href="{{ url('/homepage-warga') }}" class="btn btn-secondary" style="float: left;">
-            Kembali ke Beranda
-        </a>
-    </div> -->
+<style>
+/* --- RIWAYAT LAPORAN MODERN STYLE --- */
+.riwayat-card {
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(70,139,148,0.10);
+    margin-top: 2rem;
+    animation: fadeInDown 0.7s;
+}
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
-    <script>
-        $(document).ready(function() {
-            // Event listener untuk menampilkan modal detail laporan
-            $('.show-laporan-details').click(function() {
-                var id = $(this).data('id');
-                var judul = $(this).data('judul');
-                var deskripsi = $(this).data('deskripsi');
-                var tanggal = $(this).data('tanggal');
-                var tempat = $(this).data('tempat');
-                var status = $(this).data('status');
-                var kategori = $(this).data('kategori');
-                var jenis = $(this).data('jenis');
-                var statusPenanganan = $(this).data('status-penanganan');
-                
-                // Isi modal dengan data laporan
-                $('#modal-judul').text(judul);
-                $('#modal-deskripsi').text(deskripsi);
-                $('#modal-tanggal').text(tanggal);
-                $('#modal-tempat').text(tempat);
-                $('#modal-status').text(status);
-                $('#modal-kategori').text(kategori);
-                $('#modal-jenis').text(jenis);
-                $('#modal-status-penanganan').text(statusPenanganan);
-                
-                // Tampilkan modal
-                $('#detailLaporanModal').modal('show');
-            });
+.riwayat-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e3f6f5;
+    padding: 1rem;
+}
 
-            // Event listener untuk tombol delete
-            $('.btn-action-small.delete').click(function(e) {
-                e.preventDefault();
-                const form = $(this).closest('form');
-                
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Data yang dihapus tidak dapat dikembalikan!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#468B94',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-    </script>
+h2 {
+    color: #333333;
+    font-weight: 600;
+    margin-bottom: 10px;
+    animation: fadeInUp 0.4s ease-out;
+}
 
-    <style>
-    /* Add these animation keyframes at the top of your style section */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+p {
+    margin-bottom: 20px;
+    animation: fadeInUp 0.4s ease-out 0.1s backwards;
+}
+
+.laporan-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 16px rgba(70,139,148,0.08);
+    transition: all 0.3s ease;
+    animation: fadeInDown 0.7s;
+    position: relative;
+    border: 1px solid #e0e0e0;
+}
+
+.laporan-card:hover {
+    box-shadow: 0 8px 32px rgba(70,139,148,0.18);
+    transform: translateY(-4px) scale(1.01);
+}
+
+.laporan-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.laporan-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #468B94;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.laporan-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.laporan-card-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+    flex-wrap: wrap;
+}
+
+.laporan-label {
+    font-weight: 600;
+    color: #468B94;
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.laporan-value {
+    color: #333;
+    font-weight: 500;
+}
+
+/* Status labels styling */
+.status-labels-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #e0e0e0;
+}
+
+.status-label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-weight: 600;
+    color: #468B94;
+    font-size: 0.9rem;
+}
+
+.status-label .badge {
+    margin-top: 5px;
+}
+
+/* Badge styling */
+.badge-pill {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dropdown styling */
+.dropdown-menu {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: none;
+    padding: 0.5rem;
+    min-width: 200px;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background-color: #e3f6f5;
+    color: #468B94;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-action-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-action-small.edit {
+    background-color: #3942ef;
+    color: white;
+}
+
+.btn-action-small.delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-action-small:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .status-labels-container {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    @keyframes scaleIn {
-        from {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    /* Update animation keyframes */
-    @keyframes slideInPop {
-        0% {
-            opacity: 0;
-            transform: translateX(-10px) scale(0.98);
-        }
-        50% {
-            transform: translateX(3px) scale(1.01);
-        }
-        100% {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-        }
-    }
-
-    /* Container Background */
-    .container-fluid {
-        background: #E8F5E9; /* Pale green background */
-        padding: 20px;
-        min-height: 100vh;
-    }
-
-    /* Main Card Container */
-    .main-card {
-        background: #E8F5E9;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        margin-top: 20px;
-        animation: scaleIn 0.4s ease-out;
-        transform-origin: top;
-    }
-
-    /* Title Section */
-    /* Update existing h2 and p styles */
-    h2 {
-        color: #333333; /* Dark gray, almost black */
-        font-weight: 600;
+    .status-label {
+        width: 100%;
         margin-bottom: 10px;
     }
+}
 
-    /* Button Group Styles */
-    .button-group {
-        padding-bottom: 20px;
-        border-bottom: 1px solid rgba(70,139,148,0.2);
-    }
+/* Pagination Styling */
+.pagination {
+    margin-bottom: 0;
+    border-radius: 8px;
+    justify-content: center;
+}
 
-    .btn-custom {
-        background: #468B94;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 6px;
-        border: none;
-        font-weight: 500;
-        min-width: 120px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-decoration: none;
-        margin-left: 10px;
-        transform-origin: center;
-    }
+.page-item {
+    margin: 0 2px;
+}
 
-    .btn-custom:hover {
-        background: #2C5530;
-        color: white;
-        transform: translateY(-2px) scale(1.01);
-        box-shadow: 0 4px 8px rgba(44,85,48,0.15);
-    }
+.page-link {
+    color: #468B94;
+    background-color: white;
+    border: 1px solid #dee2e6;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
 
-    .btn-custom i {
-        margin-right: 8px;
-    }
+.page-link:hover {
+    color: white;
+    background-color: #468B94;
+    border-color: #468B94;
+    box-shadow: 0 2px 4px rgba(70,139,148,0.2);
+    text-decoration: none;
+}
 
-    /* Laporan Card Styles */
-    .laporan-list {
-        margin-top: 20px;
-    }
+.page-item.active .page-link {
+    z-index: 3;
+    color: white;
+    background-color: #468B94;
+    border-color: #468B94;
+    box-shadow: 0 2px 4px rgba(70,139,148,0.3);
+}
 
-    .laporan-item {
-        background: #468B94;
-        background:;
-        color: white;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 15px;
-        animation: slideInPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        border: 2px solid transparent;
-    }
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
 
-    .laporan-item:hover {
-        transform: translateY(-3px) scale(1.01);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-        border-color: rgba(255,255,255,0.2);
-    }
+/* Custom pagination container */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
 
-    .laporan-item:nth-child(1) { animation-delay: 0.1s; }
-    .laporan-item:nth-child(2) { animation-delay: 0.2s; }
-    .laporan-item:nth-child(3) { animation-delay: 0.3s; }
-    .laporan-item:nth-child(4) { animation-delay: 0.4s; }
-    .laporan-item:nth-child(5) { animation-delay: 0.5s; }
+/* Hide default Laravel pagination text */
+.pagination-wrapper .hidden {
+    display: none;
+}
 
-    .laporan-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
+/* Style untuk angka halaman yang tidak terlihat berantakan */
+.page-item .page-link {
+    min-width: 40px;
+    text-align: center;
+}
 
-    .laporan-title {
-        color: white;
-        font-size: 18px;
-        font-weight: 600;
-        margin: 0;
-    }
+/* Untuk link Previous dan Next */
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+    font-weight: 600;
+}
+</style>
 
-    /* Action Buttons */
-    .action-buttons {
-        display: flex;
-        gap: 8px;
-    }
+<!-- Modal Detail Laporan (jika diperlukan) -->
+<div class="modal fade" id="detailLaporanModal" tabindex="-1" role="dialog" aria-labelledby="detailLaporanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #468B94; color: white;">
+                <h5 class="modal-title" id="detailLaporanModalLabel">Detail Laporan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Isi modal detail -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    .btn-action-small {
-        background: white;
-        color: #468B94;
-        border: none;
-        border-radius: 6px;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-    }
-
-    .btn-action-small:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .btn-action-small.edit:hover {
-        background: #e8f5e9;
-    }
-
-    .btn-action-small.delete:hover {
-        background: #ffebee;
-        color: #d32f2f;
-    }
-
-    /* Info Groups */
-    .info-group {
-        margin-bottom: 12px;
-    }
-
-    .info-group label {
-        color: rgba(255,255,255,0.9);
-        font-weight: 500;
-        margin-right: 8px;
-    }
-
-    .info-group span {
-        color: white;
-    }
-
-    /* Badges */
-    .status-badges {
-        display: flex;
-        gap: 8px;
-        margin-top: 15px;
-    }
-
-    .badge {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 500;
-        background: white;
-    }
-
-    .badge-positif { color: #2e7d32; }
-    .badge-negatif { color: #c62828; }
-    .badge-verif { color: #2e7d32; }
-    .badge-unverif { color: #c62828; }
-    .badge-ditangani { color: #2e7d32; }
-    .badge-belum { color: #c62828; }
-
-    /* Dropdown Menu */
-    .dropdown-menu {
-        background: white;
-        border: none;
-        border-radius: 6px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        padding: 8px 0;
-    }
-
-    .dropdown-item {
-        padding: 8px 16px;
-        color: #2C5530;
-        transition: all 0.2s ease;
-    }
-
-    .dropdown-item:hover {
-        background: #f5f5f5;
-        color: #2C5530;
-    }
-
-    /* Empty State */
-    .no-data {
-        text-align: center;
-        padding: 40px;
-        color: #666;
-    }
-
-    .no-data i {
-        font-size: 48px;
-        color: #468B94;
-        margin-bottom: 16px;
-    }
-
-    /* Update modal animation */
-    .modal.fade .modal-dialog {
-        transform: scale(0.98);
-        opacity: 0;
-    }
-
-    .modal.show .modal-dialog {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    .animate__animated {
-        animation-duration: 0.5s;
-    }
-
-    @keyframes fadeInRight {
-        from {
-            opacity: 0;
-            transform: translate3d(100%, 0, 0);
-        }
-        to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-        }
-    }
-
-    @keyframes fadeOutRight {
-        from {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-        }
-        to {
-            opacity: 0;
-            transform: translate3d(100%, 0, 0);
-        }
-    }
-
-    /* Style untuk SweetAlert2 */
-    .swal2-popup {
-        background: #fff !important;
-        border-radius: 0 !important;
-    }
-
-    .swal2-title {
-        color: #333 !important;
-        font-size: 32px !important;
-        font-weight: 600 !important;
-    }
-
-    .swal2-html-container {
-        color: #666 !important;
-        font-size: 16px !important;
-    }
-
-    /* Style untuk tombol konfirmasi dan cancel */
-    .swal2-confirm,
-    .swal2-cancel {
-        border-radius: 8px !important; /* Changed from 0 to 8px for rounded corners */
-        font-weight: 500 !important;
-        padding: 12px 24px !important;
-        min-width: 120px !important;
-    }
-
-    .swal2-confirm {
-        background-color: #468B94 !important;
-        color: white !important;
-    }
-
-    .swal2-cancel {
-        background-color: #d33 !important;
-        color: white !important;
-    }
-
-    .swal2-confirm:focus,
-    .swal2-cancel:focus {
-        box-shadow: none !important;
-    }
-
-    /* Animasi */
-    .swal2-show {
-        animation: swal2-show 0.3s !important;
-    }
-
-    .swal2-hide {
-        animation: swal2-hide 0.3s !important;
-    }
-
-    @keyframes swal2-show {
-        0% {
-            transform: scale(0.9);
-            opacity: 0;
-        }
-        100% {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-
-    @keyframes swal2-hide {
-        0% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(0.9);
-            opacity: 0;
-        }
-    }
-    </style>
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Success message handler
+    $(document).ready(function() {
+        // Tampilkan pesan sukses jika ada
         @if(session('success'))
-            let message = '{{ session('success') }}';
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: message,
+                text: '{{ session('success') }}',
                 showConfirmButton: false,
-                timer: 1500,
-                customClass: {
-                    popup: 'swal2-popup',
-                    title: 'swal2-title', 
-                    content: 'swal2-content'
-                }
+                timer: 1500
             });
         @endif
 
-        // Delete confirmation handler
-        $('.btn-action-small.delete').click(function(e) {
+        // Konfirmasi hapus dengan SweetAlert2
+        $('.delete-btn').on('click', function(e) {
             e.preventDefault();
             const form = $(this).closest('form');
             
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Data yang dihapus tidak dapat dikembalikan!",
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus laporan ini?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#468B94',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal',
-                reverseButtons: true,
-                customClass: {
-                    popup: 'swal2-popup',
-                    title: 'swal2-title',
-                    content: 'swal2-content',
-                    confirmButton: 'swal2-confirm'
-                }
+                reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();
@@ -614,8 +475,5 @@
         });
     });
 </script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 @endpush
-
-<!-- Di bagian head -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

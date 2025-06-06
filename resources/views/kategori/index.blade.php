@@ -12,13 +12,7 @@
             confirmButtonColor: '#468B94',
             timer: 3000,
             timerProgressBar: true,
-            position: 'center',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp'
-            }
+            position: 'center'
         });
     @endif
 </script>
@@ -40,11 +34,11 @@
         </div>
         
         <div class="card-body p-0">
-            @if(session('success'))
+            <!-- @if(session('success'))
                 <div class="alert alert-success m-3">
                     {{ session('success') }}
                 </div>
-            @endif
+            @endif -->
             
             <div class="table-responsive">
                 <table class="table table-hover">
@@ -123,7 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonColor: '#dc3545',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();
