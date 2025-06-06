@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Laporan;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LaporanPengurusController extends Controller
 {
@@ -65,7 +66,7 @@ class LaporanPengurusController extends Controller
             ]);
                 
         } catch (\Exception $e) {
-            \Log::error('Error saving laporan: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error saving laporan: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat menyimpan laporan'
