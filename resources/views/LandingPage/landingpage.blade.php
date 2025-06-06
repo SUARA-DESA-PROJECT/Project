@@ -32,13 +32,19 @@
     .header {
       background: transparent;
       box-shadow: none;
-      position: absolute;
+      position: fixed;
       width: 100%;
-      z-index: 10;
+      z-index: 1030;
       top: 0;
       left: 0;
-      padding-top: 1.5rem;
-      transition: background 0.3s;
+      padding: 1rem 0;
+      transition: all 0.3s ease;
+    }
+    .header.scrolled {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 0.7rem 0;
     }
     .header .logo h1 {
       font-family: 'Poppins', sans-serif;
@@ -47,6 +53,9 @@
       letter-spacing: 1px;
       color: #fff;
       margin-bottom: 0;
+    }
+    .header.scrolled .logo h1 {
+      color: #222;
     }
     .header .sitename .text-success {
       color: #1cda71 !important;
@@ -65,8 +74,15 @@
       border-radius: 30px;
       transition: background 0.2s, color 0.2s;
     }
+    .header.scrolled .navmenu ul li a {
+      color: #222;
+    }
     .header .navmenu ul li a:hover {
       background: rgba(29, 233, 182, 0.15);
+      color: #1cda71;
+    }
+    .header.scrolled .navmenu ul li a:hover {
+      background: rgba(28, 218, 113, 0.1);
       color: #1cda71;
     }
     .header .btn-nav {
@@ -470,6 +486,16 @@
           behavior: 'smooth'
         });
       });
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
     });
   </script>
 
