@@ -96,7 +96,8 @@ class DatabaseSeeder extends Seeder
                 'nama_lengkap' => 'Joko Widodo',
                 'nomor_telepon' => '081345678901',
                 'alamat' => 'Jl. Kenanga No. 1, RT 01/RW 02',
-                'email' => 'joko.widodo@example.com'
+                'email' => 'joko.widodo@example.com',
+                'status_verifikasi' => 'Terverifikasi',
             ],
             [
                 'username' => 'warga2',

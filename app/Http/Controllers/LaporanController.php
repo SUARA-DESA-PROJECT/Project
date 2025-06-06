@@ -59,7 +59,9 @@ class LaporanController extends Controller
                 'tanggal_pelaporan' => 'required',
                 'tempat_kejadian' => 'required',
                 'kategori_laporan' => 'required',
-                'time_laporan' => 'required'  // Tambahkan validasi untuk time_laporan
+                'time_laporan' => 'required',
+                'latitude' => 'nullable|numeric|between:-90,90',
+                'longitude' => 'nullable|numeric|between:-180,180'
             ]);
 
             // Add automatic data
@@ -68,7 +70,11 @@ class LaporanController extends Controller
             $validatedData['deskripsi_penanganan'] = null;
             $validatedData['tipe_pelapor'] = 'Warga';
             $validatedData['warga_username'] = $warga->username;
-            $validatedData['time_laporan'] = $request->time_laporan;  // Tambahkan time_laporan ke data yang akan disimpan
+            $validatedData['time_laporan'] = $request->time_laporan;
+            
+            // Add coordinates if provided
+            $validatedData['latitude'] = $request->latitude;
+            $validatedData['longitude'] = $request->longitude;
 
             $laporan = Laporan::create($validatedData);
             

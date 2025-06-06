@@ -16,6 +16,8 @@ class Laporan extends Model
         'deskripsi_laporan',
         'tanggal_pelaporan',
         'tempat_kejadian',
+        'latitude',        // Tambah latitude
+        'longitude',       // Tambah longitude
         'status_verifikasi',
         'status_penanganan',
         'deskripsi_penanganan',
@@ -56,5 +58,16 @@ class Laporan extends Model
     public function komentars()
     {
         return $this->hasMany(Komentar::class, 'laporan_id');
+    }
+
+    /**
+     * Accessor untuk mendapatkan koordinat dalam format array
+     */
+    public function getCoordinatesAttribute()
+    {
+        if ($this->latitude && $this->longitude) {
+            return [$this->latitude, $this->longitude];
+        }
+        return null;
     }
 }
