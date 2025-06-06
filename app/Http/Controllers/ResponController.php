@@ -10,7 +10,7 @@ class ResponController extends Controller
 {
     public function index()
     {
-        $laporans = Laporan::where('status_verifikasi', 'Diverifikasi')
+        $laporans = Laporan::whereIn('status_verifikasi', ['Diverifikasi', 'Ditolak'])
             ->orderBy('tanggal_pelaporan', 'desc')
             ->get();
 
@@ -77,6 +77,74 @@ class ResponController extends Controller
             return redirect()
                 ->route('respon.index')
                 ->with('error', 'Laporan tidak ditemukan.')
+                ->with('alert-type', 'error');
+        }
+    }
+
+    // Tambah method baru untuk keterangan penolakan
+    public function editRejection($id)
+    {
+        try {
+            $laporan = Laporan::findOrFail($id);
+            
+            if ($laporan->status_verifikasi !== 'Ditolak') {
+                return redirect()
+                    ->route('respon.index')
+                    ->with('error', 'Hanya laporan yang ditolak yang dapat ditambah keterangan!')
+                    ->with('alert-type', 'warning');
+            }
+
+            return view('respon-Laporan.edit-rejection', compact('laporan'));
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('respon.index')
+                ->with('error', 'Laporan tidak ditemukan.')
+                ->with('alert-type', 'error');
+        }
+    }
+
+    public function updateRejection(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'deskripsi_penolakan' => 'required|string|min:10',
+            ], [
+                'deskripsi_penolakan.required' => 'Deskripsi penolakan harus diisi',
+                'deskripsi_penolakan.min' => 'Deskripsi penolakan minimal 10 karakter'
+            ]);
+
+            $laporan = Laporan::findOrFail($id);
+            
+            if ($laporan->status_verifikasi !== 'Ditolak') {
+                return redirect()
+                    ->route('respon.index')
+                    ->with('error', 'Hanya laporan yang ditolak yang dapat ditambah keterangan!')
+                    ->with('alert-type', 'warning');
+            }
+            
+            $laporan->update([
+                'deskripsi_penolakan' => $request->deskripsi_penolakan,
+                'updated_at' => now()
+            ]);
+
+            return redirect()
+                ->route('respon.index')
+                ->with('success', 'Keterangan penolakan berhasil ditambahkan!')
+                ->with('alert-type', 'success');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Gagal menambahkan keterangan penolakan. Silakan periksa kembali input Anda.')
+                ->with('alert-type', 'error');
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Terjadi kesalahan saat menambahkan keterangan penolakan.')
                 ->with('alert-type', 'error');
         }
     }

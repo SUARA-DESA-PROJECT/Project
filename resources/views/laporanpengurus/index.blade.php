@@ -47,19 +47,31 @@
         
         <div class="card-body">
             @forelse($laporans as $laporan)
-                <div class="laporan-card">
+                <div class="laporan-card laporan-clickable" 
+                     data-judul="{{ $laporan->judul_laporan }}"
+                     data-deskripsi="{{ $laporan->deskripsi_laporan }}"
+                     data-tanggal="{{ \Carbon\Carbon::parse($laporan->tanggal_pelaporan)->format('d-m-Y') }}"
+                     data-tempat="{{ $laporan->tempat_kejadian }}"
+                     data-status-verifikasi="{{ $laporan->status_verifikasi }}"
+                     data-status-penanganan="{{ $laporan->status_penanganan }}"
+                     data-deskripsi-penanganan="{{ $laporan->deskripsi_penanganan }}"
+                     data-tipe-pelapor="{{ $laporan->tipe_pelapor }}"
+                     data-pelapor="{{ $laporan->pengurus_lingkungan_username ?? $laporan->warga_username }}"
+                     data-kategori="{{ $laporan->kategori_laporan }}"
+                     data-deskripsi-penolakan="{{ $laporan->deskripsi_penolakan }}"
+                     data-jenis-kategori="{{ $laporan->jenis_kategori }}">
                     <div class="laporan-card-header">
                         <div class="laporan-card-title">
                             <i class="fas fa-file-alt"></i> {{ $laporan->judul_laporan }}
                         </div>
                         <div class="action-buttons">
-                            <button type="button" class="btn-action-small edit" onclick="window.location='{{ route('pengurus.kelola-laporan.edit', $laporan->id) }}'">
+                            <button type="button" class="btn-action-small edit" onclick="event.stopPropagation(); window.location='{{ route('pengurus.kelola-laporan.edit', $laporan->id) }}'">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <form action="{{ route('pengurus.kelola-laporan.destroy', $laporan->id) }}" method="POST" class="d-inline delete-form">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn-action-small delete delete-laporan" data-id="{{ $laporan->id }}">
+                                <button type="button" class="btn-action-small delete delete-laporan" data-id="{{ $laporan->id }}" onclick="event.stopPropagation();">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -95,6 +107,8 @@
                             <div class="status-label">
                                 @if($laporan->status_verifikasi == 'Diverifikasi')
                                     <span class="badge badge-pill badge-success">{{ $laporan->status_verifikasi }}</span>
+                                @elseif($laporan->status_verifikasi == 'Ditolak')
+                                    <span class="badge badge-pill badge-danger">{{ $laporan->status_verifikasi }}</span>
                                 @else
                                     <span class="badge badge-pill badge-warning">{{ $laporan->status_verifikasi }}</span>
                                 @endif
@@ -102,11 +116,17 @@
                             <div class="status-label">
                                 @if($laporan->status_penanganan == 'Sudah Ditangani')
                                     <span class="badge badge-pill badge-success">{{ $laporan->status_penanganan }}</span>
+                                @elseif($laporan->status_penanganan == 'Sedang Ditangani')
+                                    <span class="badge badge-pill badge-warning">{{ $laporan->status_penanganan }}</span>
                                 @else
                                     <span class="badge badge-pill badge-danger">{{ $laporan->status_penanganan }}</span>
                                 @endif
                             </div>
                         </div>
+                    </div>
+                    <!-- Tambah indikator bahwa card bisa diklik -->
+                    <div class="click-indicator">
+                        <i class="fas fa-eye"></i> Klik untuk melihat detail
                     </div>
                 </div>
             @empty
@@ -163,9 +183,35 @@ p {
     border: 1px solid #e0e0e0;
 }
 
+.laporan-card.laporan-clickable {
+    cursor: pointer;
+}
+
 .laporan-card:hover {
     box-shadow: 0 8px 32px rgba(70,139,148,0.18);
     transform: translateY(-4px) scale(1.01);
+}
+
+.laporan-card.laporan-clickable:hover {
+    border-color: #468B94;
+}
+
+.click-indicator {
+    position: absolute;
+    bottom: 10px; /* Ubah dari top ke bottom */
+    right: 10px; /* Ubah dari left ke right */
+    background-color: rgba(70, 139, 148, 0.1);
+    color: #468B94;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.laporan-card:hover .click-indicator {
+    opacity: 1;
 }
 
 .laporan-card-header {
@@ -344,6 +390,16 @@ p {
         width: 100%;
         margin-bottom: 10px;
     }
+    
+    .click-indicator {
+        position: static; /* Ubah menjadi static di mobile */
+        opacity: 1;
+        margin-top: 10px;
+        text-align: center;
+        background-color: rgba(70, 139, 148, 0.15);
+        border-radius: 6px;
+        padding: 8px;
+    }
 }
 
 /* Pagination Styling */
@@ -416,27 +472,66 @@ p {
 .page-item:last-child .page-link {
     font-weight: 600;
 }
-</style>
 
-<!-- Modal Detail Laporan (jika diperlukan) -->
-<div class="modal fade" id="detailLaporanModal" tabindex="-1" role="dialog" aria-labelledby="detailLaporanModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: #468B94; color: white;">
-                <h5 class="modal-title" id="detailLaporanModalLabel">Detail Laporan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Isi modal detail -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
+/* Custom SweetAlert styling */
+.swal2-popup.detail-laporan {
+    border-radius: 15px;
+}
+
+.detail-table {
+    width: 100%;
+    margin: 0;
+}
+
+.detail-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #468B94;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    text-align: left;
+    width: 35%;
+    vertical-align: top; /* Tambahkan untuk alignment yang lebih baik */
+}
+
+.detail-table td {
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    color: #333;
+    text-align: left; /* Ubah dari default menjadi rata kiri */
+    vertical-align: top; /* Tambahkan untuk alignment yang lebih baik */
+}
+
+.detail-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    gap: 4px;
+}
+
+.detail-badge.success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.detail-badge.danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.detail-badge.warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.detail-badge.secondary {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+</style>
 
 @endsection
 
@@ -473,6 +568,140 @@ p {
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit();
+                }
+            });
+        });
+
+        // Event listener untuk click pada card laporan
+        $('.laporan-clickable').on('click', function(e) {
+            // Jangan trigger jika yang diklik adalah button action
+            if ($(e.target).closest('.action-buttons').length > 0) {
+                return;
+            }
+
+            const data = {
+                id: $(this).data('id'),
+                judul: $(this).data('judul'),
+                deskripsi: $(this).data('deskripsi'),
+                tanggal: $(this).data('tanggal'),
+                tempat: $(this).data('tempat'),
+                statusVerifikasi: $(this).data('status-verifikasi'),
+                statusPenanganan: $(this).data('status-penanganan'),
+                deskripsiPenanganan: $(this).data('deskripsi-penanganan'),
+                tipePelapor: $(this).data('tipe-pelapor'),
+                pelapor: $(this).data('pelapor'),
+                kategori: $(this).data('kategori'),
+                deskripsiPenolakan: $(this).data('deskripsi-penolakan'),
+                jenisKategori: $(this).data('jenis-kategori')
+            };
+
+            // Function untuk membuat badge status
+            function createStatusBadge(status, type) {
+                let badgeClass = '';
+                let icon = '';
+                
+                if (type === 'verifikasi') {
+                    if (status === 'Diverifikasi') {
+                        badgeClass = 'success';
+                        icon = 'fa-check-circle';
+                    } else if (status === 'Ditolak') {
+                        badgeClass = 'danger';
+                        icon = 'fa-times-circle';
+                    } else {
+                        badgeClass = 'warning';
+                        icon = 'fa-clock';
+                    }
+                } else if (type === 'penanganan') {
+                    if (status === 'Sudah Ditangani') {
+                        badgeClass = 'success';
+                        icon = 'fa-check-circle';
+                    } else if (status === 'Sedang Ditangani') {
+                        badgeClass = 'warning';
+                        icon = 'fa-clock';
+                    } else {
+                        badgeClass = 'danger';
+                        icon = 'fa-exclamation-circle';
+                    }
+                } else if (type === 'jenis') {
+                    if (status === 'Positif') {
+                        badgeClass = 'success';
+                        icon = 'fa-thumbs-up';
+                    } else {
+                        badgeClass = 'danger';
+                        icon = 'fa-thumbs-down';
+                    }
+                }
+                
+                return `<span class="detail-badge ${badgeClass}">
+                            <i class="fas ${icon}"></i> ${status === 'Positif' ? 'Laporan Positif' : (status === 'Negatif' ? 'Laporan Negatif' : status)}
+                        </span>`;
+            }
+
+            // Buat konten modal
+            const modalContent = `
+                <table class="detail-table">
+                    <tr>
+                        <th><i class="fas fa-heading"></i> Judul Laporan</th>
+                        <td>${data.judul}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-align-left"></i> Deskripsi Laporan</th>
+                        <td>${data.deskripsi || '-'}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-calendar-alt"></i> Tanggal Pelaporan</th>
+                        <td>${data.tanggal}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-map-marker-alt"></i> Tempat Kejadian</th>
+                        <td>${data.tempat || '-'}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-tags"></i> Kategori Laporan</th>
+                        <td>${data.kategori || '-'}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-chart-line"></i> Jenis Kategori</th>
+                        <td>${createStatusBadge(data.jenisKategori, 'jenis')}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-user-tie"></i> Username Pelapor</th>
+                        <td>${data.pelapor || '-'}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-user-tag"></i> Tipe Pelapor</th>
+                        <td>${data.tipePelapor || '-'}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-check-circle"></i> Status Verifikasi</th>
+                        <td>${createStatusBadge(data.statusVerifikasi, 'verifikasi')}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-tasks"></i> Status Penanganan</th>
+                        <td>${createStatusBadge(data.statusPenanganan, 'penanganan')}</td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-comment-alt"></i> Deskripsi Penanganan</th>
+                        <td>${data.deskripsiPenanganan || '-'}</td>
+                    </tr>
+                    ${data.deskripsiPenolakan ? `
+                    <tr>
+                        <th><i class="fas fa-ban"></i> Deskripsi Penolakan</th>
+                        <td style="color: #dc3545;">${data.deskripsiPenolakan}</td>
+                    </tr>
+                    ` : ''}
+                </table>
+            `;
+
+            // Tampilkan SweetAlert dengan detail lengkap
+            Swal.fire({
+                title: '<i class="fas fa-file-alt"></i> Detail Laporan',
+                html: modalContent,
+                width: '800px',
+                showCloseButton: true,
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'detail-laporan'
                 }
             });
         });

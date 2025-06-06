@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('pengurus_lingkungan_username', 50)->nullable();
             $table->string('warga_username', 50)->nullable();
             $table->string('kategori_laporan', 50);
+            $table->string('deskripsi_penolakan')->nullable();
             $table->timestamps();
 
             // Foreign Keys

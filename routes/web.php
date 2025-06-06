@@ -172,3 +172,7 @@ Route::post('/komentarpengurus', [KomentarPengurusController::class, 'store'])->
 Route::get('/komentarpengurus/{komentar}/edit', [KomentarPengurusController::class, 'edit'])->name('komentarpengurus.edit');
 Route::put('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'update'])->name('komentarpengurus.update');
 Route::delete('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'destroy'])->name('komentarpengurus.destroy');
+
+// Tambahkan routes baru
+Route::get('/respon/{id}/edit-rejection', [ResponController::class, 'editRejection'])->name('respon.editRejection');
+Route::put('/respon/{id}/update-rejection', [ResponController::class, 'updateRejection'])->name('respon.updateRejection');

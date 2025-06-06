@@ -1,77 +1,89 @@
 @extends('layouts.app')
 
 @section('content')
-<script>
-    @if(Session::has('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: "{{ Session::get('success') }}",
-            showConfirmButton: true,
-            confirmButtonColor: '#468B94',
-            timer: 3000,
-            timerProgressBar: true,
-            position: 'center'
-        });
-    @endif
-</script>
 <div class="container-fluid px-4">
     <h2 class="mt-4">Respon Laporan</h2>
-    <p class="text-muted">Kelola dan update status penanganan laporan yang telah terverifikasi</p>
+    <p class="text-muted">Kelola dan berikan respon untuk laporan yang telah diverifikasi atau ditolak</p>
     
     <div class="card mb-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <i class="fas fa-chart-line me-1"></i>
-                    Daftar Laporan Terverifikasi
+                    <i class="fas fa-reply-all me-1"></i>
+                    Daftar Laporan
                 </div>
             </div>
         </div>
+        
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Tanggal</th>
-                            <th>Pelapor</th>
-                            <th>Kategori</th>
-                            <th>Lokasi</th>
-                            <th>Status Penanganan</th>
-                            <th>Deskripsi Penanganan</th>
-                            <th>Aksi</th>
+                        <tr class="text-center">
+                            <th class="text-start" width="20%">JUDUL LAPORAN</th>
+                            <th width="15%">TANGGAL</th>
+                            <th width="15%">TEMPAT KEJADIAN</th>
+                            <th width="12%">STATUS VERIFIKASI</th>
+                            <th width="15%">STATUS PENANGANAN</th>
+                            <th width="23%">AKSI</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($laporans as $index => $laporan)
-                        <tr class="align-middle">
-                            <td class="text-center">{{ $index + 1 }}</td>
-                            <td>{{ $laporan->tanggal_pelaporan }}</td>
-                            <td>{{ $laporan->nama_pelapor }}</td>
-                            <td>{{ $laporan->kategori_laporan }}</td>
-                            <td>{{ $laporan->tempat_kejadian }}</td>
-                            <td class="text-center">
-                                <span class="status-badge {{ $laporan->status_penanganan == 'Sudah ditangani' ? 'verified' : 'unverified' }}">
-                                    <i class="fas {{ $laporan->status_penanganan == 'Sudah ditangani' ? 'fa-check-circle' : 'fa-clock' }}"></i>
-                                    {{ $laporan->status_penanganan }}
-                                </span>
-                            </td>
-                            <td>{{ $laporan->deskripsi_penanganan ?? '-' }}</td>
-                            <td>
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <a href="{{ route('respon.edit', $laporan->id) }}" class="btn-action edit">
-                                        <i class="fa fa-edit"></i> Update
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                        @forelse($laporans as $laporan)
+                            <tr class="align-middle">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="report-icon me-3">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <div class="report-details">
+                                            <div class="report-title">{{ $laporan->judul_laporan }}</div>
+                                            <small class="report-category text-muted">{{ $laporan->kategori_laporan }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    {{ \Carbon\Carbon::parse($laporan->tanggal_pelaporan)->format('d-m-Y') }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $laporan->tempat_kejadian }}
+                                </td>
+                                <td class="text-center">
+                                    <span class="status-badge {{ $laporan->status_verifikasi == 'Diverifikasi' ? 'verified' : 'rejected' }}">
+                                        <i class="fas {{ $laporan->status_verifikasi == 'Diverifikasi' ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+                                        {{ $laporan->status_verifikasi }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="status-badge {{ 
+                                        $laporan->status_penanganan == 'Sudah Ditangani' ? 'completed' : 
+                                        ($laporan->status_penanganan == 'Sedang Ditangani' ? 'progress' : 'pending') 
+                                    }}">
+                                        <i class="fas {{ 
+                                            $laporan->status_penanganan == 'Sudah Ditangani' ? 'fa-check-circle' : 
+                                            ($laporan->status_penanganan == 'Sedang Ditangani' ? 'fa-clock' : 'fa-exclamation-circle') 
+                                        }}"></i>
+                                        {{ $laporan->status_penanganan }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    @if($laporan->status_verifikasi == 'Diverifikasi')
+                                        <a href="{{ route('respon.edit', $laporan->id) }}" class="btn-action update">
+                                            <i class="fas fa-edit"></i> Update
+                                        </a>
+                                    @elseif($laporan->status_verifikasi == 'Ditolak')
+                                        <a href="{{ route('respon.editRejection', $laporan->id) }}" class="btn-action rejection">
+                                            <i class="fas fa-plus-circle"></i> Edit Keterangan
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4">
+                            <td colspan="6" class="text-center py-4">
                                 <div class="empty-state">
-                                    <i class="fas fa-clipboard-list fa-3x mb-3"></i>
-                                    <p>Tidak ada data laporan</p>
+                                    <i class="fas fa-reply-all fa-3x mb-3"></i>
+                                    <p>Tidak ada laporan yang perlu direspon</p>
                                 </div>
                             </td>
                         </tr>
@@ -82,68 +94,6 @@
         </div>
     </div>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="updateResponModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Update Respon Laporan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="updateResponForm" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Status Penanganan</label>
-                        <select name="status_penanganan" class="form-select" required>
-                            <option value="">Pilih Status</option>
-                            <option value="Sudah ditangani">Sudah ditangani</option>
-                            <option value="Belum ditangani">Belum ditangani</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Deskripsi Penanganan</label>
-                        <textarea name="deskripsi_penanganan" class="form-control" rows="3" required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn-action edit">Update Respon</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Check for success message
-
-        // Check for error message
-        @if(Session::has('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: "{{ Session::get('error') }}",
-                showConfirmButton: true,
-                confirmButtonColor: '#468B94',
-                toast: true,
-                position: 'top-end',
-                showClass: {
-                    popup: 'animate__animated animate__fadeInDown'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__fadeOutUp'
-                }
-            });
-        @endif
-    });
-</script>
-@endpush
 
 <style>
 /* Animation Keyframes */
@@ -220,6 +170,12 @@ p {
     vertical-align: middle;
 }
 
+.table tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+}
+
 /* Row Animation */
 .table tbody tr {
     transition: all 0.3s ease;
@@ -228,11 +184,50 @@ p {
 
 .table tbody tr:hover {
     background-color: #f8f9fa;
-    transform: translateX(6px);
-    box-shadow: -6px 0 0 0 #468B94;
 }
 
-/* Action Buttons */
+/* Status Badge */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    justify-content: center;
+    min-width: 120px;
+}
+
+.status-badge.verified {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.status-badge.rejected {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.status-badge.completed {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.status-badge.progress {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.status-badge.pending {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+.status-badge i {
+    margin-right: 6px;
+}
+
+/* Action Button Styles */
 .btn-action {
     padding: 8px 16px;
     border-radius: 6px;
@@ -242,49 +237,120 @@ p {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 6px;
     transition: all 0.3s ease;
-    width: 100px;
-    height: 36px;
+    text-decoration: none;
 }
 
-.btn-action.edit {
+.btn-action.update {
     background-color: #468B94;
     color: white;
 }
 
-.btn-action:hover {
+.btn-action.update:hover {
+    background-color: #3a7a82;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     color: white;
 }
 
-/* Status Badge */
-.status-badge {
-    display: inline-flex;
+.btn-action.rejection {
+    background-color: #468B94; /* Ubah dari #fd7e14 menjadi hijau */
+    color: white;
+}
+
+.btn-action.rejection:hover {
+    background-color: #218838; /* Ubah dari #e8690b menjadi hijau gelap */
+    transform: translateY(-2px);
+    color: white;
+}
+
+/* Report Icon and Details */
+.report-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #468B94;
+    border-radius: 50%;
+    display: flex;
     align-items: center;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    min-width: 120px;
     justify-content: center;
-    transition: all 0.3s ease;
+    margin-right: 15px;
+    flex-shrink: 0; /* Mencegah icon menyusut */
+    min-width: 40px; /* Pastikan lebar minimum tetap */
 }
 
-.status-badge.verified {
-    background-color: rgba(40, 167, 69, 0.1);
-    color: #28a745;
+.report-icon i {
+    font-size: 20px;
+    color: white;
+    flex-shrink: 0; /* Mencegah icon menyusut */
 }
 
-.status-badge.unverified {
-    background-color: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
+.report-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 8px;
+    flex-grow: 1; /* Biarkan teks yang menyesuaikan */
+    min-width: 0; /* Memungkinkan text wrap jika perlu */
 }
 
-.status-badge i {
-    margin-right: 6px;
+.report-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 2px;
+    line-height: 1.2;
+    word-wrap: break-word; /* Pecah kata jika terlalu panjang */
+}
+
+.report-category {
+    font-size: 12px;
+    color: #6c757d;
+    line-height: 1;
+    word-wrap: break-word; /* Pecah kata jika terlalu panjang */
+}
+
+/* Container untuk mencegah kompresi */
+.d-flex.align-items-center {
+    gap: 8px;
+    flex-wrap: nowrap; /* Mencegah wrapping */
+    min-width: 0; /* Reset min-width */
+}
+
+/* Kolom pertama tabel */
+.table td:first-child {
+    min-width: 200px; /* Set minimum width untuk kolom pertama */
+    max-width: 300px; /* Set maximum width untuk mencegah terlalu lebar */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .table td:first-child {
+        min-width: 180px;
+    }
+    
+    .report-title {
+        font-size: 13px;
+    }
+    
+    .report-category {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 992px) {
+    .table td:first-child {
+        min-width: 160px;
+    }
+    
+    .report-icon {
+        width: 36px;
+        height: 36px;
+        margin-right: 12px;
+    }
+    
+    .report-icon i {
+        font-size: 18px;
+    }
 }
 
 /* Empty State */
@@ -304,23 +370,34 @@ p {
     margin: 0;
     font-size: 14px;
 }
-
-/* Additional Styles */
-.table-responsive {
-    overflow-x: hidden !important;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.table-responsive::-webkit-scrollbar {
-    display: none;
-}
-
-.container-fluid {
-    overflow-x: hidden;
-}
 </style>
 @endsection
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('success'))
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'OK',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                icon: 'error',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'OK'
+            });
+        @endif
+    });
+</script>
+@endsection

@@ -26,8 +26,7 @@ class RiwayatLaporanPengurusController extends Controller
             return redirect()->back()->with('error', 'Akses tidak diizinkan.');
         }
 
-        $query = Laporan::where('pengurus_lingkungan_username', $pengurus->username)
-            ->join('kategori', 'laporan.kategori_laporan', '=', 'kategori.nama_kategori')
+        $query = Laporan::join('kategori', 'laporan.kategori_laporan', '=', 'kategori.nama_kategori')
             ->select('laporan.*', 'kategori.jenis_kategori');
 
         // Filter by status if provided
