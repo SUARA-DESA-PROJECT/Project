@@ -1,263 +1,298 @@
-<!-- resources/views/inputlaporan/create.blade.php -->
 @extends('layouts.app-warga')
 
 @section('content')
 <div class="container mt-4">
-    <h2>Input Laporan</h2>
-    <p>Silahkan mengisi seluruh formulir berikut ini untuk memberikan informasi laporan :</p>
+    <div class="card">
+        <div class="card-body">
+            <h2>Input Laporan</h2>
+            <p>Silahkan mengisi seluruh formulir berikut ini untuk memberikan informasi laporan :</p>
 
-    <!-- @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif -->
+            <form action="{{ route('laporan.store') }}" method="POST" id="formLaporan">
+                @csrf
+                <meta name="csrf-token" content="{{ csrf_token() }}">
+                <input type="hidden" name="warga_username" value="{{ $warga->username }}">
+                <input type="hidden" name="tipe_pelapor" value="Warga">
 
-    <form action="{{ route('laporan.store') }}" method="POST" id="formLaporan">
-        @csrf
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <!-- Input tersembunyi untuk username warga -->
-        <input type="hidden" name="warga_username" value="{{ $warga->username }}">
-        <input type="hidden" name="tipe_pelapor" value="Warga">
-
-        <div class="mb-3">
-            <label for="judul" class="form-label">Judul Laporan</label>
-            <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul') is-invalid @enderror" 
-                value="{{ old('judul') }}" placeholder="Masukkan judul laporan">
-            @error('judul')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="deskripsi_laporan" class="form-label">Deskripsi Laporan</label>
-            <textarea name="deskripsi_laporan" id="deskripsi_laporan" class="form-control auto-expand @error('deskripsi_laporan') is-invalid @enderror" 
-                style="min-height: 200px; max-height: 500px; overflow-y: scroll;" 
-                maxlength="10000">{{ old('deskripsi_laporan') }}</textarea>
-            <small class="text-muted">Maksimal 10000 karakter. Sisa: <span id="charCount">10000</span> karakter</small>
-            @error('deskripsi_laporan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="tanggal_pelaporan" class="form-label">Waktu Kejadian</label>
-            <div class="row">
-                <div class="col-md-6 mb-2">
-                    <label for="Date" class="form-label">Tanggal</label>    
-                    <input type="date" name="tanggal_pelaporan" id="tanggal_pelaporan" class="form-control @error('tanggal_pelaporan') is-invalid @enderror" value="{{ old('tanggal_pelaporan') }}" placeholder="Pilih Tanggal">
-                    @error('tanggal_pelaporan')
+                <!-- Untuk input Judul Laporan -->
+                <div class="mb-3">
+                    <label for="judul" class="form-label">Judul Laporan</label>
+                    <small class="text-muted">Berikan judul yang singkat dan jelas untuk laporan Anda</small>
+                    <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul') is-invalid @enderror" 
+                        value="{{ old('judul') }}" placeholder="Masukkan judul laporan">
+                    
+                    @error('judul')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="col-md-6">
-                    <label for="time" class="form-label">Jam</label>    
-                    <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" value="{{ old('time_laporan') }}" placeholder="Pilih Jam">
-                    @error('time_laporan')
+
+                <!-- Untuk Deskripsi Laporan -->
+                <div class="mb-3">
+                    <label for="deskripsi_laporan" class="form-label">Deskripsi Laporan</label>
+                    <small class="text-muted">Jelaskan detail kejadian secara lengkap (maksimal 10000 karakter)</small>
+                    <textarea name="deskripsi_laporan" id="deskripsi_laporan" class="form-control auto-expand @error('deskripsi_laporan') is-invalid @enderror" 
+                        style="min-height: 200px; max-height: 500px; overflow-y: scroll;" 
+                        maxlength="10000">{{ old('deskripsi_laporan') }}</textarea>
+                    @error('deskripsi_laporan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
-        </div>
 
-        <div class="mb-3">
-            <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
-            <select name="tempat_kejadian" id="desa" class="form-control @error('desa') is-invalid @enderror">
-                <option value="">Pilih Desa/Kelurahan</option>
-                <option value="Bojongsari" {{ old('desa') == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
-                <option value="Bojongsoang" {{ old('desa') == 'Bojongsoang' ? 'selected' : '' }}>Bojongsoang</option>
-                <option value="Buahbatu" {{ old('desa') == 'Buahbatu' ? 'selected' : '' }}>Buahbatu</option>
-                <option value="Cipagalo" {{ old('desa') == 'Cipagalo' ? 'selected' : '' }}>Cipagalo</option>
-                <option value="Lengkong" {{ old('desa') == 'Lengkong' ? 'selected' : '' }}>Lengkong</option>
-                <option value="Tegalluar" {{ old('desa') == 'Tegalluar' ? 'selected' : '' }}>Tegalluar</option>
-            </select>
-            @error('desa')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+                <!-- Untuk Waktu Kejadian -->
+                <div class="mb-3">
+                    <label for="tanggal_pelaporan" class="form-label">Waktu Kejadian</label>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label for="Date" class="form-label">Tanggal</label>   
+                            <small class="text-muted">Pilih tanggal kejadian</small> 
+                            <input type="date" name="tanggal_pelaporan" id="tanggal_pelaporan" class="form-control @error('tanggal_pelaporan') is-invalid @enderror" value="{{ old('tanggal_pelaporan') }}">
+                            @error('tanggal_pelaporan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="time" class="form-label">Jam</label>
+                            <small class="text-muted">Pilih waktu kejadian</small>    
+                            <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" value="{{ old('time_laporan') }}">
+                            @error('time_laporan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
 
-        <div class="mb-3">
-            <label for="judul_laporan" class="form-label">Kategori Laporan</label>
-            <select name="kategori_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
-                <option value="">Pilih Kategori Laporan</option>
-                @foreach($kategoris as $kategori)
-                    <option value="{{ $kategori->nama_kategori }}" {{ old('kategori_laporan') == $kategori->nama_kategori ? 'selected' : '' }}
-                        data-jenis="{{ $kategori->jenis_kategori }}">
-                        {{ $kategori->nama_kategori }}
-                    </option>
-                @endforeach
-            </select>
-            @error('judul_laporan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+                <!-- Untuk Tempat Kejadian -->
+                <div class="mb-3">
+                    <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
+                    <small class="text-muted">Pilih lokasi tempat kejadian</small>
+                    <select name="tempat_kejadian" id="desa" class="form-control @error('desa') is-invalid @enderror">
+                        <option value="">Pilih Desa/Kelurahan</option>
+                        <option value="Bojongsari" {{ old('desa') == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
+                        <option value="Bojongsoang" {{ old('desa') == 'Bojongsoang' ? 'selected' : '' }}>Bojongsoang</option>
+                        <option value="Buahbatu" {{ old('desa') == 'Buahbatu' ? 'selected' : '' }}>Buahbatu</option>
+                        <option value="Cipagalo" {{ old('desa') == 'Cipagalo' ? 'selected' : '' }}>Cipagalo</option>
+                        <option value="Lengkong" {{ old('desa') == 'Lengkong' ? 'selected' : '' }}>Lengkong</option>
+                        <option value="Tegalluar" {{ old('desa') == 'Tegalluar' ? 'selected' : '' }}>Tegalluar</option>
+                    </select>
+                    @error('desa')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        <div class="mb-3">
-            <label for="kategori_laporan" class="form-label">Jenis Laporan</label>
-            <input type="text" name="jenis_laporan" id="kategori_laporan" class="form-control" readonly 
-                value="{{ old('kategori_laporan') }}" placeholder="Jenis laporan akan muncul otomatis">
-            @error('kategori_laporan')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+                <!-- Untuk Kategori Laporan -->
+                <div class="mb-3">
+                    <label for="judul_laporan" class="form-label">Kategori Laporan</label>
+                    <small class="text-muted">Pilih kategori yang sesuai dengan laporan Anda</small>
+                    <select name="kategori_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
+                        <option value="">Pilih Kategori Laporan</option>
+                        @foreach($kategoris as $kategori)
+                            <option value="{{ $kategori->nama_kategori }}" {{ old('kategori_laporan') == $kategori->nama_kategori ? 'selected' : '' }}
+                                data-jenis="{{ $kategori->jenis_kategori }}">
+                                {{ $kategori->nama_kategori }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('judul_laporan')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="kategori_laporan" class="form-label">Jenis Laporan</label>
+                    <input type="text" name="jenis_laporan" id="kategori_laporan" class="form-control" readonly 
+                        value="{{ old('kategori_laporan') }}" placeholder="Jenis laporan akan muncul otomatis">
+                    @error('kategori_laporan')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 {{-- 
-        <div class="mb-3">
-            <label for="tipe_pelapor" class="form-label">Tipe Pelapor</label>
-            <input type="text" class="form-control" value="Warga" readonly>
+                <div class="mb-3">
+                    <label for="tipe_pelapor" class="form-label">Tipe Pelapor</label>
+                    <input type="text" class="form-control" value="Warga" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label for="warga_username" class="form-label">Username Warga</label>
+                    <input type="text" class="form-control" value="{{ $warga->username }}" readonly>
+                </div> --}}
+
+                <div class="mt-4">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('/homepage') }}'">Kembali</button>
+                    <button type="submit" class="btn btn-primary">Simpan Laporan</button>
+                </div>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label for="warga_username" class="form-label">Username Warga</label>
-            <input type="text" class="form-control" value="{{ $warga->username }}" readonly>
-        </div> --}}
-
-        <a href="{{ url('/homepage') }}" class="btn btn-secondary">Kembali</a>
-        <button type="submit" class="btn btn-primary float-end">Simpan Laporan</button>
-    </form>
+    </div>
 </div>
+
+@endsection
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-document.getElementById('formLaporan').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    Swal.fire({
-        title: 'Konfirmasi',
-        text: "Apakah Anda yakin ingin menyimpan laporan ini?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#468B94',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Ya, Simpan!',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Create form and submit
-            const form = this;
-            const formData = new FormData(form);
-            
-            // Add CSRF token
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
-            // Submit form normally
-            form.submit();
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('formLaporan');
+    const requiredFields = [
+        { id: 'judul', name: 'Judul Laporan' },
+        { id: 'deskripsi_laporan', name: 'Deskripsi Laporan' },
+        { id: 'tanggal_pelaporan', name: 'Tanggal Kejadian' },
+        { id: 'time_laporan', name: 'Waktu Kejadian' },
+        { id: 'desa', name: 'Tempat Kejadian' },
+        { id: 'judul_laporan', name: 'Kategori Laporan' }
+    ];
+
+    // Tambahkan div peringatan untuk setiap field
+    requiredFields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (element) {
+            const warningDiv = document.createElement('div');
+            warningDiv.id = `warning-${field.id}`;
+            warningDiv.className = 'text-danger mt-2 d-none';
+            warningDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${field.name} wajib diisi`;
+            element.parentNode.appendChild(warningDiv);
         }
     });
-});
 
-// Check for flash messages
-@if(session('success'))
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: '{{ session('success') }}',
-        confirmButtonColor: '#468B94'
-    });
-@endif
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        let emptyFields = [];
 
-@if(session('error'))
-    Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: '{{ session('error') }}',
-        confirmButtonColor: '#d33'
-    });
-@endif
-</script>
-@endsection
+        // Sembunyikan semua peringatan terlebih dahulu
+        requiredFields.forEach(field => {
+            const warningDiv = document.getElementById(`warning-${field.id}`);
+            if (warningDiv) {
+                warningDiv.classList.add('d-none');
+            }
+        });
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const kategoriSelect = document.getElementById('judul_laporan');
-    const jenisLaporanInput = document.getElementById('kategori_laporan');
+        // Cek setiap field
+        requiredFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            const warningDiv = document.getElementById(`warning-${field.id}`);
+            
+            if (element && !element.value.trim()) {
+                isValid = false;
+                emptyFields.push(field.name);
+                if (warningDiv) {
+                    warningDiv.classList.remove('d-none');
+                }
+                element.classList.add('is-invalid');
+            } else if (element) {
+                element.classList.remove('is-invalid');
+            }
+        });
 
-    kategoriSelect.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        if (selectedOption.value === "") {
-            jenisLaporanInput.value = "";
+        if (!isValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Mohon isi semua field yang wajib!',
+                // footer: `Field yang kosong: ${emptyFields.join(', ')}`
+            });
+
+            // Scroll ke field kosong pertama
+            const firstEmptyField = document.querySelector('.is-invalid');
+            if (firstEmptyField) {
+                firstEmptyField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             return;
         }
-        
-        const jenisKategori = selectedOption.getAttribute('data-jenis');
-        jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
-    });
 
-    if (kategoriSelect.value) {
-        const selectedOption = kategoriSelect.options[kategoriSelect.selectedIndex];
-        const jenisKategori = selectedOption.getAttribute('data-jenis');
-        jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
-    }
-
-    function autoExpandPenanganan(textarea) {
-        textarea.style.height = 'auto';
-        
-        const newHeight = Math.min(textarea.scrollHeight, 500);
-        
-        textarea.style.height = newHeight + 'px';
-        
-        textarea.style.overflowY = 'scroll';
-    }
-
-    autoExpandPenanganan(document.getElementById('deskripsi_penanganan'));
-
-    document.getElementById('deskripsi_penanganan').addEventListener('input', function() {
-        autoExpandPenanganan(this);
-        
-        const maxLength = 10000;
-        const currentLength = this.value.length;
-        const remaining = maxLength - currentLength;
-        document.getElementById('charCountPenanganan').textContent = remaining;
-        
-        if (remaining < 20) {
-            document.getElementById('charCountPenanganan').style.color = '#dc3545';
-        } else {
-            document.getElementById('charCountPenanganan').style.color = '';
-        }
-    });
-
-    document.getElementById('formLaporan').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const form = this;
-        const formData = new FormData(form);
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: data.message,
-                    icon: 'success'
-                }).then(() => {
-                    window.location.href = data.redirect;
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: data.message,
-                    icon: 'error'
+        // Jika semua valid, lanjutkan dengan konfirmasi
+        Swal.fire({
+            title: 'Konfirmasi Simpan',
+            text: "Apakah Anda yakin ingin menyimpan laporan ini?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#468B94',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Simpan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form dan tambahkan event listener untuk menangkap respons
+                const formData = new FormData(this);
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Laporan Anda telah berhasil disimpan',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = '{{ route("riwayat-laporan.index") }}';
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire(
+                        'Error!',
+                        'Terjadi kesalahan saat menyimpan laporan.',
+                        'error'
+                    );
                 });
             }
-        })
-        .catch(error => {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Terjadi kesalahan saat menyimpan data',
-                icon: 'error'
-            });
         });
     });
 });
 </script>
+@endsection
 
+@section('styles')
 <style>
+/* Add these new styles and override default SweetAlert styles */
+.swal-buttons-container {
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 0 1rem !important;
+    gap: 10px !important;
+}
+
+.swal-button-confirm, .swal-button-cancel {
+    flex: 1 !important;
+    margin: 0 !important;
+    position: relative !important;
+    width: auto !important;
+}
+
+.swal2-actions {
+    width: 100% !important;
+}
+
+.swal2-confirm {
+    order: 2 !important;
+}
+
+.swal2-cancel {
+    order: 1 !important;
+}
+
+/* Remove any empty cards */
+.container-fluid > div:empty {
+    display: none !important;
+}
+
+/* Fix container padding */
+.container-fluid {
+    padding: 1rem !important;
+}
+
+/* Ensure main card has proper styling */
+.main-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+}
+
 /* Animasi dasar */
 @keyframes fadeInUp {
     from {
@@ -682,34 +717,34 @@ select.form-control {
     background-color: #d4edda;
     border-color: #c3e6cb;
     color: #155724;
-}
-
-.form-section-header {
-    border-bottom: 2px solid #eee;
+    color: #6c757d !important;
+    font-size: 0.875rem;
+    margin-top: 4px; {
+}   border-bottom: 2px solid #eee;
     margin-bottom: 20px;
-    padding-bottom: 10px;
+/* Status badges */ 10px;
+.badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;;  
+}   margin-bottom: 4px;  
 }
-
-
-.col-md-6 .form-label {
-    font-size: 0.9rem;  
-    margin-bottom: 4px;  
-}
-
-.col-md-6 .form-control {
-    padding: 6px 10px;  
-    font-size: 0.9rem;  
+.badge-negatif {
+    background-color: #dc3545;
+    color: white;10px;  
+}   font-size: 0.9rem;  
     height: 35px;      
-}
-
-
-.mb-3 .row .col-md-6 {
+.badge-positif {
+    background-color: #28a745;
+    color: white;
+}mb-3 .row .col-md-6 {
     margin-bottom: 0;    
-}
-
-.mb-3 > .form-label {
-    margin-bottom: 12px; 
+/* Row styling */
+.row {
+    margin: 0 -10px;{
+}   margin-bottom: 12px; 
     font-size: 1rem;     
-}
-</style>
-@endsection
+.col-md-6 {
+    padding: 0 10px;
+}endsection/* Alert styling */.alert {    padding: 15px;    border-radius: 4px;    margin-bottom: 20px;}.alert-success {    background-color: #d4edda;    border-color: #c3e6cb;    color: #155724;}.form-section-header {    border-bottom: 2px solid #eee;    margin-bottom: 20px;    padding-bottom: 10px;}.col-md-6 .form-label {    font-size: 0.9rem;      margin-bottom: 4px;  }.col-md-6 .form-control {    padding: 6px 10px;      font-size: 0.9rem;      height: 35px;      }.mb-3 .row .col-md-6 {    margin-bottom: 0;    }.mb-3 > .form-label {    margin-bottom: 12px;     font-size: 1rem;     }</style>@endsection

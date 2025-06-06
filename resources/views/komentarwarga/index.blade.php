@@ -424,6 +424,7 @@
             cancelButtonText: 'Batal',
             confirmButtonColor: '#468B94',
             cancelButtonColor: '#6c757d',
+            reverseButtons: true,
             preConfirm: (text) => {
                 if (!text) {
                     Swal.showValidationMessage('Komentar tidak boleh kosong')
@@ -471,7 +472,8 @@
             confirmButtonColor: '#468B94',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('delete-form-' + id).submit();

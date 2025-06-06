@@ -46,7 +46,10 @@ class LaporanController extends Controller
     {
         $warga = session('warga');
         if (!$warga) {
-            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan login terlebih dahulu.'
+            ], 401);
         }
 
         try {
@@ -55,7 +58,8 @@ class LaporanController extends Controller
                 'deskripsi_laporan' => 'required',
                 'tanggal_pelaporan' => 'required',
                 'tempat_kejadian' => 'required',
-                'kategori_laporan' => 'required'
+                'kategori_laporan' => 'required',
+                'time_laporan' => 'required'  // Tambahkan validasi untuk time_laporan
             ]);
 
             // Add automatic data
@@ -64,13 +68,22 @@ class LaporanController extends Controller
             $validatedData['deskripsi_penanganan'] = null;
             $validatedData['tipe_pelapor'] = 'Warga';
             $validatedData['warga_username'] = $warga->username;
+            $validatedData['time_laporan'] = $request->time_laporan;  // Tambahkan time_laporan ke data yang akan disimpan
 
-            Laporan::create($validatedData);
+            $laporan = Laporan::create($validatedData);
             
-            return back()->with('success', 'Laporan berhasil ditambahkan');
+            return response()->json([
+                'success' => true,
+                'message' => 'Laporan berhasil ditambahkan',
+                'data' => $laporan
+            ]);
+                
         } catch (\Exception $e) {
             \Log::error('Error saving laporan: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan laporan'
+            ], 500);
         }
     }
 
@@ -99,9 +112,15 @@ class LaporanController extends Controller
 
         try {
             $laporan->update($validatedData);
-            return redirect()->route('riwayat-laporan.index')->with('success', 'Laporan berhasil diperbarui.');
+            return redirect()
+                ->route('riwayat-laporan.index')
+                ->with('success', 'Laporan berhasil diperbarui!')
+                ->with('icon', 'success');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui laporan.');
+            return redirect()
+                ->back()
+                ->with('error', 'Terjadi kesalahan saat memperbarui laporan.')
+                ->with('icon', 'error');
         }
     }
 

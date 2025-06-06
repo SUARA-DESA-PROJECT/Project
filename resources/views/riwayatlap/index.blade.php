@@ -155,8 +155,8 @@
         </a>
     </div> -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <script>
         $(document).ready(function() {
             // Event listener untuk menampilkan modal detail laporan
@@ -191,7 +191,7 @@
                 const form = $(this).closest('form');
                 
                 Swal.fire({
-                    title: 'Hapus Laporan?',
+                    title: 'Apakah Anda yakin?',
                     text: "Data yang dihapus tidak dapat dikembalikan!",
                     icon: 'warning',
                     showCancelButton: true,
@@ -199,29 +199,10 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ya, hapus!',
                     cancelButtonText: 'Batal',
-                    background: '#fff',
-                    borderRadius: '10px',
-                    customClass: {
-                        confirmButton: 'btn btn-success me-2',
-                        cancelButton: 'btn btn-danger'
-                    },
-                    showClass: {
-                        popup: 'animate__animated animate__fadeInDown'
-                    },
-                    hideClass: {
-                        popup: 'animate__animated animate__fadeOutUp'
-                    }
+                    reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
-                        Swal.fire({
-                            title: 'Terhapus!',
-                            text: 'Data laporan berhasil dihapus.',
-                            icon: 'success',
-                            confirmButtonColor: '#468B94',
-                            background: '#fff',
-                            borderRadius: '10px'
-                        });
                     }
                 });
             });
@@ -483,5 +464,158 @@
         transform: scale(1);
         opacity: 1;
     }
+
+    .animate__animated {
+        animation-duration: 0.5s;
+    }
+
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translate3d(100%, 0, 0);
+        }
+        to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    @keyframes fadeOutRight {
+        from {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+        to {
+            opacity: 0;
+            transform: translate3d(100%, 0, 0);
+        }
+    }
+
+    /* Style untuk SweetAlert2 */
+    .swal2-popup {
+        background: #fff !important;
+        border-radius: 0 !important;
+    }
+
+    .swal2-title {
+        color: #333 !important;
+        font-size: 32px !important;
+        font-weight: 600 !important;
+    }
+
+    .swal2-html-container {
+        color: #666 !important;
+        font-size: 16px !important;
+    }
+
+    /* Style untuk tombol konfirmasi dan cancel */
+    .swal2-confirm,
+    .swal2-cancel {
+        border-radius: 8px !important; /* Changed from 0 to 8px for rounded corners */
+        font-weight: 500 !important;
+        padding: 12px 24px !important;
+        min-width: 120px !important;
+    }
+
+    .swal2-confirm {
+        background-color: #468B94 !important;
+        color: white !important;
+    }
+
+    .swal2-cancel {
+        background-color: #d33 !important;
+        color: white !important;
+    }
+
+    .swal2-confirm:focus,
+    .swal2-cancel:focus {
+        box-shadow: none !important;
+    }
+
+    /* Animasi */
+    .swal2-show {
+        animation: swal2-show 0.3s !important;
+    }
+
+    .swal2-hide {
+        animation: swal2-hide 0.3s !important;
+    }
+
+    @keyframes swal2-show {
+        0% {
+            transform: scale(0.9);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes swal2-hide {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(0.9);
+            opacity: 0;
+        }
+    }
     </style>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Success message handler
+        @if(session('success'))
+            let message = '{{ session('success') }}';
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: message,
+                showConfirmButton: false,
+                timer: 1500,
+                customClass: {
+                    popup: 'swal2-popup',
+                    title: 'swal2-title', 
+                    content: 'swal2-content'
+                }
+            });
+        @endif
+
+        // Delete confirmation handler
+        $('.btn-action-small.delete').click(function(e) {
+            e.preventDefault();
+            const form = $(this).closest('form');
+            
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#468B94',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                customClass: {
+                    popup: 'swal2-popup',
+                    title: 'swal2-title',
+                    content: 'swal2-content',
+                    confirmButton: 'swal2-confirm'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+@endpush
+
+<!-- Di bagian head -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

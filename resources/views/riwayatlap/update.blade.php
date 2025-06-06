@@ -190,7 +190,8 @@ if (formLaporan) {
             confirmButtonColor: "#468B94",
             cancelButtonColor: "#d33",
             confirmButtonText: "Ya, Update!",
-            cancelButtonText: "Batal"
+            cancelButtonText: "Batal",
+            reverseButtons: true  // Menambahkan properti ini untuk menukar posisi tombol
         }).then((result) => {
             if (result.isConfirmed) {
                 // Submit form jika user mengklik konfirmasi
