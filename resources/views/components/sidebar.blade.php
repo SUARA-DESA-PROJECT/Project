@@ -52,7 +52,7 @@
                 </a>
             </li>
             <li class="mb-2">
-                <a href="{{ route('pengurus.riwayat.index') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <a href="{{ route('pengurus.kelola-laporan.index') }}" style="background-color: #468B94; color: white; border-radius: 10px; padding: 10px 15px; display: block; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease;">
                     <span class="fa fa-history mr-3"></span>Riwayat Laporan
                 </a>
             </li>
