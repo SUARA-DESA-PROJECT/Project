@@ -48,13 +48,19 @@ class LaporanPengurusController extends Controller
                 'time_laporan' => 'required',
                 'status_penanganan' => 'required',
                 'deskripsi_penanganan' => 'required',
-                'status_verifikasi' => 'required'
+                'status_verifikasi' => 'required',
+                'latitude' => 'nullable|numeric|between:-90,90',
+                'longitude' => 'nullable|numeric|between:-180,180'
             ]);
 
             // Add automatic data
             $validatedData['tipe_pelapor'] = 'Pengurus';
             $validatedData['pengurus_lingkungan_username'] = $pengurus->username;
             $validatedData['warga_username'] = null;
+            
+            // Add coordinates if provided
+            $validatedData['latitude'] = $request->latitude;
+            $validatedData['longitude'] = $request->longitude;
 
             $laporan = Laporan::create($validatedData);
             

@@ -58,6 +58,7 @@
 
                 <div class="mb-3">
                     <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
+                    <small class="text-muted">Pilih lokasi tempat kejadian</small>
                     <select name="tempat_kejadian" id="desa" class="form-control @error('desa') is-invalid @enderror">
                         <option value="">Pilih Desa/Kelurahan</option>
                         <option value="Bojongsari" {{ old('desa') == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
@@ -70,6 +71,39 @@
                     @error('desa')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <!-- Untuk Lokasi Koordinat -->
+                <div class="mb-3">
+                    <label class="form-label">Lokasi Koordinat Kejadian</label>
+                    <small class="text-muted">Klik pada peta untuk menentukan lokasi kejadian secara tepat</small>
+                    
+                    <!-- Map Container -->
+                    <div id="locationMap" style="height: 300px; width: 100%; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;"></div>
+                    
+                    <!-- Koordinat Display -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="latitude" class="form-label">Latitude</label>
+                            <input type="text" name="latitude" id="latitude" class="form-control" 
+                                   value="{{ old('latitude') }}" placeholder="Klik peta untuk mendapatkan koordinat" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="longitude" class="form-label">Longitude</label>
+                            <input type="text" name="longitude" id="longitude" class="form-control" 
+                                   value="{{ old('longitude') }}" placeholder="Klik peta untuk mendapatkan koordinat" readonly>
+                        </div>
+                    </div>
+                    
+                    <!-- Reset Button -->
+                    <div class="mt-2">
+                        <button type="button" id="resetLocation" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-redo"></i> Reset Lokasi
+                        </button>
+                        <button type="button" id="getCurrentLocation" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-map-marker-alt"></i> Gunakan Lokasi Saat Ini
+                        </button>
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -143,9 +177,117 @@
 @endsection
 
 @section('scripts')
+<!-- Leaflet CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize map
+    let map = L.map('locationMap').setView([-6.9803, 107.6640], 14); // Bojongsoang coordinates
+    let currentMarker = null;
+
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Add click event to map
+    map.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        
+        // Update input fields
+        document.getElementById('latitude').value = lat.toFixed(8);
+        document.getElementById('longitude').value = lng.toFixed(8);
+        
+        // Remove existing marker
+        if (currentMarker) {
+            map.removeLayer(currentMarker);
+        }
+        
+        // Add new marker
+        currentMarker = L.marker([lat, lng]).addTo(map)
+            .bindPopup(`Lokasi: ${lat.toFixed(6)}, ${lng.toFixed(6)}`)
+            .openPopup();
+    });
+
+    // Reset location button
+    document.getElementById('resetLocation').addEventListener('click', function() {
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
+        
+        if (currentMarker) {
+            map.removeLayer(currentMarker);
+            currentMarker = null;
+        }
+    });
+
+    // Get current location button
+    document.getElementById('getCurrentLocation').addEventListener('click', function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                
+                // Update input fields
+                document.getElementById('latitude').value = lat.toFixed(8);
+                document.getElementById('longitude').value = lng.toFixed(8);
+                
+                // Remove existing marker
+                if (currentMarker) {
+                    map.removeLayer(currentMarker);
+                }
+                
+                // Add new marker and center map
+                currentMarker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup('Lokasi Anda Saat Ini')
+                    .openPopup();
+                    
+                map.setView([lat, lng], 16);
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Lokasi Ditemukan!',
+                    text: 'Lokasi saat ini berhasil dideteksi',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }, function(error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Mendapatkan Lokasi',
+                    text: 'Pastikan GPS aktif dan izinkan akses lokasi',
+                    confirmButtonColor: '#468B94'
+                });
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Geolocation Tidak Didukung',
+                text: 'Browser Anda tidak mendukung fitur geolocation',
+                confirmButtonColor: '#468B94'
+            });
+        }
+    });
+
+    // Load existing coordinates if available (for edit mode)
+    const existingLat = document.getElementById('latitude').value;
+    const existingLng = document.getElementById('longitude').value;
+    
+    if (existingLat && existingLng) {
+        const lat = parseFloat(existingLat);
+        const lng = parseFloat(existingLng);
+        
+        currentMarker = L.marker([lat, lng]).addTo(map)
+            .bindPopup(`Lokasi: ${lat.toFixed(6)}, ${lng.toFixed(6)}`)
+            .openPopup();
+            
+        map.setView([lat, lng], 16);
+    }
+
+    // Category selection functionality
     const kategoriSelect = document.getElementById('judul_laporan');
     const jenisLaporanInput = document.getElementById('kategori_laporan');
 
@@ -166,13 +308,11 @@ document.addEventListener('DOMContentLoaded', function() {
         jenisLaporanInput.value = jenisKategori === 'Negatif' ? 'Laporan Negatif' : 'Laporan Positif';
     }
 
+    // Auto-expand textarea functionality
     function autoExpandPenanganan(textarea) {
         textarea.style.height = 'auto';
-        
         const newHeight = Math.min(textarea.scrollHeight, 500);
-        
         textarea.style.height = newHeight + 'px';
-        
         textarea.style.overflowY = 'scroll';
     }
 
@@ -193,6 +333,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Character count for main description
+    document.getElementById('deskripsi_laporan').addEventListener('input', function() {
+        const maxLength = 10000;
+        const currentLength = this.value.length;
+        const remaining = maxLength - currentLength;
+        document.getElementById('charCount').textContent = remaining;
+        
+        if (remaining < 20) {
+            document.getElementById('charCount').style.color = '#dc3545';
+        } else {
+            document.getElementById('charCount').style.color = '';
+        }
+    });
+
+    // Form submission with validation
     document.getElementById('formLaporan').addEventListener('submit', function(e) {
         e.preventDefault();
         

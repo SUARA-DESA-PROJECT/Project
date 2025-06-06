@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('deskripsi_laporan', 100);
             $table->date('tanggal_pelaporan');
             $table->string('tempat_kejadian', 50);
+            $table->decimal('latitude', 10, 8)->nullable(); // Tambah kolom latitude
+            $table->decimal('longitude', 11, 8)->nullable(); // Tambah kolom longitude
             $table->string('status_verifikasi')->nullable();
             $table->string('status_penanganan')->nullable();
             $table->string('deskripsi_penanganan', 255)->nullable();

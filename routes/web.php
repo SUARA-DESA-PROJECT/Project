@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfilePengurusController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KomentarPengurusController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\PetaController;
 
 // Landing Page Routes
 Route::get('/', function () {
@@ -174,3 +175,11 @@ Route::post('/komentarpengurus', [KomentarPengurusController::class, 'store'])->
 Route::get('/komentarpengurus/{komentar}/edit', [KomentarPengurusController::class, 'edit'])->name('komentarpengurus.edit');
 Route::put('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'update'])->name('komentarpengurus.update');
 Route::delete('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'destroy'])->name('komentarpengurus.destroy');
+
+// Peta routes
+Route::get('/peta/persebaran-warga', [PetaController::class, 'persebaranWarga'])->name('peta.persebaran-warga');
+Route::get('/peta/persebaran-admin', [PetaController::class, 'persebaranAdmin'])->name('peta.persebaran-admin');
+
+// API routes for map data
+Route::get('/api/map-data', [PetaController::class, 'getMapData'])->name('api.map-data');
+Route::get('/api/map-statistics', [PetaController::class, 'getStatistics'])->name('api.map-statistics');
