@@ -1,416 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Registrasi</title>
+    <title>Registrasi Warga Digital</title>
     
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --accent-color: #81C784;
+            --text-color: #2C3E50;
+            --error-color: #DC3545;
+        }
+
         body {
-            min-height: 100vh;
-            margin: 0;
-            background-image: url('{{ asset('images/bg-regis.jpeg') }}');
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                        url('../images/bg-regis.jpeg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            color: var(--text-color);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Poppins', sans-serif;
-            padding: 40px 0;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: -1;
-        }
-        
-        .card-container {
-            width: 100%;
-            max-width: 700px;
-            position: relative;
-            margin: 40px 0;
-            z-index: 1;
-        }
-        
-        .card {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 30px 40px 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .card-header {
-            text-align: center;
-            background-color: #f5f5f5;
-            padding: 25px 20px;
-            margin: -30px -40px 30px;
-            border-radius: 10px 10px 0 0;
-        }
-        
-        .card-header h2 {
-            font-size: 28px;
-            color: #444;
-            margin: 0;
-            font-weight: 600;
-        }
-        
-        .card-header p {
-            color: #666;
-            margin: 8px 0 0;
-            font-size: 16px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #444;
-            font-size: 16px;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background-color: white;
-            font-size: 15px;
-            box-sizing: border-box;
-            height: auto;
-        }
-        
-        #nama_lengkap {
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-        
-        .form-control.is-invalid {
-            border-color: #dc3545;
-        }
-        
-        textarea.form-control {
-            height: 100px;
-            resize: none;
-        }
-        
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background-color: #4e54c8;
-            border: none;
-            border-radius: 6px;
-            color: white;
-            font-weight: 500;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
-        
-        .btn-primary:hover {
-            background-color: #3f44a9;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
         }
 
-        .form-row .form-group {
-            flex: 1;
+        .registration-container {
+            max-width: 800px;
+            width: 90%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .registration-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .registration-header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .registration-header p {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            border: 2px solid #E0E5EC;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.15);
+        }
+
+        .btn-register {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-register:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .row {
+            row-gap: 1rem;
+        }
+
+        .form-group {
             margin-bottom: 0;
         }
-        
+
+        textarea.form-control {
+            height: 38px;
+            resize: none;
+        }
+
         .login-link {
             text-align: center;
-            margin-top: 25px;
-        }
-        
-        .login-link p {
-            font-size: 15px;
-            color: #555;
-            margin: 0;
-        }
-        
-        .login-link a {
-            color: #4e54c8;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .invalid-feedback {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 5px;
-            display: block;
-        }
-        
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            display: none;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E0E5EC;
+            font-size: 0.9rem;
         }
 
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .form-icon {
+            font-size: 0.9rem;
         }
 
-        .modal-content i {
-            font-size: 48px;
-            color: #4CAF50;
-            margin-bottom: 15px;
+        @media (max-width: 768px) {
+            .registration-container {
+                width: 95%;
+                margin: 1rem auto;
+            }
+
+            .registration-card {
+                padding: 1.5rem;
+            }
+
+            .registration-header h1 {
+                font-size: 1.75rem;
+            }
         }
 
-        .modal-content h3 {
-            margin: 0 0 10px;
-            color: #333;
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .modal-content p {
-            color: #666;
-            margin: 0;
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out;
         }
     </style>
 </head>
 <body>
-    <div class="card-container">
-        <div class="card">
-            <div class="card-header">
-                <h2>Registrasi</h2>
-                <p>Silahkan isi formulir pendaftaran</p>
+    <div class="registration-container">
+        <div class="registration-card animate-fadeInUp">
+            <div class="registration-header">
+                <h1>Daftar Akun Warga</h1>
+                <p>Bergabung dengan Portal Digital Desa</p>
             </div>
 
-            <div class="alert" id="error-alert">
-                Mohon lengkapi semua kolom yang diperlukan.
-            </div>
-
-            <form method="POST" action="{{ route('registrasi.store') }}" id="register-form">
+            <form method="POST" action="{{ route('registrasi.store') }}" id="register-form" class="needs-validation" novalidate>
                 @csrf
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" 
-                            name="username" value="{{ old('username') }}" required>
-                        @error('username')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                        <span class="invalid-feedback" id="username-error"></span>
+                
+                <div class="row g-4">
+                    <!-- Username & Password -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person form-icon"></i>Username
+                            </label>
+                            <input type="text" class="form-control @error('username') is-invalid @enderror"
+                                   id="username" name="username" value="{{ old('username') }}" required>
+                            @error('username')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock form-icon"></i>Password
+                            </label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                   id="password" name="password" required>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" 
-                            name="password" required>
-                        @error('password')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                        <span class="invalid-feedback" id="password-error"></span>
+                    <!-- Nama & Email -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nama_lengkap" class="form-label">
+                                <i class="bi bi-person-vcard form-icon"></i>Nama Lengkap
+                            </label>
+                            <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror"
+                                   id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required>
+                            @error('nama_lengkap')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email" class="form-label">
+                                <i class="bi bi-envelope form-icon"></i>Email
+                            </label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                   id="email" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Nomor Telepon & Alamat -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nomor_telepon" class="form-label">
+                                <i class="bi bi-phone form-icon"></i>Nomor Telepon
+                            </label>
+                            <input type="text" class="form-control @error('nomor_telepon') is-invalid @enderror"
+                                   id="nomor_telepon" name="nomor_telepon" value="{{ old('nomor_telepon') }}" required>
+                            @error('nomor_telepon')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="alamat" class="form-label">
+                                <i class="bi bi-geo-alt form-icon"></i>Alamat
+                            </label>
+                            <textarea class="form-control @error('alamat') is-invalid @enderror"
+                                      id="alamat" name="alamat" required>{{ old('alamat') }}</textarea>
+                            @error('alamat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nama_lengkap">Nama Lengkap</label>
-                        <input id="nama_lengkap" type="text" class="form-control @error('nama_lengkap') is-invalid @enderror" 
-                            name="nama_lengkap" value="{{ old('nama_lengkap') }}" required>
-                        @error('nama_lengkap')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                        <span class="invalid-feedback" id="nama-lengkap-error"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
-                            name="email" value="{{ old('email') }}" required>
-                        @error('email')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                        <span class="invalid-feedback" id="email-error"></span>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nomor_telepon">Nomor Telepon</label>
-                        <input id="nomor_telepon" type="text" class="form-control @error('nomor_telepon') is-invalid @enderror" 
-                            name="nomor_telepon" value="{{ old('nomor_telepon') }}" required>
-                        @error('nomor_telepon')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                        <span class="invalid-feedback" id="nomor-telepon-error"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="alamat">Alamat</label>
-                        <textarea id="alamat" class="form-control @error('alamat') is-invalid @enderror" 
-                            name="alamat" required>{{ old('alamat') }}</textarea>
-                        @error('alamat')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                        <span class="invalid-feedback" id="alamat-error"></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" id="submit-btn">
-                        Daftar Sekarang
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-register w-100 text-white">
+                        <i class="bi bi-check2-circle me-2"></i>Daftar Sekarang
                     </button>
                 </div>
-                
+
                 <div class="login-link">
-                    <p>Sudah punya akun? <a href="{{ route('login-masyarakat') }}">Login di sini</a></p>
+                    <p>Sudah memiliki akun? <a href="{{ route('login-masyarakat') }}">Masuk di sini</a></p>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- JS -->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
-    <!-- SweetAlert2 JS -->
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('register-form');
-            const errorAlert = document.getElementById('error-alert');
             const nomorTelepon = document.getElementById('nomor_telepon');
-            const nomorTeleponError = document.getElementById('nomor-telepon-error');
             const namaLengkap = document.getElementById('nama_lengkap');
             
-            // Convert nama_lengkap to uppercase as the user types
+            // Convert nama_lengkap to uppercase
             namaLengkap.addEventListener('input', function() {
                 this.value = this.value.toUpperCase();
             });
             
-            // Validate phone number on input
-            nomorTelepon.addEventListener('input', function() {
-                validatePhoneNumber();
-            });
-            
-            // Validate phone number on blur
-            nomorTelepon.addEventListener('blur', function() {
-                validatePhoneNumber();
-            });
-            
-            function validatePhoneNumber() {
-                const value = nomorTelepon.value.trim();
-                const onlyNumbers = /^\d+$/.test(value);
-                
-                if (value && !onlyNumbers) {
-                    nomorTelepon.classList.add('is-invalid');
-                    nomorTeleponError.textContent = 'Nomor telepon hanya boleh berisi angka';
-                    nomorTeleponError.style.display = 'block';
-                    return false;
-                } else {
-                    if (value) {
-                        nomorTelepon.classList.remove('is-invalid');
-                        nomorTeleponError.style.display = 'none';
-                    }
-                    return true;
-                }
+            // Phone number validation
+            function validatePhoneNumber(value) {
+                return /^\d+$/.test(value);
             }
             
-            // Form submission validation
-            form.addEventListener('submit', function(event) {
-                let isValid = true;
-                const requiredFields = form.querySelectorAll('[required]');
-                
-                // Reset validation state
-                errorAlert.style.display = 'none';
-                
-                // Check each required field
-                requiredFields.forEach(function(field) {
-                    const errorElement = document.getElementById(field.id + '-error') || 
-                                         document.querySelector(`[id="${field.id.replace('_', '-')}-error"]`);
-                    
-                    if (!field.value.trim()) {
-                        field.classList.add('is-invalid');
-                        if (errorElement) {
-                            errorElement.textContent = 'Kolom ini harus diisi';
-                            errorElement.style.display = 'block';
-                        }
-                        isValid = false;
-                    } else {
-                        if (field.id !== 'nomor_telepon' || validatePhoneNumber()) {
-                            field.classList.remove('is-invalid');
-                            if (errorElement) {
-                                errorElement.style.display = 'none';
-                            }
-                        } else {
-                            isValid = false;
-                        }
-                    }
-                });
-                
-                // Validate phone number specifically
-                if (!validatePhoneNumber()) {
-                    isValid = false;
-                }
-                
-                // Show general error message if validation fails
-                if (!isValid) {
-                    errorAlert.style.display = 'block';
-                    event.preventDefault();
-                    window.scrollTo(0, 0);
+            nomorTelepon.addEventListener('input', function() {
+                if (!validatePhoneNumber(this.value)) {
+                    this.classList.add('is-invalid');
+                    this.nextElementSibling.textContent = 'Nomor telepon hanya boleh berisi angka';
+                } else {
+                    this.classList.remove('is-invalid');
                 }
             });
+            
+            // Form submission
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                if (!this.checkValidity()) {
+                    event.stopPropagation();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Mohon lengkapi semua field yang diperlukan!'
+                    });
+                } else if (!validatePhoneNumber(nomorTelepon.value)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Format nomor telepon tidak valid!'
+                    });
+                } else {
+                    this.submit();
+                }
+                
+                this.classList.add('was-validated');
+            });
 
-            // Show success message with SweetAlert2
+            // Success message
             @if(session('success'))
                 Swal.fire({
                     icon: 'success',
                     title: 'Registrasi Berhasil!',
-                    text: 'Anda akan diarahkan ke halaman utama...',
+                    text: 'Anda akan diarahkan ke halaman login...',
                     timer: 3000,
                     timerProgressBar: true,
                     showConfirmButton: false,
-                    allowOutsideClick: false,
                     didOpen: () => {
                         Swal.showLoading()
                     }
