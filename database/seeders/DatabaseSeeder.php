@@ -198,9 +198,10 @@ class DatabaseSeeder extends Seeder
             Kategori::create($kategori);
         }
 
-        // Setelah semua data dependencies dibuat, baru jalankan LaporanSeeder
+        // Setelah semua data dependencies dibuat, baru jalankan LaporanSeeder dan KomentarSeeder
         $this->call([
             LaporanSeeder::class,
+            KomentarSeeder::class, // Tambahkan baris ini
         ]);
     }
 }

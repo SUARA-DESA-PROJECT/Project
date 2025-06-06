@@ -21,17 +21,25 @@
     </div>
 
     <!-- Leaflet Map Container -->
-    <div id="map" style="height: calc(100vh - 180px); width: 100%;"></div>
+    <div id="map" style="height: calc(100vh - 300px); width: 100%;"></div>
 
-    <!-- Statistics Panel -->
-    <div id="statisticsPanel" class="position-absolute" style="top: 20px; right: 20px; z-index: 1000; max-width: 300px;">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Statistik Laporan</h6>
-            </div>
-            <div class="card-body p-3">
-                <div id="statisticsContent">
-                    <p class="text-muted">Memuat statistik...</p>
+    <!-- Statistics Panel - Moved below map -->
+    <div class="container-fluid mt-4 px-4">
+        <div class="row">
+            <div class="col-12">
+                <div id="statisticsPanel" class="w-100">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Statistik Laporan</h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <div id="statisticsContent" class="row">
+                                <div class="col-12 text-center">
+                                    <p class="text-muted">Memuat statistik...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,7 +114,7 @@
                 { color: '#28a745', label: 'Diverifikasi & Ditangani' },
                 { color: '#fd7e14', label: 'Diverifikasi & Belum Ditangani' },
                 { color: '#007bff', label: 'Diverifikasi & Sedang Ditangani' },
-                { color: '#20c997', label: 'Diverifikasi' },
+                // { color: '#20c997', label: 'Diverifikasi' },
                 { color: '#dc3545', label: 'Ditolak' },
                 { color: '#6c757d', label: 'Belum Diverifikasi' }
             ];
@@ -193,33 +201,93 @@
                 });
         }
 
-        // Load statistics
+        // Load statistics - Updated with cleaner layout and proper alignment
         function loadStatistics() {
             fetch('{{ route("api.map-statistics") }}')
                 .then(response => response.json())
                 .then(stats => {
                     const content = `
-                        <div class="mb-2">
-                            <strong>Total Laporan: ${stats.total_laporan}</strong>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="stat-card-main h-100 d-flex align-items-center">
+                                <div class="card-body text-center w-100">
+                                    <div class="stat-icon mb-3">
+                                        <i class="fas fa-file-alt fa-2x"></i>
+                                    </div>
+                                    <h3 class="stat-number">${stats.total_laporan}</h3>
+                                    <p class="stat-label mb-0">Total Laporan</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <small class="text-muted">Status Verifikasi:</small><br>
-                            <small>• Diverifikasi: ${stats.by_verification.diverifikasi}</small><br>
-                            <small>• Ditolak: ${stats.by_verification.ditolak}</small><br>
-                            <small>• Belum Diverifikasi: ${stats.by_verification.belum_diverifikasi}</small>
+                        
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="stat-card-secondary h-100">
+                                <div class="card-header text-center">
+                                    <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>Status Verifikasi</h6>
+                                </div>
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="w-100">
+                                        <div class="row text-center">
+                                            <div class="col-4">
+                                                <div class="mini-stat">
+                                                    <div class="mini-stat-number text-success">${stats.by_verification.diverifikasi}</div>
+                                                    <div class="mini-stat-label">Diverifikasi</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="mini-stat">
+                                                    <div class="mini-stat-number text-danger">${stats.by_verification.ditolak}</div>
+                                                    <div class="mini-stat-label">Ditolak</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="mini-stat">
+                                                    <div class="mini-stat-number text-secondary">${stats.by_verification.belum_diverifikasi}</div>
+                                                    <div class="mini-stat-label">Belum Diverifikasi</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <small class="text-muted">Status Penanganan:</small><br>
-                            <small>• Sudah Ditangani: ${stats.by_handling.sudah_ditangani}</small><br>
-                            <small>• Belum Ditangani: ${stats.by_handling.belum_ditangani}</small><br>
-                            <small>• Sedang Ditangani: ${stats.by_handling.sedang_ditangani}</small>
+                        
+                        <div class="col-lg-4 col-md-12 mb-4">
+                            <div class="stat-card-secondary h-100">
+                                <div class="card-header text-center">
+                                    <h6 class="mb-0"><i class="fas fa-cogs me-2"></i>Status Penanganan</h6>
+                                </div>
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="w-100">
+                                        <div class="row text-center">
+                                            <div class="col-4">
+                                                <div class="mini-stat">
+                                                    <div class="mini-stat-number text-success">${stats.by_handling.sudah_ditangani}</div>
+                                                    <div class="mini-stat-label">Sudah Ditangani</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="mini-stat">
+                                                    <div class="mini-stat-number text-warning">${stats.by_handling.belum_ditangani}</div>
+                                                    <div class="mini-stat-label">Belum Ditangani</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="mini-stat">
+                                                    <div class="mini-stat-number text-info">${stats.by_handling.sedang_ditangani}</div>
+                                                    <div class="mini-stat-label">Sedang Ditangani</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     `;
                     document.getElementById('statisticsContent').innerHTML = content;
                 })
                 .catch(error => {
                     console.error('Error loading statistics:', error);
-                    document.getElementById('statisticsContent').innerHTML = '<p class="text-danger">Gagal memuat statistik</p>';
+                    document.getElementById('statisticsContent').innerHTML = '<div class="col-12"><p class="text-danger text-center">Gagal memuat statistik</p></div>';
                 });
         }
 
@@ -302,35 +370,286 @@
                 font-weight: 500;
             }
             
-            /* Statistics panel styling */
-            #statisticsPanel {
-                max-height: 400px;
-                overflow-y: auto;
-            }
-            
+            /* Clean Statistics Panel Styling - Updated with colors from index.blade.php */
             #statisticsPanel .card {
                 border: none;
-                border-radius: 10px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                border-radius: 12px;
+                box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+                margin-bottom: 0;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                animation: scaleIn 0.4s ease-out;
             }
             
             #statisticsPanel .card-header {
-                background: linear-gradient(135deg, #007bff, #0056b3) !important;
-                border-radius: 10px 10px 0 0 !important;
-                padding: 12px 16px;
+                background: #468B94 !important;
+                border-radius: 12px 12px 0 0 !important;
+                padding: 15px 20px;
+                border: none;
+                color: white !important;
+            }
+            
+            /* Main Statistics Card - Better vertical centering */
+            .stat-card-main {
+                background: linear-gradient(135deg, #fff, #f8f9fa);
+                border: 2px solid #468B94;
+                border-radius: 12px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 15px rgba(70, 139, 148, 0.08);
+                min-height: 220px;
+            }
+            
+            .stat-card-main:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(70, 139, 148, 0.25);
+                border-color: #3a7a82;
+            }
+            
+            .stat-card-main .card-body {
+                padding: 35px 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                min-height: 220px;
+            }
+            
+            .stat-icon {
+                width: 70px;
+                height: 70px;
+                background: #468B94;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 15px auto;
+                color: white;
+            }
+            
+            .stat-number {
+                font-size: 2.8rem;
+                font-weight: 700;
+                margin: 15px 0 10px 0;
+                line-height: 1;
+                color: #468B94;
+            }
+            
+            .stat-label {
+                font-size: 1.1rem;
+                color: #495057;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin: 0;
+            }
+            
+            /* Secondary Statistics Cards - Better vertical centering */
+            .stat-card-secondary {
+                background: white;
+                border: 1px solid #e9ecef;
+                border-radius: 12px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+                min-height: 220px;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .stat-card-secondary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                border-color: #468B94;
+            }
+            
+            .stat-card-secondary .card-header {
+                background: #468B94 !important;
+                border-bottom: none;
+                border-radius: 12px 12px 0 0 !important;
+                padding: 15px 20px;
+                color: white !important;
+                flex-shrink: 0;
+            }
+            
+            .stat-card-secondary .card-header h6 {
+                color: white !important;
+                font-weight: 600;
+                margin: 0;
+                font-size: 1rem;
+            }
+            
+            .stat-card-secondary .card-body {
+                padding: 25px 20px;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Mini Statistics - Perfect vertical centering */
+            .mini-stat {
+                padding: 20px 8px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                min-height: 120px;
+            }
+            
+            .mini-stat-number {
+                font-size: 2.4rem;
+                font-weight: 700;
+                line-height: 1;
+                margin-bottom: 12px;
+                display: block;
+            }
+            
+            .mini-stat-label {
+                font-size: 0.95rem;
+                color: #6c757d;
+                font-weight: 500;
+                line-height: 1.2;
+                text-align: center;
+                margin: 0;
+            }
+            
+            /* Ensure proper row alignment */
+            .row.text-center {
+                display: flex;
+                align-items: stretch;
+            }
+            
+            .row.text-center .col-4 {
+                display: flex;
+                align-items: stretch;
+            }
+            
+            /* Equal height cards and proper vertical centering */
+            .row.align-items-stretch {
+                display: flex;
+                align-items: stretch;
+            }
+            
+            .h-100 {
+                height: 100% !important;
+            }
+            
+            .d-flex.align-items-center {
+                display: flex !important;
+                align-items: center !important;
+                min-height: 160px;
+            }
+            
+            .w-100 {
+                width: 100% !important;
+            }
+            
+            /* Animation keyframes */
+            @keyframes scaleIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+            
+            /* Responsive Design */
+            @media (max-width: 992px) {
+                .stat-card-main,
+                .stat-card-secondary {
+                    min-height: 200px;
+                }
+                
+                .stat-card-main .card-body {
+                    min-height: 200px;
+                    padding: 30px 20px;
+                }
+                
+                .stat-number {
+                    font-size: 2.4rem;
+                }
+                
+                .mini-stat-number {
+                    font-size: 2.2rem;
+                }
+                
+                .mini-stat {
+                    min-height: 100px;
+                    padding: 18px 8px;
+                }
+                
+                .stat-icon {
+                    width: 60px;
+                    height: 60px;
+                }
             }
             
             @media (max-width: 768px) {
-                #statisticsPanel {
-                    position: relative;
-                    top: auto;
-                    right: auto;
-                    margin: 20px;
-                    max-width: none;
-                }
-                
                 .custom-marker {
                     font-size: 16px;
+                }
+                
+                .stat-card-main,
+                .stat-card-secondary {
+                    min-height: 180px;
+                    margin-bottom: 20px;
+                }
+                
+                .stat-card-main .card-body {
+                    min-height: 180px;
+                    padding: 25px 15px;
+                }
+                
+                .stat-number {
+                    font-size: 2.2rem;
+                    margin: 12px 0 8px 0;
+                }
+                
+                .mini-stat-number {
+                    font-size: 2rem;
+                }
+                
+                .mini-stat {
+                    min-height: 90px;
+                    padding: 15px 6px;
+                }
+                
+                .stat-card-secondary .card-body {
+                    padding: 20px 15px;
+                }
+                
+                .stat-icon {
+                    width: 50px;
+                    height: 50px;
+                    margin-bottom: 12px;
+                }
+            }
+            
+            @media (max-width: 576px) {
+                .mini-stat {
+                    padding: 12px 4px;
+                    min-height: 80px;
+                }
+                
+                .mini-stat-label {
+                    font-size: 0.85rem;
+                }
+                
+                .mini-stat-number {
+                    font-size: 1.8rem;
+                    margin-bottom: 8px;
+                }
+                
+                .stat-card-main,
+                .stat-card-secondary {
+                    min-height: 160px;
+                }
+                
+                .stat-card-main .card-body {
+                    min-height: 160px;
                 }
             }
         `;

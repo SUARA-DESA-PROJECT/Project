@@ -4,6 +4,12 @@
 
 @section('styles')
 <style>
+    h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
     .forum-container {
         max-width: 100%;
         margin: 0;
@@ -267,12 +273,6 @@
         resize: none;
         margin-bottom: 15px;
     }
-
-    h2 {
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
 </style>
 @endsection
 

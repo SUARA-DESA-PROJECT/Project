@@ -3,8 +3,13 @@
 @section('title', 'Forum Diskusi')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/homepage/style.css') }}">
 <style>
+    h2 {
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
     .forum-container {
         max-width: 100%;
         margin: 0;
@@ -134,13 +139,6 @@
     .comment-user {
         font-weight: 600;
         color: #14171a;
-        margin-right: 10px;
-    }
-    
-    .verified-badge {
-        color: #1DA1F2;
-        margin-left: 4px;
-        font-size: 14px;
     }
     
     .comment-time {
@@ -282,8 +280,8 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-12">
-            <h2 class="mb-4">Forum Diskusi Laporan</h2>
-            <p class="mb-4">Diskusikan laporan yang telah terverifikasi dengan warga lain dan petugas desa.</p>
+            <h2>Forum Diskusi Laporan</h2>
+            <p>Diskusikan laporan yang telah terverifikasi dengan warga lain dan petugas desa.</p>
             
             <div class="forum-container">
                 @if($verifiedReports->count() > 0)
@@ -328,13 +326,6 @@
                                 <div style="clear: both;"></div>
                             </form>
                             
-                            <!-- Debug info - remove after fixing -->
-                            @if(session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                            @endif
-                            
                             <div class="comments-list">
                                 @forelse($report->komentars->sortByDesc('created_at') as $komentar)
                                 <div class="comment">
@@ -342,7 +333,7 @@
                                         <div class="comment-user">
                                             {{ $komentar->username }}
                                             @if($komentar->tipe_user == 'pengurus')
-                                            <i class="fa fa-check-circle verified-badge" title="Petugas Desa"></i>
+                                            <i class="fa fa-check-circle verified-badge" title="Petugas Desa" style="color: #1DA1F2;"></i>
                                             @endif
                                         </div>
                                         <div class="comment-time">{{ \Carbon\Carbon::parse($komentar->created_at)->locale('id')->diffForHumans() }}</div>
@@ -433,6 +424,7 @@
             cancelButtonText: 'Batal',
             confirmButtonColor: '#468B94',
             cancelButtonColor: '#6c757d',
+            reverseButtons: true,
             preConfirm: (text) => {
                 if (!text) {
                     Swal.showValidationMessage('Komentar tidak boleh kosong')
@@ -480,7 +472,8 @@
             confirmButtonColor: '#468B94',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('delete-form-' + id).submit();
