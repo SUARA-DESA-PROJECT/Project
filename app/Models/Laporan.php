@@ -22,7 +22,9 @@ class Laporan extends Model
         'tipe_pelapor',
         'pengurus_lingkungan_username',
         'warga_username',
-        'kategori_laporan'
+        'kategori_laporan',
+        'time_laporan',
+        'deskripsi_penolakan'
     ];
 
     /**

@@ -2,7 +2,8 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Dashboard</h1>
+    <h2 class="mt-4">Dashboard</h2>
+    <p class="text-muted">Ringkasan statistik dan informasi laporan</p>
     <div class="row">
         <div class="col-xl-3 col-md-6">
             <div class="card rounded-4 mb-4" style="background-color: #4B8F8C;">
@@ -268,5 +269,98 @@
             }
         });
     </script>
+
+    <style>
+    /* Animation Keyframes */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes slideInPop {
+        0% {
+            opacity: 0;
+            transform: translateX(-10px) scale(0.98);
+        }
+        50% {
+            transform: translateX(3px) scale(1.01);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+    }
+
+    /* Title Styles */
+    h1 {
+        color: #333333;
+        font-weight: 600;
+        margin-bottom: 10px;
+        animation: fadeInUp 0.4s ease-out;
+    }
+
+    h2 {
+        color: #333333; /* Dark gray, almost black */
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-bottom: 20px;
+        animation: fadeInUp 0.4s ease-out 0.1s backwards;
+    }
+
+    /* Card Animations */
+    .card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: scaleIn 0.4s ease-out;
+    }
+
+    .card:hover {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Dashboard Cards Sequential Animation */
+    .col-xl-3:nth-child(1) .card { animation-delay: 0.1s; }
+    .col-xl-3:nth-child(2) .card { animation-delay: 0.2s; }
+    .col-xl-3:nth-child(3) .card { animation-delay: 0.3s; }
+    .col-xl-3:nth-child(4) .card { animation-delay: 0.4s; }
+
+    /* Chart Cards Animation */
+    .col-xl-6 .card {
+        animation: slideInPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    }
+
+    .col-xl-6:nth-child(1) .card { animation-delay: 0.5s; }
+    .col-xl-6:nth-child(2) .card { animation-delay: 0.6s; }
+
+    /* Table Animation */
+    .table {
+        animation: fadeInUp 0.4s ease-out 0.7s backwards;
+    }
+
+    /* Canvas Animation */
+    canvas {
+        transition: all 0.3s ease;
+    }
+    </style>
 </div>
 @endsection

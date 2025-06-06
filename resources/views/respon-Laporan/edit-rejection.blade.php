@@ -3,8 +3,8 @@
 @section('content')
 <div class="update-container">
     <div class="update-header">
-        <h2><i class="fas fa-edit"></i> Update Respon Laporan</h2>
-        <p class="update-subtitle">Silahkan edit form dibawah untuk mengubah respon laporan</p>
+        <h2><i class="fas fa-ban"></i> Tambah Keterangan Penolakan</h2>
+        <p class="update-subtitle">Silahkan tambahkan keterangan untuk laporan yang ditolak</p>
     </div>
 
     <div class="form-grid">
@@ -19,44 +19,45 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('respon.update', $laporan->id) }}" id="updateForm">
+            <!-- Info Laporan -->
+            <div class="form-card mb-3">
+                <div class="form-header">
+                    <i class="fas fa-info-circle"></i>
+                    <label class="form-label">Informasi Laporan</label>
+                </div>
+                <table class="table table-borderless">
+                    <tr>
+                        <td width="30%"><strong>Judul Laporan:</strong></td>
+                        <td>{{ $laporan->judul_laporan }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status Verifikasi:</strong></td>
+                        <td>
+                            <span class="status-badge rejected">
+                                <i class="fas fa-times-circle"></i> {{ $laporan->status_verifikasi }}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <form method="POST" action="{{ route('respon.updateRejection', $laporan->id) }}" id="rejectionForm">
                 @csrf
                 @method('PUT')
-
-                <div class="form-card">
-                    <div class="form-header">
-                        <i class="fas fa-tasks"></i>
-                        <label for="status_penanganan" class="form-label">Status Penanganan</label>
-                    </div>
-                    <select class="form-control @error('status_penanganan') is-invalid @enderror" 
-                            id="status_penanganan" 
-                            name="status_penanganan"
-                            required
-                            style="min-height: 50px; appearance: none;">
-                        <option value="">Pilih Status</option>
-                        <option value="Belum Ditangani" {{ $laporan->status_penanganan == 'Belum Ditangani' ? 'selected' : '' }}>Belum Ditangani</option>
-                        <option value="Sedang Ditangani" {{ $laporan->status_penanganan == 'Sedang Ditangani' ? 'selected' : '' }}>Sedang Ditangani</option>
-                        <option value="Sudah Ditangani" {{ $laporan->status_penanganan == 'Sudah Ditangani' ? 'selected' : '' }}>Sudah Ditangani</option>
-                    </select>
-                    @error('status_penanganan')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
 
                 <div class="form-card full-width">
                     <div class="form-header">
                         <i class="fas fa-comment-alt"></i>
-                        <label for="deskripsi_penanganan" class="form-label">Deskripsi Penanganan</label>
+                        <label for="deskripsi_penolakan" class="form-label">Keterangan Penolakan</label>
                     </div>
-                    <textarea class="form-control @error('deskripsi_penanganan') is-invalid @enderror" 
-                              id="deskripsi_penanganan" 
-                              name="deskripsi_penanganan" 
+                    <textarea class="form-control @error('deskripsi_penolakan') is-invalid @enderror" 
+                              id="deskripsi_penolakan" 
+                              name="deskripsi_penolakan" 
                               rows="5" 
                               required
-                              style="min-height: 200px;">{{ old('deskripsi_penanganan', $laporan->deskripsi_penanganan) }}</textarea>
-                    @error('deskripsi_penanganan')
+                              placeholder="Jelaskan alasan mengapa laporan ini ditolak..."
+                              style="min-height: 200px;">{{ old('deskripsi_penolakan', $laporan->deskripsi_penolakan) }}</textarea>
+                    @error('deskripsi_penolakan')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -68,7 +69,7 @@
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Update Respon
+                        <i class="fas fa-save"></i> Simpan Keterangan
                     </button>
                 </div>
             </form>
@@ -79,7 +80,7 @@
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 
-/* Animation Keyframes */
+/* Animation Keyframes - Tambah dari edit.blade.php */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -130,11 +131,11 @@
     background: white;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 0.4s ease-out;
+    animation: fadeInUp 0.4s ease-out; /* Tambah animasi */
 }
 
 .update-header h2 {
-    color: #468B94;
+    color: #dc3545;
     font-size: 2.5rem;
     margin-bottom: 1rem;
 }
@@ -157,12 +158,12 @@
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
-    animation: slideInPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    animation: slideInPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; /* Tambah animasi */
     grid-column: span 12;
 }
 
 .form-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px); /* Tambah hover effect */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -197,32 +198,28 @@
     box-shadow: 0 0 0 0.2rem rgba(70, 139, 148, 0.25);
 }
 
-/* Custom Select Styling */
-select.form-control {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23468B94' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 16px 12px;
-    padding-right: 2.5rem;
-    cursor: pointer;
-}
-
-select.form-control option {
-    padding: 1rem;
-    font-size: 1rem;
-    background-color: white;
-    color: #333;
-}
-
-select.form-control:hover {
+/* Tambah hover effect untuk textarea */
+.form-control:hover {
     border-color: #468B94;
     box-shadow: 0 4px 8px rgba(70, 139, 148, 0.15);
 }
 
-select.form-control:focus {
-    border-color: #468B94;
-    box-shadow: 0 0 0 0.2rem rgba(70, 139, 148, 0.25);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23468B94' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 11l6-6 6 6'/%3e%3c/svg%3e");
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-badge.rejected {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.status-badge i {
+    margin-right: 6px;
 }
 
 .form-actions {
@@ -233,7 +230,7 @@ select.form-control:focus {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    animation: scaleIn 0.4s ease-out;
+    animation: scaleIn 0.4s ease-out; /* Tambah animasi */
 }
 
 .btn {
@@ -244,8 +241,11 @@ select.form-control:focus {
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s;
+    text-decoration: none;
+    border: none; /* Tambah untuk consistency */
 }
 
+/* Tambah icon styling */
 .btn i {
     font-size: 1.1rem;
 }
@@ -258,8 +258,9 @@ select.form-control:focus {
 
 .btn-primary:hover {
     background-color: #3a7a82;
-    border-color: #3a7a82;
+    border-color: #3a7a82; /* Tambah border-color */
     transform: translateY(-1px);
+    color: white;
 }
 
 .btn-secondary {
@@ -270,10 +271,17 @@ select.form-control:focus {
 
 .btn-secondary:hover {
     background-color: #5a6268;
-    border-color: #5a6268;
+    border-color: #5a6268; /* Tambah border-color */
     transform: translateY(-1px);
+    color: white;
 }
 
+.table td {
+    padding: 0.5rem 0;
+    border: none;
+}
+
+/* Tambah alert styling dengan animasi */
 .alert {
     padding: 1rem;
     border-radius: 8px;
@@ -281,7 +289,7 @@ select.form-control:focus {
     animation: slideInPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Responsive Design */
+/* Tambah responsive design */
 @media (max-width: 768px) {
     .update-container {
         padding: 1rem;
@@ -290,22 +298,48 @@ select.form-control:focus {
     .form-card {
         grid-column: span 12 !important;
     }
+    
+    .update-header h2 {
+        font-size: 2rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .btn {
+        justify-content: center;
+    }
+}
+
+/* Tambah staggered animation untuk form cards */
+.form-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.form-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.form-card:nth-child(3) {
+    animation-delay: 0.3s;
 }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-document.getElementById('updateForm').addEventListener('submit', function(e) {
+document.getElementById('rejectionForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
     Swal.fire({
         title: 'Apakah anda yakin?',
-        text: "Ingin mengupdate respon ini?",
+        text: "Ingin menambahkan keterangan penolakan?",
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#468B94',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, Update!',
+        confirmButtonText: 'Ya, Simpan!',
         cancelButtonText: 'Batal',
         reverseButtons: true,
     }).then((result) => {
@@ -316,6 +350,3 @@ document.getElementById('updateForm').addEventListener('submit', function(e) {
 });
 </script>
 @endsection
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

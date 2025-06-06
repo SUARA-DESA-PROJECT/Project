@@ -44,30 +44,47 @@ class LaporanController extends Controller
 
     public function store(Request $request)
     {
-        // Get logged in user information
         $warga = session('warga');
         if (!$warga) {
-            return redirect()->route('login-masyarakat')->with('error', 'Silakan login terlebih dahulu.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan login terlebih dahulu.'
+            ], 401);
         }
 
-        $validatedData = $request->validate([
-            'judul_laporan' => 'required',
-            'deskripsi_laporan' => 'required',
-            'tanggal_pelaporan' => 'required',
-            'tempat_kejadian' => 'required',
-            'kategori_laporan' => 'required'
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'judul_laporan' => 'required',
+                'deskripsi_laporan' => 'required',
+                'tanggal_pelaporan' => 'required',
+                'tempat_kejadian' => 'required',
+                'kategori_laporan' => 'required',
+                'time_laporan' => 'required'  // Tambahkan validasi untuk time_laporan
+            ]);
 
-        // Add automatic data
-        $validatedData['status_verifikasi'] = 'Belum Diverifikasi';
-        $validatedData['status_penanganan'] = 'Belum Ditangani';
-        $validatedData['deskripsi_penanganan'] = null;
-        $validatedData['tipe_pelapor'] = 'Warga';
-        $validatedData['warga_username'] = $warga->username;
-        $validatedData['time_laporan'] = now();
+            // Add automatic data
+            $validatedData['status_verifikasi'] = 'Belum Diverifikasi';
+            $validatedData['status_penanganan'] = 'Belum Ditangani';
+            $validatedData['deskripsi_penanganan'] = null;
+            $validatedData['tipe_pelapor'] = 'Warga';
+            $validatedData['warga_username'] = $warga->username;
+            $validatedData['time_laporan'] = $request->time_laporan;  // Tambahkan time_laporan ke data yang akan disimpan
 
-        Laporan::create($validatedData);
-        return redirect()->route('homepage-warga')->with('success', 'Laporan berhasil ditambahkan');
+            $laporan = Laporan::create($validatedData);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Laporan berhasil ditambahkan',
+                'data' => $laporan
+            ]);
+                
+        } catch (\Exception $e) {
+            \Log::error('Error saving laporan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan laporan'
+            ], 500);
+        }
     }
 
     public function show(Laporan $laporan)
@@ -95,9 +112,15 @@ class LaporanController extends Controller
 
         try {
             $laporan->update($validatedData);
-            return redirect()->route('riwayat-laporan.index')->with('success', 'Laporan berhasil diperbarui.');
+            return redirect()
+                ->route('riwayat-laporan.index')
+                ->with('success', 'Laporan berhasil diperbarui!')
+                ->with('icon', 'success');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui laporan.');
+            return redirect()
+                ->back()
+                ->with('error', 'Terjadi kesalahan saat memperbarui laporan.')
+                ->with('icon', 'error');
         }
     }
 
@@ -209,10 +232,19 @@ class LaporanController extends Controller
     public function indexVerifikasi(Request $request)
     {
         $status = $request->query('status');
+        $search = $request->query('search');
         $query = Laporan::query();
     
         if ($status) {
             $query->where('status_verifikasi', $status);
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('judul_laporan', 'LIKE', '%' . $search . '%')
+                  ->orWhere('kategori_laporan', 'LIKE', '%' . $search . '%')
+                  ->orWhere('tempat_kejadian', 'LIKE', '%' . $search . '%');
+            });
         }
     
         $laporans = $query->get();
@@ -226,13 +258,22 @@ class LaporanController extends Controller
         $laporan->save();
         return redirect()->route('verifikasilap.index')->with('success', 'Laporan berhasil diverifikasi.');
     }
-
+    
     public function unverify($id)
     {
         $laporan = Laporan::findOrFail($id);
         $laporan->status_verifikasi = 'Belum Diverifikasi';
         $laporan->save();
         return redirect()->route('verifikasilap.index')->with('success', 'Status verifikasi laporan berhasil dihapus.');
+    }
+
+    public function reject($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        $laporan->status_verifikasi = 'Ditolak';
+        $laporan->save();
+        
+        return redirect()->route('verifikasilap.index')->with('success', 'Laporan berhasil ditolak');
     }
 
     public function updateStatus(Request $request)

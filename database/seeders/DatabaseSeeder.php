@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Jalankan AdminSeeder dan LocationSeeder dulu
         $this->call([
             AdminSeeder::class,
             LocationSeeder::class,
@@ -196,46 +197,9 @@ class DatabaseSeeder extends Seeder
             Kategori::create($kategori);
         }
 
-        // Create Laporan
-        $laporanData = [
-            [
-                'judul_laporan' => 'Pencurian Sepeda Motor',
-                'deskripsi_laporan' => 'Telah terjadi pencurian sepeda motor Honda Beat warna merah di depan warung RT 02',
-                'tanggal_pelaporan' => '2024-03-19',
-                'tempat_kejadian' => 'Buahbatu',
-                'status_verifikasi' => 'Diverifikasi',
-                'status_penanganan' => 'Sudah ditangani',
-                'deskripsi_penanganan' => 'Sudah dilaporkan ke pihak kepolisian dan dalam proses penyelidikan',
-                'tipe_pelapor' => 'Pengurus Lingkungan',
-                'pengurus_lingkungan_username' => 'pengurus1',
-                'kategori_laporan' => 'Kejahatan'
-            ],
-            [
-                'judul_laporan' => 'Festival Budaya RT 03',
-                'deskripsi_laporan' => 'Penyelenggaraan festival budaya dan pagelaran seni tradisional',
-                'tanggal_pelaporan' => '2024-03-20',
-                'tempat_kejadian' => 'Buahbatu',
-                'status_verifikasi' => 'Belum Diverifikasi',
-                'status_penanganan' => 'Belum ditangani',
-                'tipe_pelapor' => 'Warga',
-                'warga_username' => 'warga3',
-                'kategori_laporan' => 'Kegiatan Budaya'
-            ],
-            [
-                'judul_laporan' => 'Rencana perbaikan Jalan RT 04',
-                'deskripsi_laporan' => 'Rencana perbaikan jalan berlubang dan pemasangan paving block',
-                'tanggal_pelaporan' => '2024-03-21',
-                'tempat_kejadian' => 'Cipagalo',
-                'status_verifikasi' => 'Diverifikasi',
-                'status_penanganan' => 'Belum ditangani',
-                'tipe_pelapor' => 'Warga',
-                'warga_username' => 'warga4',
-                'kategori_laporan' => 'Pembangunan'
-            ]
-        ];
-
-        foreach ($laporanData as $laporan) {
-            Laporan::create($laporan);
-        }
+        // Setelah semua data dependencies dibuat, baru jalankan LaporanSeeder
+        $this->call([
+            LaporanSeeder::class,
+        ]);
     }
 }

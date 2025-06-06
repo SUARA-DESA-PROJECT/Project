@@ -62,7 +62,7 @@ class ProfilePengurusController extends Controller
             session(['pengurusLingkungan' => $pengurus]);
 
             DB::commit();
-            return redirect()->route('profile-pengurus.edit')->with('success', 'Profile updated successfully');
+            return redirect()->route('profile-pengurus.edit')->with('success', 'Profile berhasil diperbarui.');
 
         } catch (\Exception $e) {
             DB::rollBack();

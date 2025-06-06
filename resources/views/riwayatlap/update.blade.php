@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="update-container">
+<div class="update-container" style="background-color: #ffffff">
     <div class="update-header">
         <h2><i class="fas fa-edit"></i> Update Laporan</h2>
         <p class="update-subtitle">Perbarui informasi laporan Anda dengan data terbaru</p>
@@ -65,8 +65,16 @@
                     <i class="fas fa-clock"></i>
                     <label for="time" class="form-label">Waktu Kejadian</label>
                 </div>
-                <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" 
-                    value="{{ old('time_laporan', $laporan->time_laporan) }}" placeholder="Pilih Jam">
+                <input type="time" 
+                       name="time_laporan" 
+                       id="time_laporan" 
+                       class="form-control @error('time_laporan') is-invalid @enderror" 
+                       value="{{ old('time_laporan', date('H:i', strtotime($laporan->time_laporan))) }}" 
+                       placeholder="Pilih Jam">
+                <!-- <div class="text-muted mt-2">
+                    <i class="fas fa-info-circle"></i>
+                    Waktu tercatat: {{ date('H:i', strtotime($laporan->time_laporan)) }}
+                </div> -->
                 @error('time_laporan')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -124,7 +132,7 @@
         </div>
 
         <div class="form-actions">
-            <a href="{{ url('/homepage') }}" class="btn btn-secondary">
+            <a href="{{ url('/riwayat-laporan') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
             <button type="submit" class="btn btn-primary">
@@ -141,6 +149,39 @@ if (formLaporan) {
     formLaporan.addEventListener('submit', function(e) {
         e.preventDefault();
 
+        // Validasi form terlebih dahulu
+        const requiredFields = [
+            'judul_laporan',
+            'deskripsi_laporan',
+            'tanggal_pelaporan',
+            'time_laporan',
+            'tempat_kejadian',
+            'kategori_laporan'
+        ];
+
+        let isValid = true;
+        let emptyFields = [];
+        
+        for (let field of requiredFields) {
+            const el = document.getElementsByName(field)[0];
+            if (!el || !el.value.trim()) {
+                isValid = false;
+                emptyFields.push(field.replace('_', ' ').toUpperCase());
+            }
+        }
+
+        if (!isValid) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Silakan isi semua field yang wajib!",
+                confirmButtonColor: "#468B94",
+                showConfirmButton: true
+            });
+            return;
+        }
+
+        // Jika validasi sukses, tampilkan konfirmasi
         Swal.fire({
             title: "Konfirmasi Update",
             text: "Apakah Anda yakin ingin mengupdate laporan ini?",
@@ -150,53 +191,11 @@ if (formLaporan) {
             cancelButtonColor: "#d33",
             confirmButtonText: "Ya, Update!",
             cancelButtonText: "Batal",
-            customClass: {
-                popup: 'animated fadeInDown'
-            }
+            reverseButtons: true  // Menambahkan properti ini untuk menukar posisi tombol
         }).then((result) => {
             if (result.isConfirmed) {
-                const requiredFields = [
-                    'judul_laporan',
-                    'deskripsi_laporan',
-                    'tanggal_pelaporan',
-                    'time_laporan',
-                    'tempat_kejadian',
-                    'kategori_laporan'
-                ];
-                let isValid = true;
-                for (let field of requiredFields) {
-                    const el = document.getElementsByName(field)[0];
-                    if (el && !el.value.trim()) {
-                        isValid = false;
-                        break;
-                    }
-                }
-
-                if (!isValid) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Silahkan isi semua formulir!",
-                        allowOutsideClick: true,
-                        allowEscapeKey: true,
-                        customClass: {
-                            popup: 'animated shake'
-                        }
-                    }).then(() => {});
-                    return;
-                }
-
-                Swal.fire({
-                    title: "Berhasil!",
-                    text: "Laporan Anda telah berhasil diupdate.",
-                    icon: "success",
-                    confirmButtonColor: "#468B94",
-                    customClass: {
-                        popup: 'animated fadeInDown'
-                    }
-                }).then(() => {
-                    this.submit();
-                });
+                // Submit form jika user mengklik konfirmasi
+                this.submit();
             }
         });
     });
@@ -248,9 +247,45 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 
+/* Add these animations at the beginning of your existing <style> section */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInPop {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.98);
+    }
+    50% {
+        transform: translateX(3px) scale(1.01);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
 .update-container {
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
     padding: 2rem;
     background: #f8f9fa;
     min-height: 100vh;
@@ -263,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
     background: white;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.4s ease-out;
 }
 
 .update-header h2 {
@@ -278,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(12, 1fr);
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -288,7 +324,35 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
+    animation: slideInPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+/* Judul Laporan - full width */
+.form-card:nth-child(1) {
+    grid-column: span 12;
+}
+
+/* Deskripsi - full width */
+.form-card:nth-child(2) {
+    grid-column: span 12;
+}
+
+/* Tanggal & Waktu - 2 columns each */
+.form-card:nth-child(3),
+.form-card:nth-child(4) {
+    grid-column: span 6;
+}
+
+/* Tempat & Kategori - 2 columns each */
+.form-card:nth-child(5),
+.form-card:nth-child(6) {
+    grid-column: span 6;
+}
+
+/* Jenis Laporan - full width */
+.form-card:nth-child(7) {
+    grid-column: span 12;
 }
 
 .form-card:hover {
@@ -339,6 +403,7 @@ document.addEventListener('DOMContentLoaded', function() {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    animation: scaleIn 0.4s ease-out;
 }
 
 .btn {
@@ -384,6 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    animation: slideInPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .alert-success {
@@ -400,6 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #dc3545;
     font-size: 0.875rem;
     margin-top: 0.5rem;
+    animation: slideInPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .text-muted {
@@ -446,18 +513,8 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 1rem;
     }
 
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-actions {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .btn {
-        width: 100%;
-        justify-content: center;
+    .form-card {
+        grid-column: span 12 !important;
     }
 }
 
