@@ -107,10 +107,11 @@ Route::delete('/kategori/{nama_kategori}', [KategoriController::class, 'destroy'
 
 // Verifikasi Laporan Routes
 Route::get('/verifikasilap', [LaporanController::class, 'indexVerifikasi'])->name('verifikasilap.index');
+Route::get('/verifikasilap/search', [LaporanController::class, 'indexVerifikasi'])->name('verifikasilap.search');
 Route::put('/verifikasilap/{id_laporan}/verify', [LaporanController::class, 'verify'])->name('verifikasilap.verify');
 Route::put('/verifikasilap/{id_laporan}/unverify', [LaporanController::class, 'unverify'])->name('verifikasilap.unverify');
+Route::put('/verifikasilap/{id_laporan}/reject', [LaporanController::class, 'reject'])->name('verifikasilap.reject');
 Route::post('/laporan/update-status', [LaporanController::class, 'updateStatus']);
-Route::put('/verifikasilap/{id}/reject', [LaporanController::class, 'reject'])->name('verifikasilap.reject');
 
 // Verifikasi Akun routes
 Route::get('/verifikasi-akun', [WargaController::class, 'verifikasiIndex'])->name('warga.verifikasi');
@@ -121,7 +122,8 @@ Route::put('/verifikasi-akun/{username}/unverify', [WargaController::class, 'unv
 Route::get('/respon-laporan', [ResponController::class, 'index'])->name('respon.index');
 Route::get('/respon-laporan/{id}/edit', [ResponController::class, 'edit'])->name('respon.edit');
 Route::put('/respon-laporan/{id}', [ResponController::class, 'update'])->name('respon.update');
-Route::get('/test-respon-edit/{laporan}', function($laporan) {dd('Test route working', $laporan);})->name('test.respon');
+Route::get('/respon-laporan/{id}/edit-rejection', [ResponController::class, 'editRejection'])->name('respon.editRejection');
+Route::put('/respon-laporan/{id}/rejection', [ResponController::class, 'updateRejection'])->name('respon.updateRejection');
 
 // Profile routes
 Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
@@ -172,7 +174,3 @@ Route::post('/komentarpengurus', [KomentarPengurusController::class, 'store'])->
 Route::get('/komentarpengurus/{komentar}/edit', [KomentarPengurusController::class, 'edit'])->name('komentarpengurus.edit');
 Route::put('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'update'])->name('komentarpengurus.update');
 Route::delete('/komentarpengurus/{komentar}', [KomentarPengurusController::class, 'destroy'])->name('komentarpengurus.destroy');
-
-// Tambahkan routes baru
-Route::get('/respon/{id}/edit-rejection', [ResponController::class, 'editRejection'])->name('respon.editRejection');
-Route::put('/respon/{id}/update-rejection', [ResponController::class, 'updateRejection'])->name('respon.updateRejection');

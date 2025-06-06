@@ -512,7 +512,13 @@ tr:hover .report-details {
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: true,
-                allowOutsideClick: true
+                allowOutsideClick: true,
+                showClass: {
+                    popup: 'animate__animated animate__zoomIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__zoomOut'
+                }
             });
         @endif
 
@@ -553,7 +559,13 @@ tr:hover .report-details {
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: confirmButtonText,
                     cancelButtonText: 'Batal',
-                    reverseButtons: true
+                    reverseButtons: true,
+                    showClass: {
+                        popup: 'animate__animated animate__zoomIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__zoomOut'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Show loading
@@ -659,6 +671,12 @@ tr:hover .report-details {
                     showConfirmButton: false,
                     customClass: {
                         popup: 'laporan-details-popup'
+                    },
+                    showClass: {
+                        popup: 'animate__animated animate__zoomIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__zoomOut'
                     }
                 });
             });

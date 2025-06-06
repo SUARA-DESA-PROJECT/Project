@@ -232,10 +232,19 @@ class LaporanController extends Controller
     public function indexVerifikasi(Request $request)
     {
         $status = $request->query('status');
+        $search = $request->query('search');
         $query = Laporan::query();
     
         if ($status) {
             $query->where('status_verifikasi', $status);
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('judul_laporan', 'LIKE', '%' . $search . '%')
+                  ->orWhere('kategori_laporan', 'LIKE', '%' . $search . '%')
+                  ->orWhere('tempat_kejadian', 'LIKE', '%' . $search . '%');
+            });
         }
     
         $laporans = $query->get();

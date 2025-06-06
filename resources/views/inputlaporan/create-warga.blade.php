@@ -5,121 +5,133 @@
     <div class="card">
         <div class="card-body">
             <h2>Input Laporan</h2>
-            <p>Silahkan mengisi seluruh formulir berikut ini untuk memberikan informasi laporan :</p>
-
-            <form action="{{ route('laporan.store') }}" method="POST" id="formLaporan">
-                @csrf
-                <meta name="csrf-token" content="{{ csrf_token() }}">
-                <input type="hidden" name="warga_username" value="{{ $warga->username }}">
-                <input type="hidden" name="tipe_pelapor" value="Warga">
-
-                <!-- Untuk input Judul Laporan -->
-                <div class="mb-3">
-                    <label for="judul" class="form-label">Judul Laporan</label>
-                    <small class="text-muted">Berikan judul yang singkat dan jelas untuk laporan Anda</small>
-                    <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul') is-invalid @enderror" 
-                        value="{{ old('judul') }}" placeholder="Masukkan judul laporan">
-                    
-                    @error('judul')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+            
+            @if($warga->status_verifikasi !== 'Terverifikasi')
+                <!-- Tampilan untuk warga yang belum diverifikasi -->
+                <div class="alert alert-warning-custom text-center">
+                    <i class="fas fa-exclamation-triangle fa-3x mb-3" style="color: #ffc107;"></i>
+                    <h4>Akun Anda Belum Diverifikasi</h4>
+                    <p>Maaf, Anda tidak dapat membuat laporan karena akun Anda belum diverifikasi oleh admin.</p>
+                    <p><strong>Status saat ini:</strong> 
+                        <span class="badge badge-warning">{{ $warga->status_verifikasi ?? 'Belum Diverifikasi' }}</span>
+                    </p>
+                    <hr>
+                    <p class="mb-1"><small>Silakan tunggu proses verifikasi dari pengurus setempat atau hubungi untuk informasi lebih lanjut.</small></p>
                 </div>
-
-                <!-- Untuk Deskripsi Laporan -->
-                <div class="mb-3">
-                    <label for="deskripsi_laporan" class="form-label">Deskripsi Laporan</label>
-                    <small class="text-muted">Jelaskan detail kejadian secara lengkap (maksimal 10000 karakter)</small>
-                    <textarea name="deskripsi_laporan" id="deskripsi_laporan" class="form-control auto-expand @error('deskripsi_laporan') is-invalid @enderror" 
-                        style="min-height: 200px; max-height: 500px; overflow-y: scroll;" 
-                        maxlength="10000">{{ old('deskripsi_laporan') }}</textarea>
-                    @error('deskripsi_laporan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                
+                <div class="mt-4 text-center">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('/homepage-warga') }}'">
+                        <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+                    </button>
                 </div>
+            @else
+                <!-- Tampilan form normal untuk warga yang sudah diverifikasi -->
+                <p>Silahkan mengisi seluruh formulir berikut ini untuk memberikan informasi laporan :</p>
 
-                <!-- Untuk Waktu Kejadian -->
-                <div class="mb-3">
-                    <label for="tanggal_pelaporan" class="form-label">Waktu Kejadian</label>
-                    <div class="row">
-                        <div class="col-md-6 mb-2">
-                            <label for="Date" class="form-label">Tanggal</label>   
-                            <small class="text-muted">Pilih tanggal kejadian</small> 
-                            <input type="date" name="tanggal_pelaporan" id="tanggal_pelaporan" class="form-control @error('tanggal_pelaporan') is-invalid @enderror" value="{{ old('tanggal_pelaporan') }}">
-                            @error('tanggal_pelaporan')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="time" class="form-label">Jam</label>
-                            <small class="text-muted">Pilih waktu kejadian</small>    
-                            <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" value="{{ old('time_laporan') }}">
-                            @error('time_laporan')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                <form action="{{ route('laporan.store') }}" method="POST" id="formLaporan">
+                    @csrf
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                    <input type="hidden" name="warga_username" value="{{ $warga->username }}">
+                    <input type="hidden" name="tipe_pelapor" value="Warga">
+
+                    <!-- Untuk input Judul Laporan -->
+                    <div class="mb-3">
+                        <label for="judul" class="form-label">Judul Laporan</label>
+                        <small class="text-muted">Berikan judul yang singkat dan jelas untuk laporan Anda</small>
+                        <input type="text" name="judul_laporan" id="judul" class="form-control @error('judul') is-invalid @enderror" 
+                            value="{{ old('judul') }}" placeholder="Masukkan judul laporan">
+                        
+                        @error('judul')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Untuk Deskripsi Laporan -->
+                    <div class="mb-3">
+                        <label for="deskripsi_laporan" class="form-label">Deskripsi Laporan</label>
+                        <small class="text-muted">Jelaskan detail kejadian secara lengkap (maksimal 10000 karakter)</small>
+                        <textarea name="deskripsi_laporan" id="deskripsi_laporan" class="form-control auto-expand @error('deskripsi_laporan') is-invalid @enderror" 
+                            style="min-height: 200px; max-height: 500px; overflow-y: scroll;" 
+                            maxlength="10000">{{ old('deskripsi_laporan') }}</textarea>
+                        @error('deskripsi_laporan')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Untuk Waktu Kejadian -->
+                    <div class="mb-3">
+                        <label for="tanggal_pelaporan" class="form-label">Waktu Kejadian</label>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="Date" class="form-label">Tanggal</label>   
+                                <small class="text-muted">Pilih tanggal kejadian</small> 
+                                <input type="date" name="tanggal_pelaporan" id="tanggal_pelaporan" class="form-control @error('tanggal_pelaporan') is-invalid @enderror" value="{{ old('tanggal_pelaporan') }}">
+                                @error('tanggal_pelaporan')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="time" class="form-label">Jam</label>
+                                <small class="text-muted">Pilih waktu kejadian</small>    
+                                <input type="time" name="time_laporan" id="time_laporan" class="form-control @error('time_laporan') is-invalid @enderror" value="{{ old('time_laporan') }}">
+                                @error('time_laporan')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Untuk Tempat Kejadian -->
-                <div class="mb-3">
-                    <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
-                    <small class="text-muted">Pilih lokasi tempat kejadian</small>
-                    <select name="tempat_kejadian" id="desa" class="form-control @error('desa') is-invalid @enderror">
-                        <option value="">Pilih Desa/Kelurahan</option>
-                        <option value="Bojongsari" {{ old('desa') == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
-                        <option value="Bojongsoang" {{ old('desa') == 'Bojongsoang' ? 'selected' : '' }}>Bojongsoang</option>
-                        <option value="Buahbatu" {{ old('desa') == 'Buahbatu' ? 'selected' : '' }}>Buahbatu</option>
-                        <option value="Cipagalo" {{ old('desa') == 'Cipagalo' ? 'selected' : '' }}>Cipagalo</option>
-                        <option value="Lengkong" {{ old('desa') == 'Lengkong' ? 'selected' : '' }}>Lengkong</option>
-                        <option value="Tegalluar" {{ old('desa') == 'Tegalluar' ? 'selected' : '' }}>Tegalluar</option>
-                    </select>
-                    @error('desa')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                    <!-- Untuk Tempat Kejadian -->
+                    <div class="mb-3">
+                        <label for="tempat_kejadian" class="form-label">Tempat Kejadian</label>
+                        <small class="text-muted">Pilih lokasi tempat kejadian</small>
+                        <select name="tempat_kejadian" id="desa" class="form-control @error('desa') is-invalid @enderror">
+                            <option value="">Pilih Desa/Kelurahan</option>
+                            <option value="Bojongsari" {{ old('desa') == 'Bojongsari' ? 'selected' : '' }}>Bojongsari</option>
+                            <option value="Bojongsoang" {{ old('desa') == 'Bojongsoang' ? 'selected' : '' }}>Bojongsoang</option>
+                            <option value="Buahbatu" {{ old('desa') == 'Buahbatu' ? 'selected' : '' }}>Buahbatu</option>
+                            <option value="Cipagalo" {{ old('desa') == 'Cipagalo' ? 'selected' : '' }}>Cipagalo</option>
+                            <option value="Lengkong" {{ old('desa') == 'Lengkong' ? 'selected' : '' }}>Lengkong</option>
+                            <option value="Tegalluar" {{ old('desa') == 'Tegalluar' ? 'selected' : '' }}>Tegalluar</option>
+                        </select>
+                        @error('desa')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                <!-- Untuk Kategori Laporan -->
-                <div class="mb-3">
-                    <label for="judul_laporan" class="form-label">Kategori Laporan</label>
-                    <small class="text-muted">Pilih kategori yang sesuai dengan laporan Anda</small>
-                    <select name="kategori_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
-                        <option value="">Pilih Kategori Laporan</option>
-                        @foreach($kategoris as $kategori)
-                            <option value="{{ $kategori->nama_kategori }}" {{ old('kategori_laporan') == $kategori->nama_kategori ? 'selected' : '' }}
-                                data-jenis="{{ $kategori->jenis_kategori }}">
-                                {{ $kategori->nama_kategori }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('judul_laporan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                    <!-- Untuk Kategori Laporan -->
+                    <div class="mb-3">
+                        <label for="judul_laporan" class="form-label">Kategori Laporan</label>
+                        <small class="text-muted">Pilih kategori yang sesuai dengan laporan Anda</small>
+                        <select name="kategori_laporan" id="judul_laporan" class="form-control @error('judul_laporan') is-invalid @enderror">
+                            <option value="">Pilih Kategori Laporan</option>
+                            @foreach($kategoris as $kategori)
+                                <option value="{{ $kategori->nama_kategori }}" {{ old('kategori_laporan') == $kategori->nama_kategori ? 'selected' : '' }}
+                                    data-jenis="{{ $kategori->jenis_kategori }}">
+                                    {{ $kategori->nama_kategori }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('judul_laporan')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                <div class="mb-3">
-                    <label for="kategori_laporan" class="form-label">Jenis Laporan</label>
-                    <input type="text" name="jenis_laporan" id="kategori_laporan" class="form-control" readonly 
-                        value="{{ old('kategori_laporan') }}" placeholder="Jenis laporan akan muncul otomatis">
-                    @error('kategori_laporan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-{{-- 
-                <div class="mb-3">
-                    <label for="tipe_pelapor" class="form-label">Tipe Pelapor</label>
-                    <input type="text" class="form-control" value="Warga" readonly>
-                </div>
+                    <div class="mb-3">
+                        <label for="kategori_laporan" class="form-label">Jenis Laporan</label>
+                        <input type="text" name="jenis_laporan" id="kategori_laporan" class="form-control" readonly 
+                            value="{{ old('kategori_laporan') }}" placeholder="Jenis laporan akan muncul otomatis">
+                        @error('kategori_laporan')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                <div class="mb-3">
-                    <label for="warga_username" class="form-label">Username Warga</label>
-                    <input type="text" class="form-control" value="{{ $warga->username }}" readonly>
-                </div> --}}
-
-                <div class="mt-4">
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('/homepage') }}'">Kembali</button>
-                    <button type="submit" class="btn btn-primary">Simpan Laporan</button>
-                </div>
-            </form>
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url('/homepage') }}'">Kembali</button>
+                        <button type="submit" class="btn btn-primary">Simpan Laporan</button>
+                    </div>
+                </form>
+            @endif
         </div>
     </div>
 </div>
@@ -127,6 +139,7 @@
 @endsection
 
 @section('scripts')
+@if($warga->status_verifikasi === 'Terverifikasi')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -207,7 +220,8 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmButtonColor: '#468B94',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ya, Simpan!',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
                 // Submit form dan tambahkan event listener untuk menangkap respons
@@ -244,53 +258,84 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+@endif
 @endsection
 
 @section('styles')
 <style>
-/* Add these new styles and override default SweetAlert styles */
-.swal-buttons-container {
-    display: flex !important;
-    justify-content: space-between !important;
-    padding: 0 1rem !important;
-    gap: 10px !important;
-}
-
-.swal-button-confirm, .swal-button-cancel {
-    flex: 1 !important;
-    margin: 0 !important;
-    position: relative !important;
-    width: auto !important;
-}
-
-.swal2-actions {
-    width: 100% !important;
-}
-
-.swal2-confirm {
-    order: 2 !important;
-}
-
-.swal2-cancel {
-    order: 1 !important;
-}
-
-/* Remove any empty cards */
-.container-fluid > div:empty {
-    display: none !important;
-}
-
-/* Fix container padding */
-.container-fluid {
-    padding: 1rem !important;
-}
-
-/* Ensure main card has proper styling */
-.main-card {
-    background: #fff;
+/* Class khusus untuk warning message saja (tanpa garis hijau) */
+.alert-warning-custom {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 1.5rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #ffeaa7;
+    /* Tidak ada border-left */
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Animasi untuk pesan peringatan */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Kembalikan styling .mb-3 seperti semula */
+.mb-3 {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(70,139,148,0.1);
+    margin-bottom: 20px;
+    position: relative;
+    border-left: 4px solid #468B94;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: slideInPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.mb-3:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2), 0 4px 8px rgba(70,139,148,0.15);
+}
+
+/* Sequence animation untuk form-section */
+.mb-3:nth-child(1) { animation-delay: 0.1s; }
+.mb-3:nth-child(2) { animation-delay: 0.2s; }
+.mb-3:nth-child(3) { animation-delay: 0.3s; }
+.mb-3:nth-child(4) { animation-delay: 0.4s; }
+.mb-3:nth-child(5) { animation-delay: 0.5s; }
+.mb-3:nth-child(6) { animation-delay: 0.6s; }
+.mb-3:nth-child(7) { animation-delay: 0.7s; }
+
+@keyframes slideInPop {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.98);
+    }
+    50% {
+        transform: translateX(3px) scale(1.01);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
 }
 
 /* Animasi dasar */

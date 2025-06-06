@@ -55,16 +55,23 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="status-badge {{ 
-                                        $laporan->status_penanganan == 'Sudah Ditangani' ? 'completed' : 
-                                        ($laporan->status_penanganan == 'Sedang Ditangani' ? 'progress' : 'pending') 
-                                    }}">
-                                        <i class="fas {{ 
-                                            $laporan->status_penanganan == 'Sudah Ditangani' ? 'fa-check-circle' : 
-                                            ($laporan->status_penanganan == 'Sedang Ditangani' ? 'fa-clock' : 'fa-exclamation-circle') 
-                                        }}"></i>
-                                        {{ $laporan->status_penanganan }}
-                                    </span>
+                                    @if($laporan->status_penanganan)
+                                        <span class="status-badge {{ 
+                                            $laporan->status_penanganan == 'Sudah ditangani' ? 'completed' : 
+                                            ($laporan->status_penanganan == 'Belum ditangani' ? 'pending' : 'progress') 
+                                        }}">
+                                            <i class="fas {{ 
+                                                $laporan->status_penanganan == 'Sudah ditangani' ? 'fa-check-circle' : 
+                                                ($laporan->status_penanganan == 'Belum ditangani' ? 'fa-exclamation-circle' : 'fa-clock') 
+                                            }}"></i>
+                                            {{ $laporan->status_penanganan }}
+                                        </span>
+                                    @else
+                                        <span class="status-badge null-status">
+                                            <i class="fas fa-minus"></i>
+                                    
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     @if($laporan->status_verifikasi == 'Diverifikasi')
@@ -219,6 +226,11 @@ p {
 }
 
 .status-badge.pending {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+.status-badge.null-status {
     background-color: rgba(108, 117, 125, 0.1);
     color: #6c757d;
 }
