@@ -89,10 +89,10 @@
 
                         <div class="form-group mb-0 d-flex justify-content-between">
                             <a href="{{ route('pengurus.kelola-laporan.index') }}" class="btn btn-secondary btn-lg border-2">
-                                <i class="fas fa-arrow-left mr-1"></i> Kembali
+                                <i class="mb-0"></i> Kembali
                             </a>
                             <button type="submit" class="btn btn-primary btn-lg border-2">
-                                <i class="fas fa-save mr-1"></i> Simpan Perubahan
+                                <i class="mb-0"></i> Simpan Perubahan
                             </button>
                         </div>
                     </form>
