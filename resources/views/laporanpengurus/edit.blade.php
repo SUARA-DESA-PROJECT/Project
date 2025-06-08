@@ -90,7 +90,7 @@
                                 <i class="mb-0"></i> Kembali
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save mr-1"></i> Simpan Perubahan
+                                <i class="mb-0"></i> Simpan Perubahan
                             </button>
                         </div>
                     </form>
