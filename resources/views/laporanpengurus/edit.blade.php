@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header" style="background-color: #468B94; color: white;">
-                    <h4 class="mb-0"><i class="fas fa-edit"></i> Edit Laporan</h4>
+                    <h4 class="mb-0">Edit Laporan</h4>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('pengurus.kelola-laporan.update', $laporan->id) }}" method="POST">
@@ -87,7 +87,7 @@
 
                         <div class="form-group mb-0 d-flex justify-content-between">
                             <a href="{{ route('pengurus.kelola-laporan.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left mr-1"></i> Kembali
+                                <i class="mb-0"></i> Kembali
                             </a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save mr-1"></i> Simpan Perubahan
